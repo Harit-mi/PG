@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
-import { UserPlus, Search, Phone, MoreVertical } from "lucide-react";
+import { Search, Phone, MoreVertical } from "lucide-react";
+import AddTenantModal from "@/components/AddTenantModal";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching
@@ -20,9 +21,7 @@ export default async function TenantsPage() {
           <h1 className={styles.title}>Tenant Management</h1>
           <p className={styles.subtitle}>View and manage all active tenants.</p>
         </div>
-        <button className={styles.addButton}>
-          <UserPlus size={20} /> Add Tenant
-        </button>
+        <AddTenantModal buttonClass={styles.addButton} />
       </div>
 
       <div className={styles.controls}>

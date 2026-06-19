@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
-import { Plus, User } from "lucide-react";
+import { User } from "lucide-react";
+import AddRoomModal from "@/components/AddRoomModal";
 
 import { supabase } from "@/utils/supabase";
 
@@ -22,9 +23,7 @@ export default async function RoomsPage() {
           <h1 className={styles.title}>Room Management</h1>
           <p className={styles.subtitle}>Manage your PG rooms and occupancy.</p>
         </div>
-        <button className={styles.addButton}>
-          <Plus size={20} /> Add Room
-        </button>
+        <AddRoomModal buttonClass={styles.addButton} />
       </div>
 
       <div className={styles.grid}>
