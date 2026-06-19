@@ -71,3 +71,40 @@ export async function addTransaction(formData) {
   revalidatePath("/dashboard/finances");
   return { success: true };
 }
+
+export async function addComplaint(formData) {
+  const tenant_id = formData.get("tenant_id");
+  const issue = formData.get("issue");
+  const category = formData.get("category");
+  const priority = formData.get("priority");
+
+  const { error } = await supabase.from("complaints").insert([{
+    tenant_id,
+    issue,
+    category,
+    priority,
+    status: "Open"
+  }]);
+
+  if (error) {
+    console.error("Error adding complaint:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/complaints");
+  return { success: true };
+}
+
+export async function updateComplaintStatus(id, newStatus) {
+  const { error } = await supabase.from("complaints")
+    .update({ status: newStatus })
+    .eq('id', id);
+
+  if (error) {
+    console.error("Error updating complaint:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/complaints");
+  return { success: true };
+}
