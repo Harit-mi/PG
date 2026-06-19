@@ -56,10 +56,80 @@
   line-height: 1.6;
 }
 
-.actions {
+.authContainer {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.inputGroup label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.authActions {
   display: flex;
   gap: 1rem;
-  width: 100%;
+}
+
+.backButton {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: var(--surface);
 }
 
 .primaryButton {
@@ -73,12 +143,18 @@
   font-weight: 600;
   box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.primaryButton:hover {
+.primaryButton:hover:not(:disabled) {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 @media (max-width: 600px) {
