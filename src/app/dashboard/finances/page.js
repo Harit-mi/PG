@@ -1,13 +1,31 @@
 import styles from "./page.module.css";
-import { ArrowUpRight, ArrowDownRight, Download, Plus } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Download } from "lucide-react";
+import AddTransactionModal from "@/components/AddTransactionModal";
+import { supabase } from "@/utils/supabase";
 
-export default function FinancesPage() {
-  const transactions = [
-    { id: "TXN001", type: "Income", category: "Rent", amount: 8000, date: "05 Jun 2026", status: "Completed", name: "Rahul Sharma (101)" },
-    { id: "TXN002", type: "Expense", category: "Electricity", amount: 2500, date: "04 Jun 2026", status: "Completed", name: "TSEB" },
-    { id: "TXN003", type: "Income", category: "Rent", amount: 6000, date: "02 Jun 2026", status: "Completed", name: "Aman Gupta (102)" },
-    { id: "TXN004", type: "Expense", category: "Maintenance", amount: 1200, date: "01 Jun 2026", status: "Completed", name: "Plumber" },
-  ];
+export const revalidate = 0; // Disable caching
+
+export default async function FinancesPage() {
+  const { data: transactions, error } = await supabase
+    .from('transactions')
+    .select('*, tenants(name, room_number)')
+    .order('date', { ascending: false });
+
+  const { data: tenants } = await supabase.from('tenants').select('id, name, room_number').order('name');
+
+  if (error) {
+    console.error("Error fetching transactions:", error);
+  }
+
+  const displayTxns = transactions?.length > 0 ? transactions : [];
+
+  let totalIncome = 0;
+  let totalExpenses = 0;
+  
+  displayTxns.forEach(txn => {
+    if (txn.type === "Income") totalIncome += txn.amount;
+    else if (txn.type === "Expense") totalExpenses += txn.amount;
+  });
 
   return (
     <div className={styles.container}>
@@ -20,9 +38,7 @@ export default function FinancesPage() {
           <button className={`${styles.actionBtn} ${styles.btnOutline}`}>
             <Download size={18} /> Export PDF
           </button>
-          <button className={`${styles.actionBtn} ${styles.btnPrimary}`}>
-            <Plus size={18} /> Add Expense
-          </button>
+          <AddTransactionModal buttonClass={`${styles.actionBtn} ${styles.btnPrimary}`} tenants={tenants || []} />
         </div>
       </div>
 
@@ -33,8 +49,8 @@ export default function FinancesPage() {
           </div>
           <div className={styles.cardData}>
             <p className={styles.cardLabel}>Rent Collected</p>
-            <h2 className={styles.cardValue}>₹14,000</h2>
-            <p className={styles.cardContext}>This Month</p>
+            <h2 className={styles.cardValue}>₹{totalIncome.toLocaleString()}</h2>
+            <p className={styles.cardContext}>All Time</p>
           </div>
         </div>
 
@@ -44,8 +60,8 @@ export default function FinancesPage() {
           </div>
           <div className={styles.cardData}>
             <p className={styles.cardLabel}>Total Expenses</p>
-            <h2 className={styles.cardValue}>₹3,700</h2>
-            <p className={styles.cardContext}>This Month</p>
+            <h2 className={styles.cardValue}>₹{totalExpenses.toLocaleString()}</h2>
+            <p className={styles.cardContext}>All Time</p>
           </div>
         </div>
 
@@ -77,22 +93,32 @@ export default function FinancesPage() {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((txn) => (
-              <tr key={txn.id}>
-                <td className={styles.textMuted}>{txn.id}</td>
-                <td>{txn.date}</td>
-                <td className={styles.fw600}>{txn.name}</td>
-                <td>{txn.category}</td>
-                <td className={txn.type === "Income" ? styles.textSuccess : styles.textDanger}>
-                  {txn.type === "Income" ? "+" : "-"}₹{txn.amount}
-                </td>
-                <td>
-                  <span className={`${styles.statusBadge} ${styles.Completed}`}>
-                    {txn.status}
-                  </span>
+            {displayTxns.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }} className={styles.textMuted}>
+                  No transactions recorded yet.
                 </td>
               </tr>
-            ))}
+            ) : (
+              displayTxns.map((txn) => (
+                <tr key={txn.id}>
+                  <td className={styles.textMuted}>{txn.id.substring(0, 8)}</td>
+                  <td>{new Date(txn.date).toLocaleDateString()}</td>
+                  <td className={styles.fw600}>
+                    {txn.tenants ? `${txn.tenants.name} (${txn.tenants.room_number})` : txn.category}
+                  </td>
+                  <td>{txn.category}</td>
+                  <td className={txn.type === "Income" ? styles.textSuccess : styles.textDanger}>
+                    {txn.type === "Income" ? "+" : "-"}₹{txn.amount.toLocaleString()}
+                  </td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${styles.Completed}`}>
+                      {txn.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

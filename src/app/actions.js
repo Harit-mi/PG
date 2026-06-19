@@ -46,3 +46,28 @@ export async function addTenant(formData) {
   revalidatePath("/dashboard/tenants");
   return { success: true };
 }
+
+export async function addTransaction(formData) {
+  const type = formData.get("type"); // Income or Expense
+  const category = formData.get("category"); // Rent, Electricity, etc.
+  const amount = parseInt(formData.get("amount"));
+  const tenant_id = formData.get("tenant_id") || null;
+  const date = formData.get("date");
+
+  const { error } = await supabase.from("transactions").insert([{
+    type,
+    category,
+    amount,
+    tenant_id,
+    date,
+    status: "Completed"
+  }]);
+
+  if (error) {
+    console.error("Error adding transaction:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/finances");
+  return { success: true };
+}
