@@ -108,3 +108,21 @@ export async function updateComplaintStatus(id, newStatus) {
   revalidatePath("/dashboard/complaints");
   return { success: true };
 }
+
+export async function addNotice(formData) {
+  const title = formData.get("title");
+  const content = formData.get("content");
+
+  const { error } = await supabase.from("notices").insert([{
+    title,
+    content
+  }]);
+
+  if (error) {
+    console.error("Error adding notice:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard");
+  return { success: true };
+}

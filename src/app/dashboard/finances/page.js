@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
-import { ArrowUpRight, ArrowDownRight, Download } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import AddTransactionModal from "@/components/AddTransactionModal";
+import ExportPdfButton from "@/components/ExportPdfButton";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching
@@ -35,9 +36,7 @@ export default async function FinancesPage() {
           <p className={styles.subtitle}>Track rent collection and log PG expenses.</p>
         </div>
         <div className={styles.actions}>
-          <button className={`${styles.actionBtn} ${styles.btnOutline}`}>
-            <Download size={18} /> Export PDF
-          </button>
+          <ExportPdfButton transactions={displayTxns} className={`${styles.actionBtn} ${styles.btnOutline}`} />
           <AddTransactionModal buttonClass={`${styles.actionBtn} ${styles.btnPrimary}`} tenants={tenants || []} />
         </div>
       </div>

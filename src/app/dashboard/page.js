@@ -1,7 +1,24 @@
 import styles from "./page.module.css";
 import { Users, DoorOpen, IndianRupee, BellRing, TrendingUp, TrendingDown } from "lucide-react";
+import { supabase } from "@/utils/supabase";
+import AddNoticeModal from "@/components/AddNoticeModal";
 
-export default function DashboardPage() {
+export const revalidate = 0; // Disable caching
+
+export default async function DashboardPage() {
+  // Fetch real counts and aggregates from Supabase
+  const [{ count: totalTenants }, { count: vacantRooms }, { count: totalRooms }, { count: openComplaints }, { data: transactions }, { data: notices }] = await Promise.all([
+    supabase.from('tenants').select('*', { count: 'exact', head: true }).eq('status', 'Active'),
+    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('status', 'Vacant'),
+    supabase.from('rooms').select('*', { count: 'exact', head: true }),
+    supabase.from('complaints').select('*', { count: 'exact', head: true }).eq('status', 'Open'),
+    supabase.from('transactions').select('amount, type'),
+    supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3)
+  ]);
+
+  const rentCollected = transactions
+    ?.filter(t => t.type === 'Income')
+    .reduce((sum, t) => sum + t.amount, 0) || 0;
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -17,9 +34,9 @@ export default function DashboardPage() {
             </div>
             <span className={styles.statLabel}>Total Tenants</span>
           </div>
-          <div className={styles.statValue}>42</div>
+          <div className={styles.statValue}>{totalTenants || 0}</div>
           <div className={styles.statTrend} style={{ color: "var(--success)" }}>
-            <TrendingUp size={16} /> +2 this month
+            Active across all properties
           </div>
         </div>
 
@@ -30,9 +47,9 @@ export default function DashboardPage() {
             </div>
             <span className={styles.statLabel}>Vacant Rooms</span>
           </div>
-          <div className={styles.statValue}>3</div>
+          <div className={styles.statValue}>{vacantRooms || 0}</div>
           <div className={styles.statTrend} style={{ color: "var(--text-muted)" }}>
-            Out of 25 total rooms
+            Out of {totalRooms || 0} total rooms
           </div>
         </div>
 
@@ -43,9 +60,9 @@ export default function DashboardPage() {
             </div>
             <span className={styles.statLabel}>Rent Collected</span>
           </div>
-          <div className={styles.statValue}>₹1,45,000</div>
-          <div className={styles.statTrend} style={{ color: "var(--danger)" }}>
-            <TrendingDown size={16} /> ₹12,000 pending
+          <div className={styles.statValue}>₹{(rentCollected || 0).toLocaleString()}</div>
+          <div className={styles.statTrend} style={{ color: "var(--text-muted)" }}>
+            All time total
           </div>
         </div>
 
@@ -56,7 +73,7 @@ export default function DashboardPage() {
             </div>
             <span className={styles.statLabel}>Open Complaints</span>
           </div>
-          <div className={styles.statValue}>4</div>
+          <div className={styles.statValue}>{openComplaints || 0}</div>
           <div className={styles.statTrend} style={{ color: "var(--danger)" }}>
             2 require urgent attention
           </div>
@@ -91,22 +108,30 @@ export default function DashboardPage() {
           </div>
         </div>
         
-        <div className={`${styles.noticesSection} glass`}>
-          <div className={styles.sectionHeader}>
+        <div className={`${styles.chartCard} glass`}>
+          <div className={styles.cardHeader}>
             <h3>Recent Notices</h3>
-            <button className={styles.textBtn}>View All</button>
+            <AddNoticeModal buttonClass={styles.addNoticeBtn} />
           </div>
-          <div className={styles.noticeList}>
-            <div className={styles.noticeItem}>
-              <h4>Water supply interruption</h4>
-              <p>Maintenance work on main tank tomorrow from 10 AM to 2 PM.</p>
-              <span className={styles.noticeDate}>Today, 9:00 AM</span>
-            </div>
-            <div className={styles.noticeItem}>
-              <h4>Rent Reminder</h4>
-              <p>Please clear pending dues for this month by the 5th.</p>
-              <span className={styles.noticeDate}>2 days ago</span>
-            </div>
+          <div className={styles.noticesList}>
+            {notices && notices.length > 0 ? (
+              notices.map(notice => (
+                <div key={notice.id} className={styles.noticeItem}>
+                  <div className={styles.noticeIcon}>
+                    <BellRing size={16} />
+                  </div>
+                  <div className={styles.noticeContent}>
+                    <h4>{notice.title}</h4>
+                    <p>{notice.content}</p>
+                    <span className={styles.noticeTime}>
+                      {new Date(notice.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>No active notices.</p>
+            )}
           </div>
         </div>
       </div>

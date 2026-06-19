@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { Search, Phone, MoreVertical } from "lucide-react";
 import AddTenantModal from "@/components/AddTenantModal";
+import UploadKycModal from "@/components/UploadKycModal";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching
@@ -65,9 +66,16 @@ export default async function TenantsPage() {
                     </span>
                   </td>
                   <td>
-                    <button className={styles.actionBtn}>
-                      <MoreVertical size={18} />
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <UploadKycModal 
+                        tenantId={tenant.id} 
+                        tenantName={tenant.name} 
+                        existingUrl={tenant.document_url} 
+                      />
+                      <button className={styles.actionBtn}>
+                        <MoreVertical size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
