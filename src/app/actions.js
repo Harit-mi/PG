@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function switchProperty(id) {
-  cookies().set('activePropertyId', id, { path: '/' });
+  (await cookies()).set('activePropertyId', id, { path: '/' });
   revalidatePath("/dashboard", "layout");
   return { success: true };
 }
@@ -28,7 +28,7 @@ export async function addProperty(formData) {
 }
 
 export async function addRoom(formData) {
-  const property_id = cookies().get('activePropertyId')?.value;
+  const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id) return { success: false, error: "No active property selected" };
 
   const room_number = formData.get("room_number");
@@ -55,7 +55,7 @@ export async function addRoom(formData) {
 }
 
 export async function addTenant(formData) {
-  const property_id = cookies().get('activePropertyId')?.value;
+  const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id) return { success: false, error: "No active property selected" };
 
   const name = formData.get("name");
@@ -80,7 +80,7 @@ export async function addTenant(formData) {
 }
 
 export async function addTransaction(formData) {
-  const property_id = cookies().get('activePropertyId')?.value;
+  const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id) return { success: false, error: "No active property selected" };
 
   const type = formData.get("type"); // Income or Expense
@@ -109,7 +109,7 @@ export async function addTransaction(formData) {
 }
 
 export async function addComplaint(formData) {
-  const property_id = cookies().get('activePropertyId')?.value;
+  const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id) return { success: false, error: "No active property selected" };
 
   const tenant_id = formData.get("tenant_id");
@@ -150,7 +150,7 @@ export async function updateComplaintStatus(id, newStatus) {
 }
 
 export async function addNotice(formData) {
-  const property_id = cookies().get('activePropertyId')?.value;
+  const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id) return { success: false, error: "No active property selected" };
 
   const title = formData.get("title");

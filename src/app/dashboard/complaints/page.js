@@ -8,7 +8,7 @@ import TicketCard from "@/components/TicketCard";
 export const revalidate = 0;
 
 export default async function ComplaintsPage() {
-  const propertyId = cookies().get("propertyId")?.value;
+  const propertyId = (await cookies()).get("activePropertyId")?.value;
 
   let complaintsQuery = supabase
     .from('complaints')

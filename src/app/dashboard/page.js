@@ -16,7 +16,7 @@ import AddNoticeModal from "@/components/AddNoticeModal";
 export const revalidate = 0; // Disable caching
 
 export default async function DashboardPage() {
-  const propertyId = cookies().get('activePropertyId')?.value;
+  const propertyId = (await cookies()).get('activePropertyId')?.value;
 
   if (!propertyId) {
     return (

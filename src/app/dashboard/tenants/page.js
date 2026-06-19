@@ -8,7 +8,7 @@ import { supabase } from "@/utils/supabase";
 export const revalidate = 0; // Disable caching
 
 export default async function TenantsPage() {
-  const propertyId = cookies().get("propertyId")?.value;
+  const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let query = supabase.from('tenants').select('*').order('name');
   if (propertyId) {

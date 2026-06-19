@@ -8,7 +8,7 @@ import { supabase } from "@/utils/supabase";
 export const revalidate = 0; // Disable caching for now so data is always fresh
 
 export default async function RoomsPage() {
-  const propertyId = cookies().get("propertyId")?.value;
+  const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let query = supabase.from('rooms').select('*').order('room_number');
   if (propertyId) {
