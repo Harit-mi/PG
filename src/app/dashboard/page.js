@@ -1,5 +1,14 @@
 import styles from "./page.module.css";
-import { Users, DoorOpen, IndianRupee, BellRing, TrendingUp, TrendingDown } from "lucide-react";
+import { Users, DoorOpen, BellRing, TrendingUp, TrendingDown } from "lucide-react";
+
+// Inline Icon component since IndianRupee from lucide needs to be imported separately
+function IndianRupeeIcon({ size }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/>
+    </svg>
+  );
+}
 import { supabase } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import AddNoticeModal from "@/components/AddNoticeModal";
@@ -70,7 +79,7 @@ export default async function DashboardPage() {
         <div className={`${styles.statCard} glass`}>
           <div className={styles.statHeader}>
             <div className={styles.iconWrapper} style={{ backgroundColor: "#dcfce7", color: "#166534" }}>
-              <IndianRupee size={20} />
+              <IndianRupeeIcon size={20} />
             </div>
             <span className={styles.statLabel}>Rent Collected</span>
           </div>
