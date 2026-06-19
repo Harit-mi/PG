@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import { Check, CreditCard, Shield, User } from "lucide-react";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export default function SettingsPage() {
   return (
@@ -65,7 +66,7 @@ export default function SettingsPage() {
                 <li><Check size={16} className={styles.check} /> WhatsApp Reminders</li>
                 <li><Check size={16} className={styles.check} /> Priority Support</li>
               </ul>
-              <button className={`${styles.planBtn} ${styles.btnPrimary}`}>Upgrade to Growth</button>
+              <CheckoutButton planName="Growth" price={699} buttonClass={`${styles.planBtn} ${styles.btnPrimary}`} />
             </div>
 
             {/* Pro Plan */}
@@ -82,7 +83,7 @@ export default function SettingsPage() {
                 <li><Check size={16} className={styles.check} /> Automated Billing</li>
                 <li><Check size={16} className={styles.check} /> 24/7 Phone Support</li>
               </ul>
-              <button className={`${styles.planBtn} ${styles.btnOutline}`}>Upgrade to Pro</button>
+              <CheckoutButton planName="Pro" price={1499} buttonClass={`${styles.planBtn} ${styles.btnOutline}`} />
             </div>
           </div>
         </section>
