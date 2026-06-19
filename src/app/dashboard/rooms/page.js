@@ -2,12 +2,19 @@ import styles from "./page.module.css";
 import { User } from "lucide-react";
 import AddRoomModal from "@/components/AddRoomModal";
 
+import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching for now so data is always fresh
 
 export default async function RoomsPage() {
-  const { data: rooms, error } = await supabase.from('rooms').select('*').order('room_number');
+  const propertyId = cookies().get("propertyId")?.value;
+  
+  let query = supabase.from('rooms').select('*').order('room_number');
+  if (propertyId) {
+    query = query.eq('property_id', propertyId);
+  }
+  const { data: rooms, error } = await query;
 
   if (error) {
     console.error("Error fetching rooms:", error);

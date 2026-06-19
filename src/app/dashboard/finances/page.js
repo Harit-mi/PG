@@ -2,17 +2,28 @@ import styles from "./page.module.css";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import AddTransactionModal from "@/components/AddTransactionModal";
 import ExportPdfButton from "@/components/ExportPdfButton";
+import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching
 
 export default async function FinancesPage() {
-  const { data: transactions, error } = await supabase
+  const propertyId = cookies().get("propertyId")?.value;
+
+  let txQuery = supabase
     .from('transactions')
     .select('*, tenants(name, room_number)')
     .order('date', { ascending: false });
 
-  const { data: tenants } = await supabase.from('tenants').select('id, name, room_number').order('name');
+  let tenantsQuery = supabase.from('tenants').select('id, name, room_number').order('name');
+
+  if (propertyId) {
+    txQuery = txQuery.eq('property_id', propertyId);
+    tenantsQuery = tenantsQuery.eq('property_id', propertyId);
+  }
+
+  const { data: transactions, error } = await txQuery;
+  const { data: tenants } = await tenantsQuery;
 
   if (error) {
     console.error("Error fetching transactions:", error);

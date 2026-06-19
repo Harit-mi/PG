@@ -2,12 +2,19 @@ import styles from "./page.module.css";
 import { Search, Phone, MoreVertical } from "lucide-react";
 import AddTenantModal from "@/components/AddTenantModal";
 import UploadKycModal from "@/components/UploadKycModal";
+import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
 export const revalidate = 0; // Disable caching
 
 export default async function TenantsPage() {
-  const { data: tenants, error } = await supabase.from('tenants').select('*').order('name');
+  const propertyId = cookies().get("propertyId")?.value;
+  
+  let query = supabase.from('tenants').select('*').order('name');
+  if (propertyId) {
+    query = query.eq('property_id', propertyId);
+  }
+  const { data: tenants, error } = await query;
 
   if (error) {
     console.error("Error fetching tenants:", error);

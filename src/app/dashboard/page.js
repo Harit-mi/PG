@@ -1,19 +1,33 @@
 import styles from "./page.module.css";
 import { Users, DoorOpen, IndianRupee, BellRing, TrendingUp, TrendingDown } from "lucide-react";
 import { supabase } from "@/utils/supabase";
+import { cookies } from "next/headers";
 import AddNoticeModal from "@/components/AddNoticeModal";
 
 export const revalidate = 0; // Disable caching
 
 export default async function DashboardPage() {
-  // Fetch real counts and aggregates from Supabase
+  const propertyId = cookies().get('activePropertyId')?.value;
+
+  if (!propertyId) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Welcome back, Owner!</h1>
+          <p className={styles.subtitle}>Please select a property from the sidebar to view metrics.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Fetch real counts and aggregates from Supabase filtered by property
   const [{ count: totalTenants }, { count: vacantRooms }, { count: totalRooms }, { count: openComplaints }, { data: transactions }, { data: notices }] = await Promise.all([
-    supabase.from('tenants').select('*', { count: 'exact', head: true }).eq('status', 'Active'),
-    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('status', 'Vacant'),
-    supabase.from('rooms').select('*', { count: 'exact', head: true }),
-    supabase.from('complaints').select('*', { count: 'exact', head: true }).eq('status', 'Open'),
-    supabase.from('transactions').select('amount, type'),
-    supabase.from('notices').select('*').order('created_at', { ascending: false }).limit(3)
+    supabase.from('tenants').select('*', { count: 'exact', head: true }).eq('status', 'Active').eq('property_id', propertyId),
+    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('status', 'Vacant').eq('property_id', propertyId),
+    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('property_id', propertyId),
+    supabase.from('complaints').select('*', { count: 'exact', head: true }).eq('status', 'Open').eq('property_id', propertyId),
+    supabase.from('transactions').select('amount, type').eq('property_id', propertyId),
+    supabase.from('notices').select('*').eq('property_id', propertyId).order('created_at', { ascending: false }).limit(3)
   ]);
 
   const rentCollected = transactions

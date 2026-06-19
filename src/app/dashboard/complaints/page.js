@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import { AlertCircle, CheckCircle2, Clock, Filter } from "lucide-react";
+import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 import AddComplaintModal from "@/components/AddComplaintModal";
 import TicketCard from "@/components/TicketCard";
@@ -7,12 +8,22 @@ import TicketCard from "@/components/TicketCard";
 export const revalidate = 0;
 
 export default async function ComplaintsPage() {
-  const { data: complaints, error } = await supabase
+  const propertyId = cookies().get("propertyId")?.value;
+
+  let complaintsQuery = supabase
     .from('complaints')
     .select('*, tenants(name, room_number)')
     .order('created_at', { ascending: false });
 
-  const { data: tenants } = await supabase.from('tenants').select('id, name, room_number').order('name');
+  let tenantsQuery = supabase.from('tenants').select('id, name, room_number').order('name');
+
+  if (propertyId) {
+    complaintsQuery = complaintsQuery.eq('property_id', propertyId);
+    tenantsQuery = tenantsQuery.eq('property_id', propertyId);
+  }
+
+  const { data: complaints, error } = await complaintsQuery;
+  const { data: tenants } = await tenantsQuery;
 
   if (error) {
     console.error("Error fetching complaints:", error);

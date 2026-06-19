@@ -2,8 +2,35 @@
 
 import { supabase } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+
+export async function switchProperty(id) {
+  cookies().set('activePropertyId', id, { path: '/' });
+  revalidatePath("/dashboard", "layout");
+  return { success: true };
+}
+
+export async function addProperty(formData) {
+  const name = formData.get("name");
+  const address = formData.get("address");
+
+  const { error } = await supabase.from("properties").insert([{
+    name,
+    address
+  }]);
+
+  if (error) {
+    console.error("Error adding property:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
 
 export async function addRoom(formData) {
+  const property_id = cookies().get('activePropertyId')?.value;
+  if (!property_id) return { success: false, error: "No active property selected" };
+
   const room_number = formData.get("room_number");
   const type = formData.get("type");
   const rent_amount = parseInt(formData.get("rent_amount"));
@@ -14,7 +41,8 @@ export async function addRoom(formData) {
     type,
     rent_amount,
     capacity,
-    status: "Vacant"
+    status: "Vacant",
+    property_id
   }]);
 
   if (error) {
@@ -27,6 +55,9 @@ export async function addRoom(formData) {
 }
 
 export async function addTenant(formData) {
+  const property_id = cookies().get('activePropertyId')?.value;
+  if (!property_id) return { success: false, error: "No active property selected" };
+
   const name = formData.get("name");
   const phone = formData.get("phone");
   const room_number = formData.get("room_number");
@@ -35,7 +66,8 @@ export async function addTenant(formData) {
     name,
     phone,
     room_number,
-    status: "Active"
+    status: "Active",
+    property_id
   }]);
 
   if (error) {
@@ -48,6 +80,9 @@ export async function addTenant(formData) {
 }
 
 export async function addTransaction(formData) {
+  const property_id = cookies().get('activePropertyId')?.value;
+  if (!property_id) return { success: false, error: "No active property selected" };
+
   const type = formData.get("type"); // Income or Expense
   const category = formData.get("category"); // Rent, Electricity, etc.
   const amount = parseInt(formData.get("amount"));
@@ -60,7 +95,8 @@ export async function addTransaction(formData) {
     amount,
     tenant_id,
     date,
-    status: "Completed"
+    status: "Completed",
+    property_id
   }]);
 
   if (error) {
@@ -73,6 +109,9 @@ export async function addTransaction(formData) {
 }
 
 export async function addComplaint(formData) {
+  const property_id = cookies().get('activePropertyId')?.value;
+  if (!property_id) return { success: false, error: "No active property selected" };
+
   const tenant_id = formData.get("tenant_id");
   const issue = formData.get("issue");
   const category = formData.get("category");
@@ -83,7 +122,8 @@ export async function addComplaint(formData) {
     issue,
     category,
     priority,
-    status: "Open"
+    status: "Open",
+    property_id
   }]);
 
   if (error) {
@@ -110,12 +150,16 @@ export async function updateComplaintStatus(id, newStatus) {
 }
 
 export async function addNotice(formData) {
+  const property_id = cookies().get('activePropertyId')?.value;
+  if (!property_id) return { success: false, error: "No active property selected" };
+
   const title = formData.get("title");
   const content = formData.get("content");
 
   const { error } = await supabase.from("notices").insert([{
     title,
-    content
+    content,
+    property_id
   }]);
 
   if (error) {

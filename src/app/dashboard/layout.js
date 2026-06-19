@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { LayoutDashboard, Users, DoorOpen, IndianRupee, BellRing, Settings } from "lucide-react";
 import styles from "./layout.module.css";
+import PropertySelector from "@/components/PropertySelector";
 
 export default function DashboardLayout({ children }) {
   return (
     <div className={styles.layout}>
       <aside className={`${styles.sidebar} glass`}>
         <div className={styles.logo}>PG Owner</div>
+        <PropertySelector />
         <nav className={styles.nav}>
           <Link href="/dashboard" className={styles.navItem}>
             <LayoutDashboard size={20} /> Dashboard
