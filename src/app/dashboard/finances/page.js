@@ -12,18 +12,21 @@ export default async function FinancesPage() {
 
   let txQuery = supabase
     .from('transactions')
-    .select('*, tenants(name, room_number)')
+    .select('*, tenants(name, room_number), employees(name, role)')
     .order('date', { ascending: false });
 
   let tenantsQuery = supabase.from('tenants').select('id, name, room_number').order('name');
+  let employeesQuery = supabase.from('employees').select('id, name, role').order('name');
 
-  if (propertyId) {
+  if (propertyId && propertyId !== 'all') {
     txQuery = txQuery.eq('property_id', propertyId);
     tenantsQuery = tenantsQuery.eq('property_id', propertyId);
+    employeesQuery = employeesQuery.eq('property_id', propertyId);
   }
 
   const { data: transactions, error } = await txQuery;
   const { data: tenants } = await tenantsQuery;
+  const { data: employees } = await employeesQuery;
 
   if (error) {
     console.error("Error fetching transactions:", error);
@@ -48,7 +51,7 @@ export default async function FinancesPage() {
         </div>
         <div className={styles.actions}>
           <ExportPdfButton transactions={displayTxns} className={`${styles.actionBtn} ${styles.btnOutline}`} />
-          <AddTransactionModal buttonClass={`${styles.actionBtn} ${styles.btnPrimary}`} tenants={tenants || []} />
+          <AddTransactionModal buttonClass={`${styles.actionBtn} ${styles.btnPrimary}`} tenants={tenants || []} employees={employees || []} />
         </div>
       </div>
 
@@ -115,7 +118,9 @@ export default async function FinancesPage() {
                   <td className={styles.textMuted}>{txn.id.substring(0, 8)}</td>
                   <td>{new Date(txn.date).toLocaleDateString()}</td>
                   <td className={styles.fw600}>
-                    {txn.tenants ? `${txn.tenants.name} (${txn.tenants.room_number})` : txn.category}
+                    {txn.tenants ? `${txn.tenants.name} (${txn.tenants.room_number})` : 
+                     txn.employees ? `Salary: ${txn.employees.name}` : 
+                     txn.category}
                   </td>
                   <td>{txn.category}</td>
                   <td className={txn.type === "Income" ? styles.textSuccess : styles.textDanger}>

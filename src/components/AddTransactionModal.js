@@ -5,10 +5,11 @@ import { Plus, X } from "lucide-react";
 import { addTransaction } from "@/app/actions";
 import styles from "./Modal.module.css";
 
-export default function AddTransactionModal({ buttonClass, tenants }) {
+export default function AddTransactionModal({ buttonClass, tenants, employees }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("Income");
+  const [category, setCategory] = useState("Rent");
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -51,27 +52,30 @@ export default function AddTransactionModal({ buttonClass, tenants }) {
                   name="type" 
                   className={styles.input} 
                   value={type} 
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                    setCategory(e.target.value === "Income" ? "Rent" : "Electricity");
+                  }}
                 >
                   <option value="Income">Income (Rent, Deposit)</option>
-                  <option value="Expense">Expense (Bills, Maintenance)</option>
+                  <option value="Expense">Expense (Bills, Maintenance, Salary)</option>
                 </select>
               </div>
 
               <div className={styles.formGroup}>
                 <label>Category</label>
                 {type === "Income" ? (
-                  <select name="category" className={styles.input}>
+                  <select name="category" className={styles.input} value={category} onChange={e => setCategory(e.target.value)}>
                     <option value="Rent">Rent</option>
                     <option value="Security Deposit">Security Deposit</option>
                     <option value="Other">Other</option>
                   </select>
                 ) : (
-                  <select name="category" className={styles.input}>
+                  <select name="category" className={styles.input} value={category} onChange={e => setCategory(e.target.value)}>
                     <option value="Electricity">Electricity</option>
                     <option value="Water">Water</option>
                     <option value="Maintenance">Maintenance</option>
-                    <option value="Payroll/Staff Salaries">Payroll/Staff Salaries</option>
+                    <option value="Salary">Salary (Employee Payroll)</option>
                     <option value="Internet">Internet</option>
                     <option value="Other">Other</option>
                   </select>
@@ -83,8 +87,20 @@ export default function AddTransactionModal({ buttonClass, tenants }) {
                   <label>Select Tenant (Optional)</label>
                   <select name="tenant_id" className={styles.input}>
                     <option value="">-- No Tenant Associated --</option>
-                    {tenants.map(t => (
+                    {tenants?.map(t => (
                       <option key={t.id} value={t.id}>{t.name} (Room {t.room_number})</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {type === "Expense" && category === "Salary" && (
+                <div className={styles.formGroup}>
+                  <label>Select Employee *</label>
+                  <select name="employee_id" className={styles.input} required>
+                    <option value="">-- Select Employee --</option>
+                    {employees?.map(e => (
+                      <option key={e.id} value={e.id}>{e.name} ({e.role})</option>
                     ))}
                   </select>
                 </div>

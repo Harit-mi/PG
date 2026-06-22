@@ -11,7 +11,7 @@ export default async function RoomsPage() {
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let query = supabase.from('rooms').select('*').order('room_number');
-  if (propertyId) {
+  if (propertyId && propertyId !== 'all') {
     query = query.eq('property_id', propertyId);
   }
   const { data: rooms, error } = await query;

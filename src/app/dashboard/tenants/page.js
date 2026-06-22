@@ -14,7 +14,7 @@ export default async function TenantsPage() {
   let tenantQuery = supabase.from('tenants').select('*').order('name');
   let roomQuery = supabase.from('rooms').select('*');
   
-  if (propertyId) {
+  if (propertyId && propertyId !== 'all') {
     tenantQuery = tenantQuery.eq('property_id', propertyId);
     roomQuery = roomQuery.eq('property_id', propertyId);
   }

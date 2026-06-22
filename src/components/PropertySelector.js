@@ -19,7 +19,8 @@ export default function PropertySelector() {
   const fetchProperties = async () => {
     const { data, error } = await supabase.from('properties').select('*').order('created_at', { ascending: true });
     if (!error && data) {
-      setProperties(data);
+      const propertiesWithAll = [{ id: 'all', name: 'All PGs (Aggregated)' }, ...data];
+      setProperties(propertiesWithAll);
       // Try to read active property from cookies
       const match = document.cookie.match(new RegExp('(^| )activePropertyId=([^;]+)'));
       if (match) {

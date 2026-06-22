@@ -30,6 +30,18 @@ export default async function MenuPage() {
   
   if (error) console.error("Error fetching menu:", error);
 
+  if (!propertyId || propertyId === 'all') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center' }}>
+        <Utensils size={48} style={{ color: 'var(--text-muted)', marginBottom: '1rem' }} />
+        <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Select a Property</h2>
+        <p style={{ color: 'var(--text-muted)', maxWidth: '400px' }}>
+          Food Menus are property-specific. Please select a specific PG from the dropdown in the sidebar to manage its menu.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

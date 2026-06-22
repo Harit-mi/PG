@@ -17,7 +17,7 @@ export default async function ComplaintsPage() {
 
   let tenantsQuery = supabase.from('tenants').select('id, name, room_number').order('name');
 
-  if (propertyId) {
+  if (propertyId && propertyId !== 'all') {
     complaintsQuery = complaintsQuery.eq('property_id', propertyId);
     tenantsQuery = tenantsQuery.eq('property_id', propertyId);
   }

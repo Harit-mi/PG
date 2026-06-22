@@ -113,6 +113,7 @@ export async function addTransaction(formData) {
   const category = formData.get("category"); // Rent, Electricity, etc.
   const amount = parseInt(formData.get("amount"));
   const tenant_id = formData.get("tenant_id") || null;
+  const employee_id = formData.get("employee_id") || null;
   const date = formData.get("date");
 
   const { error } = await supabase.from("transactions").insert([{
@@ -120,6 +121,7 @@ export async function addTransaction(formData) {
     category,
     amount,
     tenant_id,
+    employee_id,
     date,
     status: "Completed",
     property_id
@@ -292,5 +294,35 @@ export async function copyPreviousWeekMenu(currentWeekStartDate) {
   }
 
   revalidatePath("/dashboard/menu");
+  return { success: true };
+}
+
+export async function addEmployee(formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const name = formData.get("name");
+  const phone = formData.get("phone");
+  const address = formData.get("address");
+  const role = formData.get("role");
+  const salary = parseInt(formData.get("salary"));
+  
+  const { error } = await supabase.from("employees").insert([{
+    name,
+    phone,
+    address,
+    role,
+    salary,
+    status: "Active",
+    property_id
+  }]);
+
+  if (error) {
+    console.error("Error adding employee:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/employees");
   return { success: true };
 }

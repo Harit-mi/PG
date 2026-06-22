@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
-import { Users, DoorOpen, BellRing, TrendingUp, TrendingDown } from "lucide-react";
+import { Users, DoorOpen, BellRing, TrendingUp, TrendingDown, Clock } from "lucide-react";
+import Link from "next/link";
 
-// Inline Icon component since IndianRupee from lucide needs to be imported separately
 function IndianRupeeIcon({ size }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -9,11 +9,19 @@ function IndianRupeeIcon({ size }) {
     </svg>
   );
 }
+
 import { supabase } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import AddNoticeModal from "@/components/AddNoticeModal";
 
-export const revalidate = 0; // Disable caching
+export const revalidate = 0;
+
+function withProperty(query, propertyId) {
+  if (propertyId && propertyId !== 'all') {
+    return query.eq('property_id', propertyId);
+  }
+  return query;
+}
 
 export default async function DashboardPage() {
   const propertyId = (await cookies()).get('activePropertyId')?.value;
@@ -29,24 +37,43 @@ export default async function DashboardPage() {
     );
   }
 
-  // Fetch real counts and aggregates from Supabase filtered by property
-  const [{ count: totalTenants }, { count: vacantRooms }, { count: totalRooms }, { count: openComplaints }, { data: transactions }, { data: notices }] = await Promise.all([
-    supabase.from('tenants').select('*', { count: 'exact', head: true }).eq('status', 'Active').eq('property_id', propertyId),
-    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('status', 'Vacant').eq('property_id', propertyId),
-    supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('property_id', propertyId),
-    supabase.from('complaints').select('*', { count: 'exact', head: true }).eq('status', 'Open').eq('property_id', propertyId),
-    supabase.from('transactions').select('amount, type').eq('property_id', propertyId),
-    supabase.from('notices').select('*').eq('property_id', propertyId).order('created_at', { ascending: false }).limit(3)
+  // Fetch real counts and aggregates from Supabase dynamically filtered by property
+  const [
+    { count: totalTenants }, 
+    { count: vacantRooms }, 
+    { count: totalRooms }, 
+    { count: openComplaints }, 
+    { data: transactions }, 
+    { data: notices }
+  ] = await Promise.all([
+    withProperty(supabase.from('tenants').select('*', { count: 'exact', head: true }).eq('status', 'Active'), propertyId),
+    withProperty(supabase.from('rooms').select('*', { count: 'exact', head: true }).eq('status', 'Vacant'), propertyId),
+    withProperty(supabase.from('rooms').select('*', { count: 'exact', head: true }), propertyId),
+    withProperty(supabase.from('complaints').select('*', { count: 'exact', head: true }).eq('status', 'Open'), propertyId),
+    withProperty(supabase.from('transactions').select('amount, type, status, category'), propertyId),
+    withProperty(supabase.from('notices').select('*'), propertyId).order('created_at', { ascending: false }).limit(3)
   ]);
 
-  const rentCollected = transactions
-    ?.filter(t => t.type === 'Income')
-    .reduce((sum, t) => sum + t.amount, 0) || 0;
+  const rentCollected = transactions?.filter(t => t.type === 'Income' && t.status === 'Completed').reduce((sum, t) => sum + t.amount, 0) || 0;
+  
+  // Pending Dues Math
+  const pendingTransactions = transactions?.filter(t => t.type === 'Income' && t.status === 'Pending') || [];
+  const pendingAmount = pendingTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const pendingTenantsCount = new Set(pendingTransactions.filter(t => t.tenant_id).map(t => t.tenant_id)).size;
+  
+  // Chart Math
+  const totalIncome = transactions?.filter(t => t.type === 'Income').reduce((sum, t) => sum + t.amount, 0) || 0;
+  const totalExpense = transactions?.filter(t => t.type === 'Expense').reduce((sum, t) => sum + t.amount, 0) || 0;
+  
+  const maxVal = Math.max(totalIncome, totalExpense, 1);
+  const incomeHeight = `${Math.max((totalIncome / maxVal) * 100, 5)}%`;
+  const expenseHeight = `${Math.max((totalExpense / maxVal) * 100, 5)}%`;
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Welcome back, Owner!</h1>
-        <p className={styles.subtitle}>Here is an overview of your PG properties today.</p>
+        <p className={styles.subtitle}>{propertyId === 'all' ? "Here is the aggregated overview of all your PG properties." : "Here is an overview of your PG property today."}</p>
       </div>
 
       <div className={styles.statsGrid}>
@@ -59,7 +86,7 @@ export default async function DashboardPage() {
           </div>
           <div className={styles.statValue}>{totalTenants || 0}</div>
           <div className={styles.statTrend} style={{ color: "var(--success)" }}>
-            Active across all properties
+            Active {propertyId === 'all' ? 'across all properties' : 'in this property'}
           </div>
         </div>
 
@@ -85,48 +112,45 @@ export default async function DashboardPage() {
           </div>
           <div className={styles.statValue}>₹{(rentCollected || 0).toLocaleString()}</div>
           <div className={styles.statTrend} style={{ color: "var(--text-muted)" }}>
-            All time total
+            All time total collected
           </div>
         </div>
 
-        <div className={`${styles.statCard} glass`}>
-          <div className={styles.statHeader}>
-            <div className={styles.iconWrapper} style={{ backgroundColor: "#fee2e2", color: "#991b1b" }}>
-              <BellRing size={20} />
+        {/* New Pending Payments Card */}
+        <Link href="/dashboard/dues" style={{ textDecoration: 'none' }}>
+          <div className={`${styles.statCard} glass`} style={{ borderLeft: '4px solid #f59e0b', cursor: 'pointer', transition: 'all 0.2s' }}>
+            <div className={styles.statHeader}>
+              <div className={styles.iconWrapper} style={{ backgroundColor: "#fef3c7", color: "#d97706" }}>
+                <Clock size={20} />
+              </div>
+              <span className={styles.statLabel}>Pending Payments</span>
             </div>
-            <span className={styles.statLabel}>Open Complaints</span>
+            <div className={styles.statValue} style={{ color: "#d97706" }}>₹{(pendingAmount || 0).toLocaleString()}</div>
+            <div className={styles.statTrend} style={{ color: "var(--text-muted)" }}>
+              From {pendingTenantsCount} tenants
+            </div>
           </div>
-          <div className={styles.statValue}>{openComplaints || 0}</div>
-          <div className={styles.statTrend} style={{ color: "var(--danger)" }}>
-            2 require urgent attention
-          </div>
-        </div>
+        </Link>
       </div>
 
       <div className={styles.bottomSection}>
         <div className={`${styles.chartSection} glass`}>
-          <h3>Income vs Expenses (Mock)</h3>
+          <h3>Income vs Expenses (Actual)</h3>
           <div className={styles.mockChart}>
-            {/* Simple CSS-based mock chart */}
             <div className={styles.barGroup}>
-              <div className={styles.barIncome} style={{ height: "80%" }}></div>
-              <div className={styles.barExpense} style={{ height: "30%" }}></div>
-              <span>Jan</span>
+              <div className={styles.barIncome} style={{ height: incomeHeight }} title={`Income: ₹${totalIncome}`}></div>
+              <div className={styles.barExpense} style={{ height: expenseHeight }} title={`Expense: ₹${totalExpense}`}></div>
+              <span>Total</span>
             </div>
-            <div className={styles.barGroup}>
-              <div className={styles.barIncome} style={{ height: "90%" }}></div>
-              <div className={styles.barExpense} style={{ height: "40%" }}></div>
-              <span>Feb</span>
+          </div>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', fontSize: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '12px', height: '12px', background: 'var(--success)', borderRadius: '2px' }}></div>
+              <span>Income: ₹{totalIncome.toLocaleString()}</span>
             </div>
-            <div className={styles.barGroup}>
-              <div className={styles.barIncome} style={{ height: "85%" }}></div>
-              <div className={styles.barExpense} style={{ height: "35%" }}></div>
-              <span>Mar</span>
-            </div>
-            <div className={styles.barGroup}>
-              <div className={styles.barIncome} style={{ height: "100%" }}></div>
-              <div className={styles.barExpense} style={{ height: "45%" }}></div>
-              <span>Apr</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ width: '12px', height: '12px', background: 'var(--danger)', borderRadius: '2px' }}></div>
+              <span>Expenses: ₹{totalExpense.toLocaleString()}</span>
             </div>
           </div>
         </div>
@@ -134,7 +158,7 @@ export default async function DashboardPage() {
         <div className={`${styles.chartCard} glass`}>
           <div className={styles.cardHeader}>
             <h3>Recent Notices</h3>
-            <AddNoticeModal buttonClass={styles.addNoticeBtn} />
+            {propertyId !== 'all' && <AddNoticeModal buttonClass={styles.addNoticeBtn} />}
           </div>
           <div className={styles.noticesList}>
             {notices && notices.length > 0 ? (
