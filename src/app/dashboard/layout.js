@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, DoorOpen, BellRing, Settings } from "lucide-react";
+import { LayoutDashboard, Users, DoorOpen, BellRing, Settings, Utensils, FileText } from "lucide-react";
 
 // Inline Icon component since IndianRupee from lucide needs to be imported separately
 function IndianRupeeIcon({ size }) {
@@ -57,6 +57,12 @@ export default async function DashboardLayout({ children }) {
           </Link>
           <Link href="/dashboard/complaints" className={styles.navItem}>
             <BellRing size={20} /> Complaints
+          </Link>
+          <Link href="/dashboard/menu" className={styles.navItem}>
+            <Utensils size={20} /> Food Menu
+          </Link>
+          <Link href="/dashboard/dues" className={styles.navItem}>
+            <FileText size={20} /> Pending Dues
           </Link>
           <Link href="/dashboard/settings" className={styles.navItem}>
             <Settings size={20} /> Settings
