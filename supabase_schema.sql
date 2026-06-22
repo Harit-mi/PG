@@ -10,6 +10,11 @@ CREATE TABLE tenants (
   move_in_date DATE DEFAULT CURRENT_DATE,
   emergency_contact TEXT,
   status TEXT DEFAULT 'Active', -- Active, Notice Period, Past
+  permanent_address TEXT,
+  father_mother_name TEXT,
+  parent_contact_number TEXT,
+  blood_group TEXT,
+  workplace_details TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
 
@@ -18,7 +23,7 @@ CREATE TABLE rooms (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   room_number TEXT UNIQUE NOT NULL,
   type TEXT NOT NULL, -- Single, Double, Triple
-  rent_amount INTEGER NOT NULL,
+  rent_per_bed INTEGER NOT NULL,
   capacity INTEGER NOT NULL,
   status TEXT DEFAULT 'Vacant', -- Vacant, Occupied, Partially Occupied
   amenities TEXT[],
@@ -33,6 +38,7 @@ CREATE TABLE transactions (
   category TEXT NOT NULL, -- Rent, Electricity, Maintenance, etc.
   amount INTEGER NOT NULL,
   status TEXT DEFAULT 'Completed',
+  proof_url TEXT,
   date DATE DEFAULT CURRENT_DATE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
@@ -40,11 +46,13 @@ CREATE TABLE transactions (
 -- 4. Complaints Table
 CREATE TABLE complaints (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  ticket_id TEXT UNIQUE,
   tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
   issue TEXT NOT NULL,
   category TEXT NOT NULL,
   priority TEXT DEFAULT 'Medium', -- High, Medium, Low
   status TEXT DEFAULT 'Open', -- Open, In Progress, Resolved
+  property_id UUID REFERENCES properties(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
 
@@ -70,3 +78,22 @@ CREATE POLICY "Allow public update access" ON transactions FOR UPDATE USING (tru
 CREATE POLICY "Allow public read access" ON complaints FOR SELECT USING (true);
 CREATE POLICY "Allow public insert access" ON complaints FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow public update access" ON complaints FOR UPDATE USING (true);
+
+-- 5. Food Menus Table
+CREATE TABLE food_menus (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  property_id UUID REFERENCES properties(id),
+  week_start_date DATE NOT NULL,
+  day_of_week TEXT NOT NULL,
+  breakfast TEXT,
+  lunch TEXT,
+  evening_snack TEXT,
+  dinner TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()),
+  UNIQUE(property_id, week_start_date, day_of_week)
+);
+
+ALTER TABLE food_menus ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access" ON food_menus FOR SELECT USING (true);
+CREATE POLICY "Allow public insert access" ON food_menus FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update access" ON food_menus FOR UPDATE USING (true);

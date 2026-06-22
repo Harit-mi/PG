@@ -71,7 +71,7 @@ export default function AddTransactionModal({ buttonClass, tenants }) {
                     <option value="Electricity">Electricity</option>
                     <option value="Water">Water</option>
                     <option value="Maintenance">Maintenance</option>
-                    <option value="Salaries">Salaries</option>
+                    <option value="Payroll/Staff Salaries">Payroll/Staff Salaries</option>
                     <option value="Internet">Internet</option>
                     <option value="Other">Other</option>
                   </select>

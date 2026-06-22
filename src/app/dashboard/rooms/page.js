@@ -48,7 +48,8 @@ export default async function RoomsPage() {
             
               <div className={styles.details}>
                 <p><strong>Type:</strong> {room.type}</p>
-                <p><strong>Rent:</strong> ₹{room.rent_amount}/mo</p>
+                <p><strong>Rent/Bed:</strong> ₹{room.rent_per_bed}/mo</p>
+                <p><strong>Total Potential Rev:</strong> ₹{room.rent_per_bed * room.capacity}/mo</p>
               </div>
 
               <div className={styles.occupancy}>

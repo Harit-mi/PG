@@ -9,13 +9,37 @@ function IndianRupeeIcon({ size }) {
     </svg>
   );
 }
+import { supabase } from "@/utils/supabase";
+import { cookies } from "next/headers";
 import styles from "./layout.module.css";
 import PropertySelector from "@/components/PropertySelector";
 
-export default function DashboardLayout({ children }) {
+export const revalidate = 0;
+
+export default async function DashboardLayout({ children }) {
+  const propertyId = (await cookies()).get("activePropertyId")?.value;
+  let isExpired = false;
+
+  if (propertyId) {
+    const { data: property } = await supabase
+      .from("properties")
+      .select("subscription_status, expiry_date")
+      .eq("id", propertyId)
+      .single();
+
+    if (property && (property.subscription_status === 'expired' || new Date(property.expiry_date) < new Date())) {
+      isExpired = true;
+    }
+  }
+
   return (
     <div className={styles.layout}>
-      <aside className={`${styles.sidebar} glass`}>
+      {isExpired && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, background: 'var(--danger)', color: 'white', textAlign: 'center', padding: '0.5rem', zIndex: 1000, fontWeight: 600 }}>
+          Your subscription has expired. The dashboard is now in Read-Only mode. Please renew your plan.
+        </div>
+      )}
+      <aside className={`${styles.sidebar} glass`} style={{ marginTop: isExpired ? '40px' : '0' }}>
         <div className={styles.logo}>PG Owner</div>
         <PropertySelector />
         <nav className={styles.nav}>
@@ -39,7 +63,7 @@ export default function DashboardLayout({ children }) {
           </Link>
         </nav>
       </aside>
-      <main className={styles.mainContent}>
+      <main className={styles.mainContent} style={{ marginTop: isExpired ? '40px' : '0' }}>
         {children}
       </main>
     </div>

@@ -55,8 +55,8 @@ export default function AddRoomModal({ buttonClass }) {
               </div>
 
               <div className={styles.formGroup}>
-                <label>Rent Amount (₹)</label>
-                <input name="rent_amount" type="number" required placeholder="8000" className={styles.input} />
+                <label>Rent Per Bed (₹)</label>
+                <input name="rent_per_bed" type="number" required placeholder="8000" className={styles.input} />
               </div>
 
               <div className={styles.formGroup}>

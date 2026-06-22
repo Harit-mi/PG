@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS properties (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   name TEXT NOT NULL,
   address TEXT,
+  subscription_status TEXT DEFAULT 'active', -- active, expired, trial
+  expiry_date DATE DEFAULT (CURRENT_DATE + INTERVAL '30 days'),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

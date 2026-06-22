@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import { Search, Phone, MoreVertical } from "lucide-react";
 import AddTenantModal from "@/components/AddTenantModal";
 import UploadKycModal from "@/components/UploadKycModal";
+import TenantProfileButton from "@/components/TenantProfileButton";
 import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
@@ -10,17 +11,31 @@ export const revalidate = 0; // Disable caching
 export default async function TenantsPage() {
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
-  let query = supabase.from('tenants').select('*').order('name');
+  let tenantQuery = supabase.from('tenants').select('*').order('name');
+  let roomQuery = supabase.from('rooms').select('*');
+  
   if (propertyId) {
-    query = query.eq('property_id', propertyId);
+    tenantQuery = tenantQuery.eq('property_id', propertyId);
+    roomQuery = roomQuery.eq('property_id', propertyId);
   }
-  const { data: tenants, error } = await query;
-
-  if (error) {
-    console.error("Error fetching tenants:", error);
-  }
+  
+  const [{ data: tenants }, { data: rooms }] = await Promise.all([tenantQuery, roomQuery]);
 
   const displayTenants = tenants?.length > 0 ? tenants : [];
+  const displayRooms = rooms?.length > 0 ? rooms : [];
+
+  // Calculate occupancy to pass available rooms to the Add Tenant Modal
+  const occupancyMap = {};
+  displayTenants.forEach(t => {
+    if (t.status === 'Active' && t.room_number) {
+      occupancyMap[t.room_number] = (occupancyMap[t.room_number] || 0) + 1;
+    }
+  });
+
+  const availableRooms = displayRooms.filter(r => {
+    const occupants = occupancyMap[r.room_number] || 0;
+    return occupants < r.capacity;
+  });
 
   return (
     <div className={styles.container}>
@@ -29,7 +44,7 @@ export default async function TenantsPage() {
           <h1 className={styles.title}>Tenant Management</h1>
           <p className={styles.subtitle}>View and manage all active tenants.</p>
         </div>
-        <AddTenantModal buttonClass={styles.addButton} />
+        <AddTenantModal buttonClass={styles.addButton} availableRooms={availableRooms} />
       </div>
 
       <div className={styles.controls}>
@@ -74,6 +89,7 @@ export default async function TenantsPage() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <TenantProfileButton tenant={tenant} />
                       <UploadKycModal 
                         tenantId={tenant.id} 
                         tenantName={tenant.name} 
