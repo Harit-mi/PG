@@ -4,15 +4,15 @@ import { useState } from "react";
 import styles from "./page.module.css";
 import { CheckCircle, Clock, Search, Filter } from "lucide-react";
 import MarkPaidModal from "@/components/MarkPaidModal";
+import ReceiptGenerator from "@/components/ReceiptGenerator";
 import { supabase } from "@/utils/supabase";
 
-export default function DuesClient({ initialDues, propertyId }) {
-  const [dues, setDues] = useState(initialDues);
+export default function DuesClient({ initialDues, propertyId, paymentMethods = [] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Pending"); // "All", "Paid", "Pending", "Overdue"
   const [dateFilter, setDateFilter] = useState("All"); // "Today", "This Week", "This Month", "All"
 
-  const filteredDues = dues.filter(due => {
+  const filteredDues = initialDues.filter(due => {
     const tenant = due.tenants || {};
     const matchesSearch = 
       (tenant.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -170,11 +170,14 @@ export default function DuesClient({ initialDues, propertyId }) {
                             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.waBtn} style={{ background: '#25D366', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', textDecoration: 'none', fontSize: '0.8rem' }}>
                               WhatsApp
                             </a>
-                            <MarkPaidModal transactionId={due.id} />
+                            <MarkPaidModal transactionId={due.id} paymentMethods={paymentMethods} />
                           </>
                         )}
                         {due.status === 'Completed' && (
-                          <span style={{ fontSize: '0.8rem', color: 'var(--success)' }}>Paid</span>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--success)' }}>Paid</span>
+                            <ReceiptGenerator transaction={due} />
+                          </div>
                         )}
                       </div>
                     </td>

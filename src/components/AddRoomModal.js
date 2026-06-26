@@ -12,14 +12,17 @@ export default function AddRoomModal({ buttonClass }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.target);
+    const form = e.target;
+    const formData = new FormData(form);
     const res = await addRoom(formData);
     setLoading(false);
     
     if (res.success) {
+      alert("Room added successfully!");
+      form.reset();
       setIsOpen(false);
     } else {
-      alert(res.error);
+      alert("Error: " + res.error);
     }
   }
 

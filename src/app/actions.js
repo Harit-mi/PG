@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 async function checkSubscription(property_id) {
-  if (!property_id) return { success: false, error: "No active property selected" };
+  if (!property_id || property_id === 'all') return { success: false, error: "Please select a specific property from the sidebar to perform this action." };
   const { data: property } = await supabase
     .from("properties")
     .select("subscription_status, expiry_date")
@@ -49,6 +49,22 @@ export async function addRoom(formData) {
   const type = formData.get("type");
   const rent_per_bed = parseInt(formData.get("rent_per_bed"));
   const capacity = parseInt(formData.get("capacity"));
+
+  if (rent_per_bed <= 0 || capacity <= 0) {
+    return { success: false, error: "Rent and capacity must be greater than zero." };
+  }
+
+  // Check for duplicate room number
+  const { data: existingRoom } = await supabase
+    .from("rooms")
+    .select("id")
+    .eq("property_id", property_id)
+    .eq("room_number", room_number)
+    .single();
+
+  if (existingRoom) {
+    return { success: false, error: `Room ${room_number} already exists in this property.` };
+  }
   
   const { error } = await supabase.from("rooms").insert([{
     room_number,
@@ -205,7 +221,7 @@ export async function addNotice(formData) {
   return { success: true };
 }
 
-export async function updateTransactionStatus(id, newStatus, proofUrl = null) {
+export async function updateTransactionStatus(id, newStatus, proofUrl = null, paymentMethod = null, paymentDate = null) {
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -213,6 +229,12 @@ export async function updateTransactionStatus(id, newStatus, proofUrl = null) {
   const updateData = { status: newStatus };
   if (proofUrl) {
     updateData.proof_url = proofUrl;
+  }
+  if (paymentMethod) {
+    updateData.payment_method = paymentMethod;
+  }
+  if (paymentDate) {
+    updateData.payment_date = paymentDate;
   }
 
   const { error } = await supabase.from("transactions")
@@ -235,10 +257,14 @@ export async function saveMenu(menus) {
   if (!subCheck.success) return subCheck;
 
   // Menus is an array of objects
-  const menusToUpsert = menus.map(m => ({
-    ...m,
-    property_id
-  }));
+  const menusToUpsert = menus.map(m => {
+    // Exclude id so Supabase uniquely constraints on (property_id, week_start_date, day_of_week)
+    const { id, ...rest } = m;
+    return {
+      ...rest,
+      property_id
+    };
+  });
 
   const { error } = await supabase.from('food_menus').upsert(menusToUpsert, {
     onConflict: 'property_id,week_start_date,day_of_week'
@@ -324,5 +350,64 @@ export async function addEmployee(formData) {
   }
 
   revalidatePath("/dashboard/employees");
+  return { success: true };
+}
+
+export async function getPaymentMethods() {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  if (!property_id || property_id === 'all') return { success: true, data: [] };
+
+  const { data, error } = await supabase
+    .from('payment_methods')
+    .select('*')
+    .eq('property_id', property_id)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error("Error fetching payment methods:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, data };
+}
+
+export async function addPaymentMethod(formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const type = formData.get("type");
+  const details = formData.get("details");
+  const is_default = formData.get("is_default") === "on";
+
+  const { error } = await supabase.from("payment_methods").insert([{
+    property_id,
+    type,
+    details,
+    is_default
+  }]);
+
+  if (error) {
+    console.error("Error adding payment method:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function deletePaymentMethod(id) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("payment_methods").delete().eq('id', id);
+
+  if (error) {
+    console.error("Error deleting payment method:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/settings");
   return { success: true };
 }

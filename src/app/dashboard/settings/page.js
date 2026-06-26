@@ -1,8 +1,12 @@
 import styles from "./page.module.css";
 import { Check, CreditCard, Shield, User } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
+import PaymentMethodsManager from "@/components/PaymentMethodsManager";
+import { getPaymentMethods } from "@/app/actions";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const { data: initialMethods } = await getPaymentMethods();
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -93,8 +97,8 @@ export default function SettingsPage() {
             <CreditCard size={20} className={styles.icon} />
             <h2>Payment Methods</h2>
           </div>
-          <p className={styles.textMuted}>Payments are securely processed by Razorpay.</p>
-          <button className={`${styles.actionBtn} ${styles.btnOutline}`}>Add Payment Method</button>
+          <p className={styles.textMuted}>Manage how your tenants can pay you.</p>
+          <PaymentMethodsManager initialMethods={initialMethods || []} />
         </section>
       </div>
     </div>

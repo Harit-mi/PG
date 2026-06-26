@@ -6,10 +6,12 @@ import { updateTransactionStatus } from "@/app/actions";
 import { supabase } from "@/utils/supabase";
 import styles from "./Modal.module.css";
 
-export default function MarkPaidModal({ transactionId }) {
+export default function MarkPaidModal({ transactionId, paymentMethods = [] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -42,7 +44,7 @@ export default function MarkPaidModal({ transactionId }) {
       }
     }
 
-    const res = await updateTransactionStatus(transactionId, "Completed", proofUrl);
+    const res = await updateTransactionStatus(transactionId, "Completed", proofUrl, paymentMethod, paymentDate);
     setLoading(false);
     
     if (res.success) {
@@ -98,6 +100,40 @@ export default function MarkPaidModal({ transactionId }) {
                     </p>
                   </label>
                 </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label>Payment Method</label>
+                <select 
+                  className={styles.input} 
+                  value={paymentMethod} 
+                  onChange={e => setPaymentMethod(e.target.value)}
+                  required
+                >
+                  <option value="">Select Method</option>
+                  {paymentMethods.length > 0 ? paymentMethods.map(pm => (
+                    <option key={pm.id} value={`${pm.type}${pm.details ? ` - ${pm.details}` : ''}`}>
+                      {pm.type} {pm.details ? `(${pm.details})` : ''}
+                    </option>
+                  )) : (
+                    <>
+                      <option value="Cash">Cash</option>
+                      <option value="UPI">UPI</option>
+                      <option value="Bank Transfer">Bank Transfer</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label>Payment Date</label>
+                <input 
+                  type="date" 
+                  className={styles.input}
+                  value={paymentDate}
+                  onChange={e => setPaymentDate(e.target.value)}
+                  required
+                />
               </div>
 
               <div className={styles.actions}>

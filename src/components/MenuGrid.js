@@ -28,11 +28,22 @@ export default function MenuGrid({ initialMenus, weekStartDate }) {
   };
 
   const handleSave = async () => {
-    setLoading(true);
     const menusArray = Object.values(menus).map(m => ({
       ...m,
       week_start_date: weekStartDate
     }));
+
+    // Check if at least one meal is entered
+    const isEmpty = menusArray.every(m => 
+      !m.breakfast?.trim() && !m.lunch?.trim() && !m.evening_snack?.trim() && !m.dinner?.trim()
+    );
+
+    if (isEmpty) {
+      alert("Cannot save an entirely empty menu. Please add at least one meal.");
+      return;
+    }
+
+    setLoading(true);
     const res = await saveMenu(menusArray);
     setLoading(false);
     if (!res.success) {
@@ -49,6 +60,7 @@ export default function MenuGrid({ initialMenus, weekStartDate }) {
     if (!res.success) {
       alert(res.error);
     } else {
+      alert("Menu copied successfully!");
       // Reload page to fetch new data
       window.location.reload();
     }

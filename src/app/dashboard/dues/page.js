@@ -22,6 +22,15 @@ export default async function DuesPage() {
   const { data: allDues, error } = await query;
   if (error) console.error("Error fetching dues:", error);
 
+  let paymentMethods = [];
+  if (propertyId && propertyId !== 'all') {
+    const { data: pmData } = await supabase
+      .from('payment_methods')
+      .select('*')
+      .eq('property_id', propertyId);
+    if (pmData) paymentMethods = pmData;
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -31,7 +40,7 @@ export default async function DuesPage() {
         </div>
       </div>
       
-      <DuesClient initialDues={allDues || []} propertyId={propertyId} />
+      <DuesClient initialDues={allDues || []} propertyId={propertyId} paymentMethods={paymentMethods} />
     </div>
   );
 }
