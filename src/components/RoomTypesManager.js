@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { addRoomType, deleteRoomType } from "@/app/actions";
-import styles from "./PaymentMethodsManager.module.css"; // Reuse same styles
+import styles from "./Modal.module.css";
 
 export default function RoomTypesManager({ initialRoomTypes }) {
   const [types, setTypes] = useState(initialRoomTypes || []);

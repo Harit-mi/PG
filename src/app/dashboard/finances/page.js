@@ -93,9 +93,6 @@ export default async function FinancesPage() {
         </div>
       </div>
 
-        </div>
-      </div>
-
       <FinancesClient initialTransactions={displayTxns} />
     </div>
   );
