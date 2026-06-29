@@ -2,10 +2,12 @@ import styles from "./page.module.css";
 import { Check, CreditCard, Shield, User } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import PaymentMethodsManager from "@/components/PaymentMethodsManager";
-import { getPaymentMethods } from "@/app/actions";
+import RoomTypesManager from "@/components/RoomTypesManager";
+import { getPaymentMethods, getRoomTypes } from "@/app/actions";
 
 export default async function SettingsPage() {
   const { data: initialMethods } = await getPaymentMethods();
+  const { data: initialRoomTypes } = await getRoomTypes();
 
   return (
     <div className={styles.container}>
@@ -99,6 +101,15 @@ export default async function SettingsPage() {
           </div>
           <p className={styles.textMuted}>Manage how your tenants can pay you.</p>
           <PaymentMethodsManager initialMethods={initialMethods || []} />
+        </section>
+
+        <section className={`${styles.section} glass`}>
+          <div className={styles.sectionHeader}>
+            <Check size={20} className={styles.icon} />
+            <h2>Room Types</h2>
+          </div>
+          <p className={styles.textMuted}>Configure custom room types, defaults for capacity and rent.</p>
+          <RoomTypesManager initialRoomTypes={initialRoomTypes || []} />
         </section>
       </div>
     </div>

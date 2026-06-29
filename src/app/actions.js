@@ -411,3 +411,62 @@ export async function deletePaymentMethod(id) {
   revalidatePath("/dashboard/settings");
   return { success: true };
 }
+
+export async function getRoomTypes() {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  if (!property_id || property_id === 'all') return { success: true, data: [] };
+
+  const { data, error } = await supabase
+    .from('room_types')
+    .select('*')
+    .eq('property_id', property_id)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error("Error fetching room types:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, data };
+}
+
+export async function addRoomType(formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const name = formData.get("name");
+  const default_capacity = parseInt(formData.get("default_capacity"));
+  const default_rent = parseInt(formData.get("default_rent"));
+
+  const { error } = await supabase.from("room_types").insert([{
+    property_id,
+    name,
+    default_capacity,
+    default_rent
+  }]);
+
+  if (error) {
+    console.error("Error adding room type:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}
+
+export async function deleteRoomType(id) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("room_types").delete().eq('id', id);
+
+  if (error) {
+    console.error("Error deleting room type:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/settings");
+  return { success: true };
+}

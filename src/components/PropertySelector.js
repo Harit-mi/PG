@@ -36,6 +36,7 @@ export default function PropertySelector() {
     setActivePropertyId(id);
     setIsOpen(false);
     await switchProperty(id);
+    window.location.reload();
   };
 
   const handleAddProperty = async (e) => {

@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { User } from "lucide-react";
 import AddRoomModal from "@/components/AddRoomModal";
+import { getRoomTypes } from "@/app/actions";
 
 import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
@@ -14,7 +15,11 @@ export default async function RoomsPage() {
   if (propertyId && propertyId !== 'all') {
     query = query.eq('property_id', propertyId);
   }
-  const { data: rooms, error } = await query;
+  
+  const [{ data: rooms, error }, { data: roomTypes }] = await Promise.all([
+    query,
+    getRoomTypes()
+  ]);
 
   if (error) {
     console.error("Error fetching rooms:", error);
@@ -30,7 +35,7 @@ export default async function RoomsPage() {
           <h1 className={styles.title}>Room Management</h1>
           <p className={styles.subtitle}>Manage your PG rooms and occupancy.</p>
         </div>
-        <AddRoomModal buttonClass={styles.addButton} />
+        <AddRoomModal buttonClass={styles.addButton} roomTypes={roomTypes || []} />
       </div>
 
       <div className={styles.grid}>

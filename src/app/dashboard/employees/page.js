@@ -1,6 +1,7 @@
 import styles from "../tenants/page.module.css";
 import { Search, Phone, MoreVertical, Briefcase } from "lucide-react";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
+import EmployeeActionMenu from "@/components/EmployeeActionMenu";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
@@ -84,9 +85,7 @@ export default async function EmployeesPage() {
                           Profile
                         </button>
                       </Link>
-                      <button className={styles.actionBtn}>
-                        <MoreVertical size={18} />
-                      </button>
+                      <EmployeeActionMenu employee={emp} />
                     </div>
                   </td>
                 </tr>

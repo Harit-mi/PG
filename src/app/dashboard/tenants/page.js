@@ -3,6 +3,7 @@ import { Search, Phone, MoreVertical } from "lucide-react";
 import AddTenantModal from "@/components/AddTenantModal";
 import UploadKycModal from "@/components/UploadKycModal";
 import TenantProfileButton from "@/components/TenantProfileButton";
+import TenantActionMenu from "@/components/TenantActionMenu";
 import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
@@ -95,9 +96,7 @@ export default async function TenantsPage() {
                         tenantName={tenant.name} 
                         existingUrl={tenant.document_url} 
                       />
-                      <button className={styles.actionBtn}>
-                        <MoreVertical size={18} />
-                      </button>
+                      <TenantActionMenu tenant={tenant} />
                     </div>
                   </td>
                 </tr>

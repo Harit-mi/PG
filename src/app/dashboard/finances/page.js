@@ -2,6 +2,8 @@ import styles from "./page.module.css";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import AddTransactionModal from "@/components/AddTransactionModal";
 import ExportPdfButton from "@/components/ExportPdfButton";
+import ExportExcelButton from "@/components/ExportExcelButton";
+import FinancesClient from "./FinancesClient";
 import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 
@@ -50,6 +52,7 @@ export default async function FinancesPage() {
           <p className={styles.subtitle}>Track rent collection and log PG expenses.</p>
         </div>
         <div className={styles.actions}>
+          <ExportExcelButton transactions={displayTxns} className={`${styles.actionBtn} ${styles.btnOutline}`} />
           <ExportPdfButton transactions={displayTxns} className={`${styles.actionBtn} ${styles.btnOutline}`} />
           <AddTransactionModal buttonClass={`${styles.actionBtn} ${styles.btnPrimary}`} tenants={tenants || []} employees={employees || []} />
         </div>
@@ -90,53 +93,10 @@ export default async function FinancesPage() {
         </div>
       </div>
 
-      <div className={`${styles.ledgerContainer} glass`}>
-        <div className={styles.ledgerHeader}>
-          <h3>Recent Transactions</h3>
         </div>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayTxns.length === 0 ? (
-              <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }} className={styles.textMuted}>
-                  No transactions recorded yet.
-                </td>
-              </tr>
-            ) : (
-              displayTxns.map((txn) => (
-                <tr key={txn.id}>
-                  <td className={styles.textMuted}>{txn.id.substring(0, 8)}</td>
-                  <td>{new Date(txn.date).toLocaleDateString()}</td>
-                  <td className={styles.fw600}>
-                    {txn.tenants ? `${txn.tenants.name} (${txn.tenants.room_number})` : 
-                     txn.employees ? `Salary: ${txn.employees.name}` : 
-                     txn.category}
-                  </td>
-                  <td>{txn.category}</td>
-                  <td className={txn.type === "Income" ? styles.textSuccess : styles.textDanger}>
-                    {txn.type === "Income" ? "+" : "-"}₹{txn.amount.toLocaleString()}
-                  </td>
-                  <td>
-                    <span className={`${styles.statusBadge} ${styles.Completed}`}>
-                      {txn.status}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
       </div>
+
+      <FinancesClient initialTransactions={displayTxns} />
     </div>
   );
 }
