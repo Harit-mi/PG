@@ -1,11 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { Eye, Edit, Trash2, Building, Receipt, UserX } from "lucide-react";
 import ActionDropdown from "./ActionDropdown";
 import { useRouter } from "next/navigation";
+import EditEmployeeModal from "./EditEmployeeModal";
+import { deleteEmployee } from "@/app/actions";
 
 export default function EmployeeActionMenu({ employee }) {
   const router = useRouter();
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete ${employee.name}?`)) {
+      const result = await deleteEmployee(employee.id);
+      if (!result.success) {
+        alert(result.error || "Failed to delete employee");
+      }
+    }
+  };
 
   const actions = [
     {
@@ -16,30 +29,32 @@ export default function EmployeeActionMenu({ employee }) {
     {
       label: "Edit Details",
       icon: <Edit size={14} />,
-      onClick: () => alert(`Edit employee ${employee.name}`)
+      onClick: () => setShowEdit(true)
     },
     {
       label: "Assign PG",
       icon: <Building size={14} />,
-      onClick: () => alert(`Assign PG for ${employee.name}`)
+      onClick: () => alert(`Assign PG for ${employee.name} (Coming soon)`)
     },
     {
       label: "Salary History",
       icon: <Receipt size={14} />,
-      onClick: () => alert(`View salary history for ${employee.name}`)
-    },
-    {
-      label: "Deactivate",
-      icon: <UserX size={14} />,
-      onClick: () => alert(`Deactivate ${employee.name}`)
+      onClick: () => alert(`View salary history for ${employee.name} (Coming soon)`)
     },
     {
       label: "Delete",
       icon: <Trash2 size={14} />,
       danger: true,
-      onClick: () => alert(`Delete ${employee.name}`)
+      onClick: handleDelete
     }
   ];
 
-  return <ActionDropdown actions={actions} />;
+  return (
+    <>
+      <ActionDropdown actions={actions} />
+      {showEdit && (
+        <EditEmployeeModal employee={employee} onClose={() => setShowEdit(false)} />
+      )}
+    </>
+  );
 }

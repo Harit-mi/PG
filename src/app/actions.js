@@ -470,3 +470,132 @@ export async function deleteRoomType(id) {
   revalidatePath("/dashboard/settings");
   return { success: true };
 }
+
+export async function updateEmployee(id, formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const updateData = {};
+  
+  if (formData.get("name")) updateData.name = formData.get("name");
+  if (formData.get("phone")) updateData.phone = formData.get("phone");
+  if (formData.get("address")) updateData.address = formData.get("address");
+  if (formData.get("role")) updateData.role = formData.get("role");
+  if (formData.get("salary")) updateData.salary = parseInt(formData.get("salary"));
+  if (formData.get("status")) updateData.status = formData.get("status");
+
+  const { error } = await supabase.from("employees").update(updateData).eq('id', id);
+
+  if (error) {
+    console.error("Error updating employee:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/employees");
+  return { success: true };
+}
+
+export async function deleteEmployee(id) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("employees").delete().eq('id', id);
+
+  if (error) {
+    console.error("Error deleting employee:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/employees");
+  return { success: true };
+}
+
+export async function updateTransaction(id, formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const updateData = {
+    amount: parseFloat(formData.get("amount")),
+    category: formData.get("category"),
+    type: formData.get("type"),
+    status: formData.get("status"),
+    payment_method: formData.get("payment_method"),
+    description: formData.get("description"),
+  };
+
+  if (formData.get("payment_date")) {
+    updateData.payment_date = formData.get("payment_date");
+  } else if (updateData.status === "Paid") {
+    updateData.payment_date = new Date().toISOString();
+  }
+
+  const { error } = await supabase.from("transactions").update(updateData).eq('id', id);
+
+  if (error) {
+    console.error("Error updating transaction:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/finances");
+  revalidatePath("/dashboard"); // Refresh dashboard totals
+  return { success: true };
+}
+
+export async function deleteTransaction(id) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("transactions").delete().eq('id', id);
+
+  if (error) {
+    console.error("Error deleting transaction:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/finances");
+  revalidatePath("/dashboard"); // Refresh dashboard totals
+  return { success: true };
+}
+
+export async function updateComplaint(id, formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const updateData = {
+    issue: formData.get("issue"),
+    category: formData.get("category"),
+    priority: formData.get("priority"),
+    status: formData.get("status")
+  };
+
+  const { error } = await supabase.from("complaints").update(updateData).eq('id', id);
+
+  if (error) {
+    console.error("Error updating complaint:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/complaints");
+  return { success: true };
+}
+
+export async function deleteComplaint(id) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("complaints").delete().eq('id', id);
+
+  if (error) {
+    console.error("Error deleting complaint:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/complaints");
+  return { success: true };
+}

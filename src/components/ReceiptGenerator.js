@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export default function ReceiptGenerator({ transaction }) {
   const [loading, setLoading] = useState(false);
@@ -20,11 +20,23 @@ export default function ReceiptGenerator({ transaction }) {
         : new Date(transaction.date).toLocaleDateString();
       const paymentMethod = transaction.payment_method || "Cash";
       const transactionId = transaction.id;
+      const propertyName = transaction.properties?.name || "Premium PG Management";
+      const collectedBy = transaction.employees?.name || "Admin";
 
-      // Header
+      // Header & Logo (Stylized text for now)
+      doc.setFillColor(41, 128, 185);
+      doc.rect(20, 15, 12, 12, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.text("PG", 22, 23);
+      
       doc.setFontSize(22);
       doc.setTextColor(41, 128, 185); // Blue color
-      doc.text("PAYMENT RECEIPT", 105, 20, { align: "center" });
+      doc.text("PAYMENT RECEIPT", 105, 22, { align: "center" });
+
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.text(propertyName, 190, 22, { align: "right" });
 
       doc.setFontSize(10);
       doc.setTextColor(100, 100, 100);
@@ -36,7 +48,7 @@ export default function ReceiptGenerator({ transaction }) {
       doc.line(20, 40, 190, 40);
 
       // Details Table
-      doc.autoTable({
+      autoTable(doc, {
         startY: 45,
         theme: "plain",
         styles: { fontSize: 11, cellPadding: 5 },
@@ -45,11 +57,13 @@ export default function ReceiptGenerator({ transaction }) {
           1: { textColor: [100, 100, 100] }
         },
         body: [
+          ["Receipt No. / Txn ID:", transactionId],
           ["Received From (Tenant Name):", tenantName],
           ["Room Number:", roomNumber],
           ["Payment For:", transaction.category || "Rent"],
           ["Payment Date:", paymentDate],
-          ["Payment Method:", paymentMethod]
+          ["Payment Method:", paymentMethod],
+          ["Collected By:", collectedBy]
         ]
       });
 
@@ -66,11 +80,19 @@ export default function ReceiptGenerator({ transaction }) {
       doc.setTextColor(39, 174, 96); // Green color
       doc.text(`Rs. ${amount.toLocaleString()}`, 160, finalY + 19, { align: "right" });
 
+      // Signature Area
+      const sigY = finalY + 50;
+      doc.setDrawColor(150, 150, 150);
+      doc.line(140, sigY, 190, sigY);
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      doc.text("Authorized Signature", 165, sigY + 5, { align: "center" });
+
       // Footer
       doc.setFontSize(10);
       doc.setTextColor(150, 150, 150);
-      doc.text("Thank you for your prompt payment.", 105, finalY + 50, { align: "center" });
-      doc.text("This is a computer generated receipt and requires no physical signature.", 105, finalY + 57, { align: "center" });
+      doc.text("Thank you for your prompt payment.", 105, sigY + 20, { align: "center" });
+      doc.text("This is a computer generated receipt and is valid without a physical signature.", 105, sigY + 27, { align: "center" });
 
       // Save the PDF
       doc.save(`Receipt_${tenantName.replace(/\s+/g, '_')}_${paymentDate}.pdf`);

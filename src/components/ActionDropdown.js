@@ -23,19 +23,23 @@ export default function ActionDropdown({ actions }) {
     <div className={styles.container} ref={dropdownRef}>
       <button 
         className={styles.triggerBtn} 
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         aria-label="Actions"
       >
         <MoreVertical size={18} />
       </button>
 
       {isOpen && (
-        <div className={`${styles.dropdown} glass`}>
+        <div className={styles.dropdown}>
           {actions.map((action, index) => (
             <button
               key={index}
               className={`${styles.actionItem} ${action.danger ? styles.danger : ''}`}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setIsOpen(false);
                 if (action.onClick) action.onClick();
               }}

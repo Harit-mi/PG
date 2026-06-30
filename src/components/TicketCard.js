@@ -3,6 +3,7 @@
 import { updateComplaintStatus } from "@/app/actions";
 import styles from "../app/dashboard/complaints/page.module.css";
 import { useState } from "react";
+import ComplaintActionMenu from "./ComplaintActionMenu";
 
 export default function TicketCard({ ticket }) {
   const [loading, setLoading] = useState(false);
@@ -18,9 +19,12 @@ export default function TicketCard({ ticket }) {
     <div className={styles.ticketCard} style={{ opacity: loading ? 0.6 : 1 }}>
       <div className={styles.ticketHeader}>
         <span className={styles.ticketId}>{ticket.id.substring(0, 8)}</span>
-        <span className={`${styles.priorityBadge} ${styles[ticket.priority]}`}>
-          {ticket.priority}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className={`${styles.priorityBadge} ${styles[ticket.priority]}`}>
+            {ticket.priority}
+          </span>
+          <ComplaintActionMenu ticket={ticket} />
+        </div>
       </div>
       <h4 className={styles.ticketIssue}>{ticket.issue}</h4>
       <p className={styles.ticketTenant}>

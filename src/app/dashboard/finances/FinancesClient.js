@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "./page.module.css";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import TransactionActionMenu from "@/components/TransactionActionMenu";
 
 export default function FinancesClient({ initialTransactions }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,6 +66,7 @@ export default function FinancesClient({ initialTransactions }) {
             <th>Category</th>
             <th>Amount</th>
             <th>Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -89,9 +91,12 @@ export default function FinancesClient({ initialTransactions }) {
                   {txn.type === "Income" ? "+" : "-"}₹{txn.amount.toLocaleString()}
                 </td>
                 <td>
-                  <span className={`${styles.statusBadge} ${styles.Completed}`}>
+                  <span className={`${styles.statusBadge} ${txn.status === "Paid" ? styles.Completed : styles.Pending}`}>
                     {txn.status}
                   </span>
+                </td>
+                <td style={{ width: '40px' }}>
+                  <TransactionActionMenu transaction={txn} />
                 </td>
               </tr>
             ))

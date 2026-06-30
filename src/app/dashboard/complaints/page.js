@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { supabase } from "@/utils/supabase";
 import AddComplaintModal from "@/components/AddComplaintModal";
 import TicketCard from "@/components/TicketCard";
+import ExportComplaintsExcel from "@/components/ExportComplaintsExcel";
 
 export const revalidate = 0;
 
@@ -38,7 +39,8 @@ export default async function ComplaintsPage() {
           <h1 className={styles.title}>Complaints & Requests</h1>
           <p className={styles.subtitle}>Track and resolve tenant issues.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <ExportComplaintsExcel complaints={displayComplaints} />
           <button className={styles.filterBtn}>
             <Filter size={18} /> Filter
           </button>
