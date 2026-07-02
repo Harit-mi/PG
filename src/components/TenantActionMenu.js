@@ -9,11 +9,6 @@ export default function TenantActionMenu({ tenant }) {
 
   const actions = [
     {
-      label: "View Profile",
-      icon: <Eye size={14} />,
-      onClick: () => router.push(`/dashboard/tenants/${tenant.id}`)
-    },
-    {
       label: "Edit Details",
       icon: <Edit size={14} />,
       onClick: () => alert(`Edit tenant ${tenant.name}`)
