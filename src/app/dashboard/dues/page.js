@@ -11,7 +11,7 @@ export default async function DuesPage() {
   // Fetch all income transactions for filtering
   let query = supabase
     .from('transactions')
-    .select('*, tenants(name, phone, room_number)')
+    .select('*, tenants(name, phone, room_number), properties(name)')
     .eq('type', 'Income')
     .order('date', { ascending: false });
 

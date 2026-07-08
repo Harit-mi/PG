@@ -33,7 +33,7 @@ export default function RoomTypesManager({ initialRoomTypes }) {
       setShowAddForm(false);
       // Let server revalidation handle fetching real ID later
     } else {
-      alert("Failed to add room type");
+      alert("Failed to add room type: " + (res.error || "Unknown error"));
       setTypes(types.filter(t => t.id !== newType.id));
     }
   };

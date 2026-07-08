@@ -14,10 +14,10 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 async function seed() {
   console.log("Seeding Rooms...");
   const { data: rooms, error: roomError } = await supabase.from('rooms').insert([
-    { room_number: "101", type: "Single", rent_amount: 8000, capacity: 1, status: "Occupied", amenities: ["AC", "Attached Bath"] },
-    { room_number: "102", type: "Double", rent_amount: 6000, capacity: 2, status: "Partially Occupied", amenities: ["AC", "Balcony"] },
-    { room_number: "103", type: "Triple", rent_amount: 5000, capacity: 3, status: "Vacant", amenities: ["Non-AC"] },
-    { room_number: "104", type: "Double", rent_amount: 6000, capacity: 2, status: "Occupied", amenities: ["AC", "Attached Bath"] }
+    { room_number: "101", type: "Single", rent_per_bed: 8000, capacity: 1, status: "Occupied", amenities: ["AC", "Attached Bath"] },
+    { room_number: "102", type: "Double", rent_per_bed: 6000, capacity: 2, status: "Partially Occupied", amenities: ["AC", "Balcony"] },
+    { room_number: "103", type: "Triple", rent_per_bed: 5000, capacity: 3, status: "Vacant", amenities: ["Non-AC"] },
+    { room_number: "104", type: "Double", rent_per_bed: 6000, capacity: 2, status: "Occupied", amenities: ["AC", "Attached Bath"] }
   ]).select();
 
   if (roomError) {
