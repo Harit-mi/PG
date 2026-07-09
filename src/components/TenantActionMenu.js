@@ -1,17 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import { Eye, Edit, Trash2, CalendarClock, ArrowRightLeft, LogOut, Receipt, FileText } from "lucide-react";
 import ActionDropdown from "./ActionDropdown";
 import { useRouter } from "next/navigation";
+import EditTenantModal from "./EditTenantModal";
 
 export default function TenantActionMenu({ tenant }) {
   const router = useRouter();
+  const [showEdit, setShowEdit] = useState(false);
 
   const actions = [
     {
       label: "Edit Details",
       icon: <Edit size={14} />,
-      onClick: () => alert(`Edit tenant ${tenant.name}`)
+      onClick: () => setShowEdit(true)
     },
     {
       label: "Notice Period",
@@ -46,5 +49,12 @@ export default function TenantActionMenu({ tenant }) {
     }
   ];
 
-  return <ActionDropdown actions={actions} />;
+  return (
+    <>
+      <ActionDropdown actions={actions} />
+      {showEdit && (
+        <EditTenantModal tenant={tenant} onClose={() => setShowEdit(false)} />
+      )}
+    </>
+  );
 }

@@ -45,13 +45,23 @@ export async function addRoom(formData) {
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
 
-  const room_number = formData.get("room_number");
+  const room_number = formData.get("room_number")?.trim();
   const type = formData.get("type");
-  const rent_per_bed = parseInt(formData.get("rent_per_bed"));
-  const capacity = parseInt(formData.get("capacity"));
+  const rent_raw = formData.get("rent_per_bed");
+  const capacity_raw = formData.get("capacity");
 
-  if (rent_per_bed <= 0 || capacity <= 0) {
-    return { success: false, error: "Rent and capacity must be greater than zero." };
+  if (!room_number) {
+    return { success: false, error: "Room number is required." };
+  }
+
+  const rent_per_bed = Number(rent_raw);
+  if (rent_raw === "" || Number.isNaN(rent_per_bed) || rent_per_bed < 0) {
+    return { success: false, error: "Rent per bed must be a valid non-negative number." };
+  }
+
+  const capacity = Number(capacity_raw);
+  if (capacity_raw === "" || Number.isNaN(capacity) || capacity <= 0) {
+    return { success: false, error: "Capacity must be a valid positive integer." };
   }
 
   // Check for duplicate room number
@@ -69,6 +79,7 @@ export async function addRoom(formData) {
   const { error } = await supabase.from("rooms").insert([{
     room_number,
     type,
+    rent_amount: rent_per_bed,
     rent_per_bed,
     capacity,
     status: "Vacant",
@@ -113,6 +124,53 @@ export async function addTenant(formData) {
 
   if (error) {
     console.error("Error adding tenant:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/tenants");
+  return { success: true };
+}
+
+export async function updateTenant(id, formData) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const name = formData.get("name")?.trim();
+  const phone = formData.get("phone")?.trim();
+  const room_number = formData.get("room_number") || null;
+  const status = formData.get("status");
+  const move_in_date = formData.get("move_in_date") || null;
+  const permanent_address = formData.get("permanent_address")?.trim() || null;
+  const father_mother_name = formData.get("father_mother_name")?.trim() || null;
+  const parent_contact_number = formData.get("parent_contact_number")?.trim() || null;
+  const blood_group = formData.get("blood_group")?.trim() || null;
+  const workplace_details = formData.get("workplace_details")?.trim() || null;
+
+  if (!name || !phone) {
+    return { success: false, error: "Name and phone number are required." };
+  }
+
+  const updateData = {
+    name,
+    phone,
+    room_number,
+    status,
+    move_in_date,
+    permanent_address,
+    father_mother_name,
+    parent_contact_number,
+    blood_group,
+    workplace_details
+  };
+
+  const { error } = await supabase
+    .from("tenants")
+    .update(updateData)
+    .eq('id', id);
+
+  if (error) {
+    console.error("Error updating tenant:", error);
     return { success: false, error: error.message };
   }
 
@@ -377,14 +435,19 @@ export async function addPaymentMethod(formData) {
   if (!subCheck.success) return subCheck;
 
   const type = formData.get("type");
-  const details = formData.get("details");
+  const details = formData.get("details")?.trim();
   const is_default = formData.get("is_default") === "on";
+
+  if (!type || !details) {
+    return { success: false, error: "Payment method type and details are required." };
+  }
 
   const { error } = await supabase.from("payment_methods").insert([{
     property_id,
     type,
     details,
-    is_default
+    is_default,
+    is_active: true
   }]);
 
   if (error) {

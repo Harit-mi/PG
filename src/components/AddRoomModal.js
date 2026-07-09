@@ -11,6 +11,7 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
   const [selectedType, setSelectedType] = useState("");
   const [capacity, setCapacity] = useState("");
   const [rent, setRent] = useState("");
+  const [error, setError] = useState(null);
 
   const handleTypeChange = (e) => {
     const val = e.target.value;
@@ -26,26 +27,62 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
     }
   };
 
+  const handleOpenChange = (open) => {
+    setIsOpen(open);
+    if (open) {
+      setError(null);
+      setSelectedType("");
+      setCapacity("");
+      setRent("");
+    }
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
+
     const form = e.target;
     const formData = new FormData(form);
+    
+    const room_number = formData.get("room_number")?.trim();
+    const rent_raw = formData.get("rent_per_bed");
+    const capacity_raw = formData.get("capacity");
+
+    if (!room_number) {
+      setError("Room number is required");
+      setLoading(false);
+      return;
+    }
+
+    const rentVal = Number(rent_raw);
+    if (rent_raw === "" || Number.isNaN(rentVal) || rentVal < 0) {
+      setError("Valid rent amount is required");
+      setLoading(false);
+      return;
+    }
+
+    const capacityVal = Number(capacity_raw);
+    if (capacity_raw === "" || Number.isNaN(capacityVal) || capacityVal <= 0) {
+      setError("Valid capacity is required");
+      setLoading(false);
+      return;
+    }
+
     const res = await addRoom(formData);
     setLoading(false);
     
     if (res.success) {
-      alert("Room added successfully!");
       form.reset();
       setIsOpen(false);
     } else {
-      alert("Error: " + res.error);
+      setError(res.error || "Failed to add room");
     }
   }
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className={buttonClass}>
+      <button onClick={() => handleOpenChange(true)} className={buttonClass}>
         <Plus size={20} /> Add Room
       </button>
 
@@ -54,10 +91,12 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
           <div className={`${styles.modal} glass`}>
             <div className={styles.modalHeader}>
               <h2>Add New Room</h2>
-              <button onClick={() => setIsOpen(false)} className={styles.closeBtn}>
+              <button onClick={() => handleOpenChange(false)} className={styles.closeBtn}>
                 <X size={20} />
               </button>
             </div>
+            
+            {error && <div className={styles.errorBanner}>{error}</div>}
             
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.formGroup}>

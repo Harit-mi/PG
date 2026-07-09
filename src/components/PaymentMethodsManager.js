@@ -9,23 +9,41 @@ export default function PaymentMethodsManager({ initialMethods = [] }) {
   const [methods, setMethods] = useState(initialMethods);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleOpenChange = (open) => {
+    setIsOpen(open);
+    if (open) {
+      setError(null);
+    }
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
+
     const form = e.target;
     const formData = new FormData(form);
+    
+    const type = formData.get("type");
+    const details = formData.get("details")?.trim();
+
+    if (!type || !details) {
+      setError("Payment method type and details are required.");
+      setLoading(false);
+      return;
+    }
     
     const res = await addPaymentMethod(formData);
     setLoading(false);
     
     if (res.success) {
-      alert("Payment method added successfully!");
       form.reset();
       setIsOpen(false);
       window.location.reload(); // Quick way to sync data without deep state management
     } else {
-      alert("Error adding method: " + res.error);
+      setError(res.error || "Failed to add payment method");
     }
   }
 
@@ -78,7 +96,7 @@ export default function PaymentMethodsManager({ initialMethods = [] }) {
       </div>
 
       <button 
-        onClick={() => setIsOpen(true)}
+        onClick={() => handleOpenChange(true)}
         style={{ 
           display: 'flex', alignItems: 'center', gap: '0.5rem', 
           background: 'transparent', color: 'var(--accent)', border: '1px solid var(--accent)', 
@@ -93,10 +111,12 @@ export default function PaymentMethodsManager({ initialMethods = [] }) {
           <div className={`${styles.modal} glass`}>
             <div className={styles.modalHeader}>
               <h2>Add Payment Method</h2>
-              <button type="button" onClick={() => setIsOpen(false)} className={styles.closeBtn}>
+              <button type="button" onClick={() => handleOpenChange(false)} className={styles.closeBtn}>
                 &times;
               </button>
             </div>
+            
+            {error && <div className={styles.errorBanner}>{error}</div>}
             
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.formGroup}>
