@@ -662,3 +662,81 @@ export async function deleteComplaint(id) {
   revalidatePath("/dashboard/complaints");
   return { success: true };
 }
+
+export async function submitLeaveRequest(propertyId, tenantId, startDate, endDate, breakfast, lunch, dinner, reason) {
+  const subCheck = await checkSubscription(propertyId);
+  if (!subCheck.success) return subCheck;
+
+  if (!tenantId || !startDate || !endDate || !reason) {
+    return { success: false, error: "Please fill in all required fields." };
+  }
+  if (startDate > endDate) {
+    return { success: false, error: "Start date cannot be after end date." };
+  }
+
+  const { error } = await supabase.from("leaves").insert([{
+    property_id: propertyId,
+    tenant_id: tenantId,
+    start_date: startDate,
+    end_date: endDate,
+    breakfast: !!breakfast,
+    lunch: !!lunch,
+    dinner: !!dinner,
+    reason: reason.trim(),
+    status: 'Pending'
+  }]);
+
+  if (error) {
+    console.error("Error submitting leave:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/leaves");
+  revalidatePath("/dashboard/kitchen");
+  revalidatePath(`/pg/${propertyId}/tenant-portal`);
+  return { success: true };
+}
+
+export async function updateLeaveRequestStatus(leaveId, status) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("leaves")
+    .update({ status })
+    .eq('id', leaveId);
+
+  if (error) {
+    console.error("Error updating leave:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/leaves");
+  revalidatePath("/dashboard/kitchen");
+  revalidatePath("/dashboard");
+  if (property_id) {
+    revalidatePath(`/pg/${property_id}/tenant-portal`);
+  }
+  return { success: true };
+}
+
+export async function deleteLeaveRequest(leaveId) {
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase.from("leaves").delete().eq('id', leaveId);
+
+  if (error) {
+    console.error("Error deleting leave:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/leaves");
+  revalidatePath("/dashboard/kitchen");
+  revalidatePath("/dashboard");
+  if (property_id) {
+    revalidatePath(`/pg/${property_id}/tenant-portal`);
+  }
+  return { success: true };
+}

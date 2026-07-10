@@ -1,6 +1,7 @@
 import { supabase } from "@/utils/supabase";
-import { Utensils, Bell } from "lucide-react";
+import { Utensils, Bell, Calendar } from "lucide-react";
 import ComplaintSection from "./ComplaintSection";
+import LeaveSection from "./LeaveSection";
 
 export const revalidate = 0;
 
@@ -40,6 +41,20 @@ export default async function TenantPortalPage({ params }) {
     .order('created_at', { ascending: false })
     .limit(5);
 
+  // Fetch tenants for leave submission select
+  const { data: tenants } = await supabase
+    .from('tenants')
+    .select('id, name, room_number')
+    .eq('property_id', property_id)
+    .eq('status', 'Active');
+
+  // Fetch leaves for status tracking
+  const { data: leaves } = await supabase
+    .from('leaves')
+    .select('*')
+    .eq('property_id', property_id)
+    .order('created_at', { ascending: false });
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
@@ -72,6 +87,14 @@ export default async function TenantPortalPage({ params }) {
             No menu updated for today yet.
           </div>
         )}
+      </section>
+
+      {/* Leave Submission Section */}
+      <section>
+        <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Calendar size={20} style={{ color: 'var(--accent)' }} /> Leave / Absence Tracker
+        </h2>
+        <LeaveSection propertyId={property_id} tenants={tenants || []} leaves={leaves || []} />
       </section>
 
       {/* Notice Board */}
