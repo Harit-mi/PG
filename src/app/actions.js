@@ -740,3 +740,61 @@ export async function deleteLeaveRequest(leaveId) {
   }
   return { success: true };
 }
+
+export async function verifyTenantByPhone(propertyId, phone) {
+  if (!propertyId || !phone) {
+    return { success: false, error: "Missing property or phone number." };
+  }
+
+  const cleanPhone = phone.trim().replace(/[\s-()]/g, '');
+
+  const { data: tenants, error } = await supabase
+    .from("tenants")
+    .select("id, name, phone, room_number")
+    .eq("property_id", propertyId)
+    .eq("status", "Active");
+
+  if (error) {
+    console.error("Error verifying tenant:", error);
+    return { success: false, error: error.message };
+  }
+
+  const tenant = tenants.find(t => {
+    const tPhone = (t.phone || "").replace(/[\s-()]/g, '');
+    return tPhone === cleanPhone || tPhone.endsWith(cleanPhone) || cleanPhone.endsWith(tPhone);
+  });
+
+  if (!tenant) {
+    return { success: false, error: "This mobile number is not registered for this PG property." };
+  }
+
+  return { success: true, tenant };
+}
+
+export async function submitVerifiedComplaint(propertyId, tenantId, tenantName, roomNumber, category, issue) {
+  if (!propertyId || !tenantId || !category || !issue) {
+    return { success: false, error: "Missing required fields." };
+  }
+
+  const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+  const formattedIssue = `[${roomNumber}] ${tenantName}: ${issue}`;
+
+  const { error } = await supabase.from("complaints").insert([{
+    property_id: propertyId,
+    tenant_id: tenantId,
+    ticket_id: ticketId,
+    issue: formattedIssue,
+    category,
+    priority: "Medium",
+    status: "Open"
+  }]);
+
+  if (error) {
+    console.error("Submit Complaint Error:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/complaints");
+  revalidatePath("/dashboard");
+  return { success: true, ticketId };
+}

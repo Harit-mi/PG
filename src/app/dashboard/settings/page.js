@@ -1,13 +1,34 @@
 import styles from "./page.module.css";
-import { Check, CreditCard, Shield, User } from "lucide-react";
+import { Check, CreditCard, Shield, User, ExternalLink } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import PaymentMethodsManager from "@/components/PaymentMethodsManager";
 import RoomTypesManager from "@/components/RoomTypesManager";
+import CopyablePortalLink from "@/components/CopyablePortalLink";
 import { getPaymentMethods, getRoomTypes } from "@/app/actions";
+import { cookies, headers } from "next/headers";
+import { supabase } from "@/utils/supabase";
 
 export default async function SettingsPage() {
   const { data: initialMethods } = await getPaymentMethods();
   const { data: initialRoomTypes } = await getRoomTypes();
+
+  const cookieStore = await cookies();
+  const propertyId = cookieStore.get("activePropertyId")?.value;
+
+  let activeProperty = null;
+  if (propertyId && propertyId !== 'all') {
+    const { data } = await supabase
+      .from('properties')
+      .select('name')
+      .eq('id', propertyId)
+      .single();
+    activeProperty = data;
+  }
+
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const baseUrl = `${proto}://${host}`;
 
   return (
     <div className={styles.container}>
@@ -30,6 +51,33 @@ export default async function SettingsPage() {
             <label>Registered Phone Number</label>
             <input type="text" value="+91 98765 43210" readOnly className={styles.input} />
           </div>
+        </section>
+
+        {/* Tenant Portals */}
+        <section className={`${styles.section} glass`}>
+          <div className={styles.sectionHeader}>
+            <ExternalLink size={20} className={styles.icon} />
+            <h2>Tenant Portal URLs</h2>
+          </div>
+          {activeProperty ? (
+            <div>
+              <p className={styles.textMuted} style={{ marginBottom: '1rem' }}>
+                Share these outlet-specific links with the residents of <strong>{activeProperty.name}</strong>. They can verify their identity using their registered mobile number.
+              </p>
+              <CopyablePortalLink 
+                label="Tenant Leave Request Portal" 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal/leaves`} 
+              />
+              <CopyablePortalLink 
+                label="Tenant Complaint Portal" 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal/complaints`} 
+              />
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              <p style={{ margin: 0 }}>Please select a specific property from the sidebar to view tenant portal links.</p>
+            </div>
+          )}
         </section>
 
         <section className={`${styles.section} glass`}>
