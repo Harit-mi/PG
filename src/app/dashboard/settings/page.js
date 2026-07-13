@@ -69,6 +69,14 @@ export default async function SettingsPage() {
                 url={`${baseUrl}/pg/${propertyId}/tenant-portal/leaves`} 
               />
               <CopyablePortalLink 
+                label="Tenant Rent & Invoices Portal" 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal/rent`} 
+              />
+              <CopyablePortalLink 
+                label="Tenant Visitor Gate-Pass Portal" 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal/visitors`} 
+              />
+              <CopyablePortalLink 
                 label="Tenant Complaint Portal" 
                 url={`${baseUrl}/pg/${propertyId}/tenant-portal/complaints`} 
               />

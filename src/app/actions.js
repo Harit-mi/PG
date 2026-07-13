@@ -798,3 +798,123 @@ export async function submitVerifiedComplaint(propertyId, tenantId, tenantName, 
   revalidatePath("/dashboard");
   return { success: true, ticketId };
 }
+
+export async function submitTenantPayment(transactionId, paymentReference, screenshotUrl) {
+  if (!transactionId || !paymentReference) {
+    return { success: false, error: "Transaction ID and payment reference are required." };
+  }
+
+  const { error } = await supabase.from("transactions")
+    .update({
+      payment_reference: paymentReference,
+      payment_screenshot_url: screenshotUrl || null
+    })
+    .eq('id', transactionId);
+
+  if (error) {
+    console.error("Error submitting tenant payment:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/dues");
+  return { success: true };
+}
+
+export async function requestVisitorPass(propertyId, tenantId, name, phone, relationship, visitDate, purpose) {
+  if (!propertyId || !tenantId || !name || !phone || !relationship || !visitDate || !purpose) {
+    return { success: false, error: "All fields are required." };
+  }
+
+  const { error } = await supabase.from("visitors").insert([{
+    property_id: propertyId,
+    tenant_id: tenantId,
+    name: name.trim(),
+    phone: phone.trim(),
+    relationship: relationship.trim(),
+    visit_date: visitDate,
+    purpose: purpose.trim(),
+    status: 'Requested'
+  }]);
+
+  if (error) {
+    console.error("Error requesting visitor pass:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/visitors");
+  return { success: true };
+}
+
+export async function updateVisitorStatus(visitorId, status) {
+  if (!visitorId || !status) {
+    return { success: false, error: "Visitor ID and status are required." };
+  }
+
+  const { error } = await supabase.from("visitors")
+    .update({ status })
+    .eq('id', visitorId);
+
+  if (error) {
+    console.error("Error updating visitor status:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/visitors");
+  return { success: true };
+}
+
+export async function addRoomAsset(propertyId, roomId, name, serialNumber, status) {
+  if (!propertyId || !roomId || !name) {
+    return { success: false, error: "Property ID, room ID, and asset name are required." };
+  }
+
+  const { error } = await supabase.from("room_assets").insert([{
+    property_id: propertyId,
+    room_id: roomId,
+    name: name.trim(),
+    serial_number: serialNumber ? serialNumber.trim() : null,
+    status: status || 'Working'
+  }]);
+
+  if (error) {
+    console.error("Error adding room asset:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/assets");
+  return { success: true };
+}
+
+export async function updateRoomAssetStatus(assetId, status) {
+  if (!assetId || !status) {
+    return { success: false, error: "Asset ID and status are required." };
+  }
+
+  const { error } = await supabase.from("room_assets")
+    .update({ status })
+    .eq('id', assetId);
+
+  if (error) {
+    console.error("Error updating room asset status:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/assets");
+  return { success: true };
+}
+
+export async function deleteRoomAsset(assetId) {
+  if (!assetId) {
+    return { success: false, error: "Asset ID is required." };
+  }
+
+  const { error } = await supabase.from("room_assets").delete().eq('id', assetId);
+
+  if (error) {
+    console.error("Error deleting room asset:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/assets");
+  return { success: true };
+}

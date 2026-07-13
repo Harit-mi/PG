@@ -158,19 +158,30 @@ export default function DuesClient({ initialDues, propertyId, paymentMethods = [
                       </div>
                     </td>
                     <td>
-                      <span className={`${styles.statusBadge} ${due.status === 'Completed' ? styles.Completed : ''}`} style={due.status === 'Pending' ? { background: '#fef3c7', color: '#d97706', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' } : {}}>
-                        {due.status}
-                      </span>
+                      {due.status === 'Pending' && due.payment_reference ? (
+                        <span style={{ background: 'rgba(245, 158, 11, 0.15)', color: 'var(--warning)', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                          Pending Verification
+                        </span>
+                      ) : (
+                        <span className={`${styles.statusBadge} ${due.status === 'Completed' ? styles.Completed : ''}`} style={due.status === 'Pending' ? { background: '#fef3c7', color: '#d97706', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' } : {}}>
+                          {due.status}
+                        </span>
+                      )}
                     </td>
                     <td style={{ color: due.status === 'Completed' ? 'var(--success)' : 'var(--danger)', fontWeight: '600' }}>₹{due.amount.toLocaleString()}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                         {due.status === 'Pending' && (
                           <>
                             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.waBtn} style={{ background: '#25D366', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', textDecoration: 'none', fontSize: '0.8rem' }}>
                               WhatsApp
                             </a>
                             <MarkPaidModal transactionId={due.id} paymentMethods={paymentMethods} />
+                            {due.payment_reference && (
+                              <div style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600, background: 'rgba(56,189,248,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                                Ref: {due.payment_reference}
+                              </div>
+                            )}
                           </>
                         )}
                         {due.status === 'Completed' && (
