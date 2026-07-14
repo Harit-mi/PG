@@ -6,12 +6,33 @@ import { cookies } from "next/headers";
 
 async function checkSubscription(property_id) {
   if (!property_id || property_id === 'all') return { success: false, error: "Please select a specific property from the sidebar to perform this action." };
+  
   const { data: property } = await supabase
     .from("properties")
-    .select("subscription_status, expiry_date")
+    .select("subscription_status, expiry_date, organization_id")
     .eq("id", property_id)
     .single();
-  if (property && (property.subscription_status === 'expired' || new Date(property.expiry_date) < new Date())) {
+
+  if (!property) return { success: true };
+
+  let status = property.subscription_status;
+  let expiry = property.expiry_date;
+
+  if (property.organization_id) {
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("status, expiry_date")
+      .eq("organization_id", property.organization_id)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (sub && sub.length > 0) {
+      status = sub[0].status;
+      expiry = sub[0].expiry_date;
+    }
+  }
+
+  if (status === 'expired' || (expiry && expiry !== 'N/A' && new Date(expiry) < new Date())) {
     return { success: false, error: "Subscription expired. Read-only mode." };
   }
   return { success: true };
