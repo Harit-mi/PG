@@ -1,7 +1,13 @@
 -- SQL Migration to support Prepaid Outlet Slots and Subscription Renewals
 -- Run this in your Supabase SQL Editor (https://supabase.com/dashboard/project/creeorxpcmzpcgtzcxaw/editor)
 
--- 1. CREATE OUTLET SLOTS TABLE
+-- 1. ENSURE COLUMNS EXIST ON PROPERTIES TABLE FIRST
+ALTER TABLE public.properties
+ADD COLUMN IF NOT EXISTS subscription_status VARCHAR(50) DEFAULT 'Active',
+ADD COLUMN IF NOT EXISTS expiry_date DATE DEFAULT '2030-12-31',
+ADD COLUMN IF NOT EXISTS organization_id UUID REFERENCES public.organizations(id) DEFAULT 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+
+-- 2. CREATE OUTLET SLOTS TABLE
 CREATE TABLE IF NOT EXISTS public.outlet_slots (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     organization_id UUID REFERENCES public.organizations(id) ON DELETE CASCADE DEFAULT 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0',
@@ -28,7 +34,7 @@ DROP POLICY IF EXISTS "Allow public delete outlet_slots" ON public.outlet_slots;
 CREATE POLICY "Allow public delete outlet_slots" ON public.outlet_slots FOR DELETE USING (true);
 
 
--- 2. BACKFILL: MIGRATE EXISTING PROPERTIES INTO ASSIGNED SLOTS
+-- 3. BACKFILL: MIGRATE EXISTING PROPERTIES INTO ASSIGNED SLOTS
 -- Ensure we create a slot for every existing property so they keep operational access.
 DO $$
 DECLARE
