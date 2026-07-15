@@ -264,3 +264,55 @@ export async function fetchSuperAdminAuditLogs() {
     return { success: false, error: err.message };
   }
 }
+
+export async function grantComplimentarySlot(orgId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
+  try {
+    // 1. Insert unassigned slot
+    const { error: slotErr } = await supabase
+      .from("outlet_slots")
+      .insert([{
+        organization_id: orgId,
+        plan_name: planName,
+        status: 'Unassigned',
+        expiry_date: expiryDate
+      }]);
+
+    if (slotErr) throw slotErr;
+
+    // 2. Log admin action
+    const details = `Granted complimentary slot for plan ${planName} expiring on ${expiryDate}`;
+    await supabase.from('admin_audit_logs').insert([{
+      admin_email: adminEmail,
+      action: 'Grant Slot',
+      details,
+      reason
+    }]);
+
+    revalidatePath("/super-admin/customers");
+    return { success: true };
+  } catch (err) {
+    console.error("grantComplimentarySlot error:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function fetchBusinessDetails(orgId) {
+  try {
+    // 1. Fetch properties
+    const { data: properties } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("organization_id", orgId);
+
+    // 2. Fetch slots
+    const { data: slots } = await supabase
+      .from("outlet_slots")
+      .select("*")
+      .eq("organization_id", orgId);
+
+    return { success: true, properties: properties || [], slots: slots || [] };
+  } catch (err) {
+    console.error("fetchBusinessDetails error:", err);
+    return { success: false, error: err.message };
+  }
+}

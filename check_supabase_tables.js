@@ -15,28 +15,29 @@ const { createClient: createSupabaseClient } = require('@supabase/supabase-js');
 const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
 
 async function check() {
-  console.log("Checking visitors table...");
-  const { data: visitors, error: visitorsError } = await supabase
-    .from('visitors')
-    .select('*')
-    .limit(1);
-
-  if (visitorsError) {
-    console.error("Visitors Table Error:", visitorsError.message);
-  } else {
-    console.log("Visitors Table is successfully accessible!");
+  const tables = ['organizations', 'subscriptions', 'support_tickets', 'ticket_messages', 'admin_audit_logs'];
+  
+  for (const table of tables) {
+    console.log(`Checking table public.${table}...`);
+    const { data, error } = await supabase.from(table).select('*').limit(1);
+    if (error) {
+      console.error(`Error on public.${table}:`, error.message);
+    } else {
+      console.log(`Table public.${table} is successfully verified!`);
+    }
   }
 
-  console.log("Checking transactions columns...");
-  const { data: transactions, error: transactionsError } = await supabase
-    .from('transactions')
-    .select('id, payment_reference, payment_screenshot_url')
+  // Also check column organization_id on properties
+  console.log("Checking properties.organization_id column...");
+  const { data: prop, error: propError } = await supabase
+    .from('properties')
+    .select('id, organization_id')
     .limit(1);
 
-  if (transactionsError) {
-    console.error("Transactions Columns Error:", transactionsError.message);
+  if (propError) {
+    console.error("Properties Column Error:", propError.message);
   } else {
-    console.log("Transactions columns (payment_reference, payment_screenshot_url) are successfully accessible!");
+    console.log("properties.organization_id is successfully verified!");
   }
 }
 

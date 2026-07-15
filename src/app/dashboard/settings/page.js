@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { Check, CreditCard, Shield, User, ExternalLink } from "lucide-react";
+import { Check, CreditCard, Shield, User, ExternalLink, Building2, ArrowRight } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
 import PaymentMethodsManager from "@/components/PaymentMethodsManager";
 import RoomTypesManager from "@/components/RoomTypesManager";
@@ -38,6 +38,33 @@ export default async function SettingsPage() {
       </div>
 
       <div className={styles.content}>
+        {/* SaaS Outlets Control Link */}
+        <section className={`${styles.section} glass`}>
+          <div className={styles.sectionHeader}>
+            <Building2 size={20} className={styles.icon} />
+            <h2>Outlet & Subscription Management</h2>
+          </div>
+          <p className={styles.textMuted} style={{ marginBottom: '1rem' }}>
+            Review, cancel, deactivate, and reactivate individual Paying Guest property locations and their associated subscription periods.
+          </p>
+          <a 
+            href="/dashboard/settings/outlets" 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '6px', 
+              background: 'var(--primary)', 
+              color: 'white', 
+              padding: '8px 18px', 
+              borderRadius: '99px', 
+              fontWeight: 600, 
+              textDecoration: 'none', 
+              fontSize: '0.85rem' 
+            }}
+          >
+            Manage Outlets <ArrowRight size={14} />
+          </a>
+        </section>
         <section className={`${styles.section} glass`}>
           <div className={styles.sectionHeader}>
             <User size={20} className={styles.icon} />

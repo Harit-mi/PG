@@ -939,3 +939,225 @@ export async function deleteRoomAsset(assetId) {
   revalidatePath("/dashboard/assets");
   return { success: true };
 }
+
+// -------------------------------------------------------------
+// SAAS MULTI-OUTLET SLOT & SUBSCRIPTION ACTIONS
+// -------------------------------------------------------------
+
+export async function fetchUnassignedSlotsCount(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+  try {
+    const { count, error } = await supabase
+      .from("outlet_slots")
+      .select("*", { count: "exact", head: true })
+      .eq("organization_id", orgId)
+      .eq("status", "Unassigned");
+
+    if (error) throw error;
+    return { success: true, count: count || 0 };
+  } catch (err) {
+    console.error("Error fetching slots count:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function fetchUnassignedSlots(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+  try {
+    const { data, error } = await supabase
+      .from("outlet_slots")
+      .select("*")
+      .eq("organization_id", orgId)
+      .eq("status", "Unassigned");
+
+    if (error) throw error;
+    return { success: true, slots: data || [] };
+  } catch (err) {
+    console.error("Error fetching unassigned slots:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function assignSlotToOutlet(slotId, name, address, orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+  try {
+    // 1. Fetch the slot to get plan and expiry
+    const { data: slot, error: slotErr } = await supabase
+      .from("outlet_slots")
+      .select("*")
+      .eq("id", slotId)
+      .single();
+
+    if (slotErr || !slot) throw new Error("Slot not found or invalid.");
+
+    // 2. Create the property
+    const { data: prop, error: propErr } = await supabase
+      .from("properties")
+      .insert([{
+        name: name.trim(),
+        address: address ? address.trim() : "",
+        organization_id: orgId,
+        subscription_status: 'Active',
+        expiry_date: slot.expiry_date
+      }])
+      .select()
+      .single();
+
+    if (propErr) throw propErr;
+
+    // 3. Mark the slot as assigned
+    const { error: updateErr } = await supabase
+      .from("outlet_slots")
+      .update({
+        status: 'Assigned',
+        assigned_property_id: prop.id
+      })
+      .eq("id", slotId);
+
+    if (updateErr) throw updateErr;
+
+    revalidatePath("/dashboard", "layout");
+    return { success: true, propertyId: prop.id };
+  } catch (err) {
+    console.error("Error assigning slot:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function purchaseOutletSlots(planName, quantity, propertyNamesList = [], orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+  try {
+    const expiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days trial/paid
+
+    for (let i = 0; i < quantity; i++) {
+      const name = propertyNamesList[i];
+      if (name && name.trim()) {
+        // Create property and assign slot directly
+        const { data: prop, error: propErr } = await supabase
+          .from("properties")
+          .insert([{
+            name: name.trim(),
+            address: "Address Pending Setup",
+            organization_id: orgId,
+            subscription_status: 'Active',
+            expiry_date: expiry
+          }])
+          .select()
+          .single();
+
+        if (propErr) throw propErr;
+
+        const { error: slotErr } = await supabase
+          .from("outlet_slots")
+          .insert([{
+            organization_id: orgId,
+            plan_name: planName,
+            status: 'Assigned',
+            assigned_property_id: prop.id,
+            expiry_date: expiry
+          }]);
+
+        if (slotErr) throw slotErr;
+      } else {
+        // Create as unassigned slot
+        const { error: slotErr } = await supabase
+          .from("outlet_slots")
+          .insert([{
+            organization_id: orgId,
+            plan_name: planName,
+            status: 'Unassigned',
+            expiry_date: expiry
+          }]);
+
+        if (slotErr) throw slotErr;
+      }
+    }
+
+    revalidatePath("/dashboard", "layout");
+    return { success: true };
+  } catch (err) {
+    console.error("Error purchasing slots:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function cancelRenewal(propertyId) {
+  try {
+    // Locate the slot
+    const { data: slot } = await supabase
+      .from("outlet_slots")
+      .select("id")
+      .eq("assigned_property_id", propertyId)
+      .limit(1);
+
+    if (slot && slot.length > 0) {
+      await supabase
+        .from("outlet_slots")
+        .update({ status: 'Cancelled' })
+        .eq("id", slot[0].id);
+    }
+
+    revalidatePath("/dashboard/settings/outlets");
+    return { success: true };
+  } catch (err) {
+    console.error("Error cancelling renewal:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function deactivateOutlet(propertyId) {
+  try {
+    const { error } = await supabase
+      .from("properties")
+      .update({ subscription_status: 'expired' })
+      .eq("id", propertyId);
+
+    if (error) throw error;
+
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/dashboard/settings/outlets");
+    return { success: true };
+  } catch (err) {
+    console.error("Error deactivating property:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function reactivateOutlet(propertyId, slotId) {
+  try {
+    // 1. Fetch the slot to get expiry
+    const { data: slot, error: slotErr } = await supabase
+      .from("outlet_slots")
+      .select("*")
+      .eq("id", slotId)
+      .single();
+
+    if (slotErr || !slot) throw new Error("Slot not found.");
+
+    // 2. Link property to slot & make Active
+    const { error: propErr } = await supabase
+      .from("properties")
+      .update({
+        subscription_status: 'Active',
+        expiry_date: slot.expiry_date
+      })
+      .eq("id", propertyId);
+
+    if (propErr) throw propErr;
+
+    // 3. Mark slot as assigned
+    const { error: slotUpdateErr } = await supabase
+      .from("outlet_slots")
+      .update({
+        status: 'Assigned',
+        assigned_property_id: propertyId
+      })
+      .eq("id", slotId);
+
+    if (slotUpdateErr) throw slotUpdateErr;
+
+    revalidatePath("/dashboard", "layout");
+    revalidatePath("/dashboard/settings/outlets");
+    return { success: true };
+  } catch (err) {
+    console.error("Error reactivating property:", err);
+    return { success: false, error: err.message };
+  }
+}
+

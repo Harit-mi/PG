@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { CreditCard, Lock, Loader2, CheckCircle2 } from "lucide-react";
 import styles from "../page.module.css";
 
+import { purchaseOutletSlots } from "@/app/actions";
+
 export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -21,20 +23,28 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const handleCheckout = (e) => {
+  const handleCheckout = async (e) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate Razorpay/Payment processing
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
+    try {
+      const planName = plan === "Professional" ? "Pro" : plan;
+      const res = await purchaseOutletSlots(planName, 1);
       
-      // Redirect to dashboard after success
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1500);
-    }, 2000);
+      if (res.success) {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1500);
+      } else {
+        alert("Payment gateway failed to record transaction.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Checkout error.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (success) {
