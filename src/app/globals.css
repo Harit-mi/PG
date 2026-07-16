@@ -1,26 +1,24 @@
 :root {
-  --background: #F5F3EE; /* Chalk light background */
-  --foreground: #16213E; /* Ink Navy */
-  --primary: #B98D3E; /* Brass primary accent */
-  --primary-hover: #9A752E;
+  --background: #F4F7FA; /* Cool slate white background */
+  --foreground: #1E293B; /* Slate dark text */
+  --primary: #1E4877; /* Steel Blue primary */
+  --primary-hover: #153457;
   --surface: #FFFFFF;
-  --border: #2E5266; /* Slate Teal borders */
-  --border-light: rgba(46, 82, 102, 0.2);
-  --text-muted: #50626B;
+  --border: #DDE7F2; /* Soft pastel blue borders */
+  --border-light: rgba(30, 72, 119, 0.1);
+  --text-muted: #64748B;
   
   /* Alert/State semantics */
-  --success: #B98D3E; /* Brass for occupancy state */
-  --danger: #C1441E; /* Rust for overdue rent / alert / notice-period */
-  --warning: #C1441E;
-  --accent: #2E5266; /* Slate Teal secondary */
+  --success: #28A745; /* Leaf green for vacant or success state */
+  --danger: #E62B39; /* Crimson red for overdue or notice-period */
+  --warning: #F59E0B;
+  --accent: #E62B39; /* Crimson accent */
   --card-bg: #FFFFFF;
 
-  /* Raw palette references */
-  --ink-navy: #16213E;
-  --brass: #B98D3E;
-  --chalk: #F5F3EE;
-  --slate-teal: #2E5266;
-  --rust: #C1441E;
+  /* Custom layouts */
+  --cst-gradient: linear-gradient(102.23deg, #DDE7F2 0.24%, #FAFAF3 49.12%, #F7D6D9 100%);
+  --cst-shadow: 0 10px 25px -5px rgba(30, 72, 119, 0.05), 0 8px 10px -6px rgba(30, 72, 119, 0.05);
+  --cst-shadow-hover: 0 20px 25px -5px rgba(30, 72, 119, 0.1), 0 10px 10px -6px rgba(30, 72, 119, 0.1);
 }
 
 html,
@@ -29,39 +27,44 @@ body {
   overflow-x: hidden;
   background-color: var(--background);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(46, 82, 102, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(185, 141, 62, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(30, 72, 119, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(230, 43, 57, 0.02) 0px, transparent 50%);
   background-attachment: fixed;
   color: var(--foreground);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 0;
   letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* Heading Typography: Characterful Slab Serif */
+/* Heading Typography: Characterful Anton Display */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-fraunces), serif;
-  font-weight: 700;
-  color: var(--foreground);
+  font-family: var(--font-anton), var(--font-poppins), sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--primary);
+  text-transform: uppercase;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 button {
   cursor: pointer;
   font-family: inherit;
   outline: none;
+  transition: all 0.2s ease;
 }
 
-/* Scrollbar Customization - Slate Teal styled */
+/* Scrollbar Customization */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -72,31 +75,31 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(46, 82, 102, 0.3);
+  background: rgba(30, 72, 119, 0.2);
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--slate-teal);
+  background: var(--primary);
 }
 
 /* Ruled Ledger inputs */
 input, select, textarea {
-  background: rgba(46, 82, 102, 0.02);
-  border: 1px solid var(--border-light);
+  background: #FFFFFF;
+  border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--foreground);
   padding: 0.6rem 1rem;
   font-size: 0.9rem;
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   outline: none;
   transition: all 0.2s ease;
 }
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(185, 141, 62, 0.15);
-  background: rgba(185, 141, 62, 0.03);
+  box-shadow: 0 0 0 3px rgba(30, 72, 119, 0.15);
+  background: #FFFFFF;
 }
 
 /* Focus States for Keyboard Accessibility */
@@ -116,12 +119,12 @@ table {
 }
 
 th {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  color: var(--slate-teal);
+  color: var(--primary);
   border-bottom: 2px solid var(--border);
   padding: 0.85rem 1rem;
 }
@@ -129,7 +132,7 @@ th {
 td {
   padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--border-light);
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* Monospace Class specifically for Numbers, Dates, Overdue lists */
@@ -139,21 +142,19 @@ td {
   letter-spacing: -0.02em;
 }
 
-/* Glassmorphism Cards UI styled to match Chalk/Slate board */
+/* Glassmorphism Cards UI */
 .glass {
   background: var(--card-bg);
   border: 1px solid var(--border-light);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(22, 33, 62, 0.04);
+  border-radius: 16px;
+  box-shadow: var(--cst-shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .glass:hover {
-  box-shadow: 0 8px 25px rgba(22, 33, 62, 0.06);
+  box-shadow: var(--cst-shadow-hover);
   border-color: var(--border);
 }
-
-/* Key boards hanging animation helper removed for module scoping */
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {

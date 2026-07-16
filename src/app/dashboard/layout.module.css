@@ -6,90 +6,91 @@
 
 .sidebar {
   width: 280px;
-  border-right: 1px solid var(--slate-teal);
+  border-right: 1px solid var(--border);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   position: fixed;
   height: 100vh;
   overflow-y: auto;
-  background-color: var(--ink-navy); /* Dark surface/nav theme */
-  color: var(--chalk);
+  background-color: var(--primary); /* Steel blue sidebar */
+  color: #FFFFFF;
   z-index: 100;
+  box-shadow: 4px 0 25px rgba(30, 72, 119, 0.05);
 }
 
 .logo {
-  font-family: var(--font-fraunces), serif;
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-family: var(--font-anton), sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
   margin-bottom: 2rem;
-  padding: 0 0.5rem;
-  color: var(--brass);
-  letter-spacing: -0.5px;
+  padding: 0.5rem 0.5rem 1rem 0.5rem;
+  color: #FFFFFF;
+  letter-spacing: 0.05em;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid rgba(185, 141, 62, 0.2);
-  padding-bottom: 1rem;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.logo svg {
+  color: #FFFFFF;
 }
 
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 /* Hanging tag rail layout */
 .navItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.85rem;
-  color: #a3b3bc;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.25s ease;
+  border-radius: 12px;
+  transition: all 0.2s ease;
   font-weight: 500;
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 0.9rem;
-  border: 1px solid transparent;
 }
 
 .navItem svg {
-  background: rgba(185, 141, 62, 0.15); /* Small hanging rail slot */
-  color: var(--brass);
-  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  border-radius: 10px;
   padding: 5px;
   width: 28px;
   height: 28px;
-  border: 1px solid rgba(185, 141, 62, 0.4);
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .navItem:hover {
-  background-color: rgba(46, 82, 102, 0.2);
-  color: var(--chalk);
-  border-color: var(--slate-teal);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
 }
 
 .navItem:hover svg {
-  background: var(--brass);
-  color: var(--ink-navy);
-  transform: rotate(-15deg); /* Tilted hanging tag effect */
-  box-shadow: 0 0 10px rgba(185, 141, 62, 0.4);
+  background: var(--accent); /* Crimson highlight on hover */
+  transform: rotate(-8deg);
+  box-shadow: 0 4px 10px rgba(230, 43, 57, 0.2);
 }
 
 /* Active tab style */
 .activeNavItem {
-  background-color: rgba(46, 82, 102, 0.3);
-  color: #ffffff;
-  border-color: var(--slate-teal);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-weight: 600;
 }
 
 .activeNavItem svg {
-  background: var(--brass);
-  color: var(--ink-navy);
-  box-shadow: 0 0 10px rgba(185, 141, 62, 0.4);
+  background: var(--accent); /* Crimson active state */
+  box-shadow: 0 4px 10px rgba(230, 43, 57, 0.25);
+  border-color: rgba(230, 43, 57, 0.2);
 }
 
 .mobileHeader {
@@ -104,7 +105,7 @@
 .mainContent {
   flex: 1;
   margin-left: 280px;
-  padding: 2rem;
+  padding: 2.5rem;
   max-width: 1400px;
 }
 
@@ -112,15 +113,15 @@
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
-    padding-bottom: 70px;
+    padding-bottom: 75px;
   }
 
   .mobileHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--ink-navy);
-    border-bottom: 1px solid rgba(185, 141, 62, 0.15);
+    background-color: var(--primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     height: 60px;
     padding: 0 1.25rem;
     position: fixed;
@@ -128,13 +129,15 @@
     left: 0;
     right: 0;
     z-index: 999;
+    box-shadow: 0 4px 15px rgba(30, 72, 119, 0.06);
   }
 
   .mobileLogo {
-    font-family: var(--font-fraunces), serif;
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--brass);
+    font-family: var(--font-anton), sans-serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #FFFFFF;
+    letter-spacing: 0.05em;
   }
 
   .sidebarSelector {
@@ -147,15 +150,16 @@
     left: 0;
     right: 0;
     width: 100%;
-    height: 70px;
+    height: 75px;
     flex-direction: row;
     padding: 0;
     border-radius: 0;
     z-index: 1000;
     border-right: none;
-    border-top: 1px solid var(--slate-teal);
-    background-color: var(--ink-navy);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: var(--primary);
     overflow: hidden;
+    box-shadow: 0 -4px 20px rgba(30, 72, 119, 0.08);
   }
 
   .logo {
@@ -167,36 +171,38 @@
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    padding: 0 0.5rem;
-    gap: 0.25rem;
+    padding: 0 0.75rem;
+    gap: 0.35rem;
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
   }
 
   .nav::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Safari/Chrome */
+    display: none;
   }
 
   .navItem {
     flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.4rem 0.75rem;
+    gap: 0.25rem;
+    padding: 0.45rem 0.85rem;
     font-size: 0.65rem;
-    flex-shrink: 0; /* Prevent links from squeezing */
+    flex-shrink: 0;
+    border-radius: 8px;
   }
 
   .navItem svg {
     width: 24px;
     height: 24px;
     padding: 4px;
+    border-radius: 6px;
   }
 
   .mainContent {
     margin-left: 0;
-    padding: 1.25rem;
+    padding: 1.5rem 1.25rem;
     width: 100%;
-    margin-top: 60px; /* Space for mobile sticky top bar */
+    margin-top: 60px;
   }
 }

@@ -43,7 +43,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
           <div style={{ position: 'relative', width: '20px', height: '40px' }}><div className={styles.pegHook}></div></div>
           <div style={{ position: 'relative', width: '20px', height: '40px' }}><div className={styles.pegHook}></div></div>
         </div>
-        <h3 style={{ fontFamily: 'var(--font-fraunces), serif', fontSize: '1.4rem', margin: '0 0 8px', color: 'var(--ink-navy)' }}>
+        <h3 style={{ fontSize: '1.4rem', margin: '0 0 8px', color: 'var(--primary)' }}>
           Your Key Rack is Bare
         </h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1.5rem', textAlign: 'center', maxWidth: '340px' }}>
@@ -59,8 +59,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
             fontWeight: 700, 
             fontSize: '0.85rem',
             textDecoration: 'none',
-            fontFamily: 'var(--font-fraunces), serif',
-            boxShadow: '0 4px 10px rgba(185, 141, 62, 0.2)' 
+            boxShadow: '0 4px 10px rgba(30, 72, 119, 0.2)' 
           }}
         >
           Mount First Key Hook
@@ -116,7 +115,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
                     <div className={styles.statusLabel}>VACANT</div>
                   </div>
                 ) : isNotice ? (
-                  /* Notice Period: Tag tilted half-off the hook with Rust highlights */
+                  /* Notice Period: Tag tilted half-off the hook with Crimson highlights */
                   <div 
                     className={`${styles.keyTag} ${styles.noticeTag}`}
                     onClick={() => handleTagClick(tenantToShow)}
@@ -129,7 +128,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
                     <span className={styles.ringHole}></span>
                     <div className={styles.roomNumLabel}>{room.room_number}</div>
                     <div className={styles.initialsBlock}>{getInitials(tenantToShow.name)}</div>
-                    <div className={styles.statusLabel} style={{ color: 'var(--rust)' }}>NOTICE</div>
+                    <div className={styles.statusLabel} style={{ color: 'var(--danger)' }}>NOTICE</div>
                   </div>
                 ) : (
                   /* Occupied: Tag lifted off hook (translated down/offset) */
@@ -180,8 +179,8 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Profile Card */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <User size={16} style={{ color: 'var(--brass)' }} />
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--slate-teal)' }}>CONTACT INFORMATION</strong>
+                  <User size={16} style={{ color: 'var(--primary)' }} />
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>CONTACT INFORMATION</strong>
                 </div>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>Phone: <span className="ledger-mono">{selectedTenant.phone}</span></p>
                 <p style={{ margin: '4px 0 0', fontSize: '0.9rem' }}>Room Number: <span className="ledger-mono">{selectedTenant.room_number}</span></p>
@@ -190,8 +189,8 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Rent & Payments Ledger */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <FileText size={16} style={{ color: 'var(--brass)' }} />
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--slate-teal)' }}>LEASE & RENT STATEMENT</strong>
+                  <FileText size={16} style={{ color: 'var(--primary)' }} />
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>LEASE & RENT STATEMENT</strong>
                 </div>
                 
                 {/* Math check for unpaid rent */}
@@ -209,12 +208,12 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
                       </div>
                       
                       {isOverdue ? (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--rust)', fontWeight: 700, fontSize: '0.9rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--danger)', fontWeight: 700, fontSize: '0.9rem' }}>
                           <span>Overdue Balance:</span>
                           <span className="ledger-mono">₹{totalUnpaid.toLocaleString()}</span>
                         </div>
                       ) : (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--brass)', fontWeight: 600, fontSize: '0.9rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--success)', fontWeight: 600, fontSize: '0.9rem' }}>
                           <span>Rent Account Status:</span>
                           <span>✓ Paid</span>
                         </div>
@@ -227,8 +226,8 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Visitor logs timeline */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  <UserCheck size={16} style={{ color: 'var(--brass)' }} />
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--slate-teal)' }}>VISITOR REGISTER TIMELINE</strong>
+                  <UserCheck size={16} style={{ color: 'var(--primary)' }} />
+                  <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>VISITOR REGISTER TIMELINE</strong>
                 </div>
                 {(() => {
                   const tenantVisitors = visitors.filter(v => v.tenant_id === selectedTenant.id);

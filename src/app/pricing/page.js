@@ -40,10 +40,10 @@ export default function PricingPage() {
   return (
     <div className={styles.pricingContainer}>
       <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h1 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-fraunces), serif' }}>
+        <h1 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem' }}>
           Choose your PG Plan
         </h1>
-        <p style={{ textAlign: 'center', marginBottom: '2.5rem', fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+        <p style={{ textAlign: 'center', marginBottom: '2.5rem', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
           Select the perfect management plan for your Paying Guest business based on your property size.
         </p>
 
@@ -51,16 +51,16 @@ export default function PricingPage() {
           {PLANS.map((plan) => (
             <div key={plan.id} className={`${styles.pricingCard} ${plan.isPopular ? styles.proCard : ''} glass`}>
               {plan.isPopular && <div className={styles.pricingBadge}>MOST POPULAR</div>}
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, fontFamily: 'var(--font-fraunces), serif' }}>{plan.name}</h3>
-              <div className="ledger-mono" style={{ fontSize: '2.5rem', fontWeight: 700, margin: '1rem 0' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--primary)', margin: '0 0 0.5rem 0' }}>{plan.name}</h3>
+              <div className="ledger-mono" style={{ fontSize: '2.5rem', fontWeight: 700, margin: '1rem 0', color: 'var(--foreground)' }}>
                 {plan.price}<span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 400 }}>/mo</span>
               </div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem' }}>{plan.desc}</p>
               
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {plan.features.map((feat, i) => (
-                  <li key={i} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.85rem' }}>
-                    <Check size={16} style={{ color: 'var(--brass)' }} /> 
+                  <li key={i} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.85rem', alignItems: 'center', color: 'var(--foreground)' }}>
+                    <Check size={16} style={{ color: 'var(--primary)' }} /> 
                     <span>{feat}</span>
                   </li>
                 ))}

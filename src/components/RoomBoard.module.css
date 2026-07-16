@@ -7,36 +7,37 @@
 }
 
 .pegboard {
-  background-color: var(--chalk);
-  border: 2px dashed var(--slate-teal); /* Pegboard ruler design */
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   background-image: 
-    radial-gradient(var(--slate-teal) 1.5px, transparent 1.5px),
-    radial-gradient(var(--slate-teal) 1.5px, transparent 1.5px);
+    radial-gradient(var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(var(--border) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
   background-position: 0 0, 12px 12px;
   padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: inset 0 0 20px rgba(22, 33, 62, 0.05);
+  border-radius: 24px;
+  box-shadow: var(--cst-shadow);
 }
 
 .boardHeader {
   margin-bottom: 2.5rem;
-  border-bottom: 2px solid var(--slate-teal);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 1rem;
 }
 
 .boardHeader h2 {
-  font-family: var(--font-fraunces), serif;
-  font-size: 1.75rem;
+  font-family: var(--font-anton), sans-serif;
+  font-size: 1.5rem;
   margin: 0;
-  color: var(--ink-navy);
+  color: var(--primary);
+  letter-spacing: 0.05em;
 }
 
 .boardHeader p {
   margin: 4px 0 0;
   font-size: 0.85rem;
   color: var(--text-muted);
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* Staggered load animation */
@@ -93,20 +94,20 @@
   left: 3px;
   width: 2px;
   height: 12px;
-  background: var(--slate-teal);
+  background: var(--primary);
   border-radius: 1px;
   transform: rotate(15deg);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 /* Metallic key tag */
 .keyTag {
   width: 70px;
   height: 105px;
-  background: linear-gradient(135deg, #e4c48a, #B98D3E, #906b25);
+  background: linear-gradient(135deg, #f7d794, #B98D3E, #906b25);
   border-radius: 99px; /* Rounded pill tags */
-  border: 2px solid #7e6c46;
-  box-shadow: 0 6px 12px rgba(22, 33, 62, 0.15);
+  border: 2px solid #8b6422;
+  box-shadow: 0 6px 12px rgba(30, 72, 119, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,7 +118,7 @@
   top: 14px;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   transform-origin: top center;
-  color: var(--ink-navy);
+  color: #1e293b;
 }
 
 .ringHole {
@@ -130,58 +131,65 @@
 }
 
 .roomNumLabel {
-  font-family: var(--font-fraunces), serif;
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-family: var(--font-anton), sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
   text-shadow: 0 1px 0 rgba(255,255,255,0.3);
   line-height: 1;
+  color: var(--primary);
 }
 
 .initialsBlock {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 0.75rem;
-  font-weight: 700;
-  background: rgba(22, 33, 62, 0.1);
+  font-weight: 600;
+  background: rgba(30, 72, 119, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
-  border: 1px dashed rgba(22, 33, 62, 0.3);
+  border: 1px dashed rgba(30, 72, 119, 0.3);
+  color: var(--primary);
 }
 
 .statusLabel {
   font-size: 0.55rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  opacity: 0.8;
-  font-family: var(--font-inter), sans-serif;
+  opacity: 0.9;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 /* Tag states styling */
 .vacantTag {
-  opacity: 0.85;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9, #a5d6a7);
+  border-color: #81c784;
+  color: #2e7d32;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.1);
+}
+
+.vacantTag .roomNumLabel {
+  color: #2e7d32;
 }
 
 .vacantTag:hover {
-  opacity: 1;
   transform: rotate(-5deg);
-  box-shadow: 0 8px 16px rgba(22, 33, 62, 0.2);
+  box-shadow: 0 8px 16px rgba(46, 125, 50, 0.2);
 }
 
 .occupiedTag {
   transform: translateY(18px) scale(0.98); /* Tag is lifted off hook */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.25);
-  border-color: #554422;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .occupiedTag:hover {
   transform: translateY(15px) scale(1.03) rotate(-3deg);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
 }
 
 .noticeTag {
   transform: translateY(10px) rotate(22deg); /* Notice period is tilted */
-  border-color: var(--rust);
-  box-shadow: 0 4px 8px rgba(193, 68, 30, 0.2);
+  border-color: var(--danger);
+  box-shadow: 0 4px 8px rgba(230, 43, 57, 0.2);
 }
 
 .noticeTag::after {
@@ -192,13 +200,13 @@
   right: 0;
   bottom: 0;
   border-radius: 99px;
-  border: 1.5px solid var(--rust);
+  border: 1.5px solid var(--danger);
   opacity: 0.7;
 }
 
 .noticeTag:hover {
   transform: translateY(8px) rotate(15deg) scale(1.03);
-  box-shadow: 0 8px 18px rgba(193, 68, 30, 0.35);
+  box-shadow: 0 8px 18px rgba(230, 43, 57, 0.35);
 }
 
 /* Slide-in Ledger Side Panel */
@@ -208,9 +216,9 @@
   right: -420px;
   width: 400px;
   height: 100vh;
-  background-color: var(--chalk);
-  border-left: 2px solid var(--slate-teal);
-  box-shadow: -10px 0 30px rgba(22, 33, 62, 0.15);
+  background-color: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -10px 0 30px rgba(30, 72, 119, 0.08);
   z-index: 1000;
   transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -232,22 +240,25 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  border-bottom: 2px solid var(--slate-teal);
+  border-bottom: 1px solid var(--border);
   padding-bottom: 1rem;
 }
 
 .panelHeader h2 {
   font-size: 1.4rem;
   margin: 4px 0 0;
-  font-family: var(--font-fraunces), serif;
+  font-family: var(--font-anton), sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--primary);
 }
 
 .tagBadge {
   font-size: 0.65rem;
-  font-weight: 800;
-  color: var(--slate-teal);
+  font-weight: 700;
+  color: var(--accent);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 .closeBtn {
@@ -255,14 +266,17 @@
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 4px;
+  padding: 8px;
   border-radius: 50%;
   transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .closeBtn:hover {
-  background: rgba(46, 82, 102, 0.1);
-  color: var(--ink-navy);
+  background: rgba(30, 72, 119, 0.06);
+  color: var(--primary);
 }
 
 .sectionBody {
@@ -273,9 +287,10 @@
 
 .infoCard {
   background: #FFFFFF;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--cst-shadow);
 }
 
 .timeline {
