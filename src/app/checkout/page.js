@@ -62,37 +62,37 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className={styles.container} style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div style={{ display: 'flex', gap: '2rem', maxWidth: '900px', width: '100%', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+    <div className={styles.pricingContainer} style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.25rem' }}>
+      <div style={{ display: 'flex', gap: '2rem', maxWidth: '900px', width: '100%', alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'center' }}>
         
         {/* Order Summary */}
-        <div style={{ flex: '1 1 400px' }}>
-          <h1 className={styles.title} style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Complete Purchase</h1>
+        <div style={{ flex: '1 1 290px', width: '100%' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem', fontFamily: 'var(--font-fraunces), serif' }}>Complete Purchase</h1>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '1rem', marginBottom: '1rem' }}>
               <div>
-                <h3 style={{ fontWeight: 600, fontSize: '1.125rem' }}>PG App - {plan} Plan</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Billed monthly</p>
+                <h3 style={{ fontWeight: 600, fontSize: '1.125rem', fontFamily: 'var(--font-fraunces), serif' }}>PG App - {plan} Plan</h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Billed monthly</p>
               </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 600 }}>{price}</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 700 }} className="ledger-mono">{price}</div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
               <span>Subtotal</span>
-              <span>{price}</span>
+              <span className="ledger-mono">{price}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
               <span>GST (18%)</span>
               <span>Included</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, fontSize: '1.25rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '1.25rem', borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
               <span>Total due today</span>
-              <span className="text-primary">{price}</span>
+              <span style={{ color: 'var(--brass)' }} className="ledger-mono">{price}</span>
             </div>
           </div>
         </div>
 
         {/* Payment Form */}
-        <div className="glass" style={{ flex: '1 1 400px', padding: '2rem', borderRadius: '16px' }}>
+        <div className="glass" style={{ flex: '1 1 290px', width: '100%', padding: '1.5rem', borderRadius: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
             <Lock size={16} color="var(--success)" />
             <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Secure Checkout</span>
@@ -139,8 +139,8 @@ export default function CheckoutPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className={styles.primaryButton} 
-              style={{ marginTop: '0.5rem', padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', width: '100%' }}
+              className={styles.planButton} 
+              style={{ background: 'var(--brass)', border: 'none', color: 'var(--ink-navy)', marginTop: '0.5rem', padding: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', width: '100%', borderRadius: '4px', cursor: 'pointer' }}
             >
               {loading ? <Loader2 className="spin" size={20} /> : `Pay ${price}`}
             </button>

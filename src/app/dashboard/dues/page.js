@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import { supabase } from "@/utils/supabase";
 import { cookies } from "next/headers";
 import DuesClient from "./DuesClient";
+import { Suspense } from "react";
 
 export const revalidate = 0;
 
@@ -40,7 +41,9 @@ export default async function DuesPage() {
         </div>
       </div>
       
-      <DuesClient initialDues={allDues || []} propertyId={propertyId} paymentMethods={paymentMethods} />
+      <Suspense fallback={<div style={{ color: "var(--text-muted)", padding: "2rem" }}>Loading Ledger...</div>}>
+        <DuesClient initialDues={allDues || []} propertyId={propertyId} paymentMethods={paymentMethods} />
+      </Suspense>
     </div>
   );
 }

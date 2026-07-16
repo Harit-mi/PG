@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, Trash2, Calendar, FileText, Search, User, Filter, AlertCircle } from "lucide-react";
+import { Check, X, Trash2, Calendar, FileText, Search, User, Filter, AlertCircle, Sparkles } from "lucide-react";
 import { updateLeaveRequestStatus, deleteLeaveRequest } from "@/app/actions";
 
 export default function LeavesClient({ propertyId, initialTenants = [], initialLeaves = [] }) {
@@ -71,37 +71,7 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
   const onLeaveTodayCount = new Set(activeLeavesToday.map(l => l.tenant_id)).size;
   const totalTenantsCount = initialTenants.length;
   const presentTodayCount = Math.max(totalTenantsCount - onLeaveTodayCount, 0);
-
-  // CSV Export logic
-  const handleExportCSV = () => {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Resident Name,Room Number,Start Date,End Date,Breakfast Skip,Lunch Skip,Dinner Skip,Reason,Status,Submitted At\n";
-
-    filteredLeaves.forEach(l => {
-      const tenant = getTenantInfo(l.tenant_id);
-      const row = [
-        tenant.name.replace(/,/g, ""),
-        tenant.room,
-        l.start_date,
-        l.end_date,
-        l.breakfast ? "Yes" : "No",
-        l.lunch ? "Yes" : "No",
-        l.dinner ? "Yes" : "No",
-        l.reason.replace(/,/g, "").replace(/\n/g, " "),
-        l.status,
-        new Date(l.created_at).toLocaleString().replace(/,/g, "")
-      ].join(",");
-      csvContent += row + "\n";
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `PG_Leaves_Report_${todayStr}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const percentPresent = totalTenantsCount > 0 ? Math.round((presentTodayCount / totalTenantsCount) * 100) : 100;
 
   const pendingLeaves = filteredLeaves.filter(l => l.status === "Pending");
   const processedLeaves = filteredLeaves.filter(l => l.status !== "Pending");
@@ -111,45 +81,45 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
       
       {/* Overview Analytics Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
-        <div className="statCard glass" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Total Tenants</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 700 }}>{totalTenantsCount}</div>
+        <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Total Residents</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800 }} className="ledger-mono">{totalTenantsCount}</div>
         </div>
-        <div className="statCard glass" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Present Today</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--success)' }}>{presentTodayCount}</div>
+        <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Present Today</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--brass)' }} className="ledger-mono">{presentTodayCount}</div>
         </div>
-        <div className="statCard glass" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>On Leave Today</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--danger)' }}>{onLeaveTodayCount}</div>
+        <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>On Leave Today</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--rust)' }} className="ledger-mono">{onLeaveTodayCount}</div>
         </div>
-        <div className="statCard glass" style={{ padding: '1.5rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Pending Requests</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 700, color: '#f59e0b' }}>{pendingCount}</div>
+        <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Pending Approvals</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--brass)' }} className="ledger-mono">{pendingCount}</div>
         </div>
       </div>
 
       {/* Pending Approvals Table */}
-      <div className="dashboard-card glass" style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
-        <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 0 }}>
           ⏳ Pending Leave Approvals
         </h3>
         
         {pendingLeaves.length === 0 ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem', fontSize: '0.9rem' }}>
-            🎉 No pending leave requests to process!
+            No pending leave requests to process.
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Tenant</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Room</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Leave Dates</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Missed Meals</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Reason</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Tenant</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Room</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Leave Dates</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Missed Meals</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Reason</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -161,19 +131,19 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                   if (l.dinner) meals.push("D");
                   
                   return (
-                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '1rem' }}><strong>{tenant.name}</strong></td>
+                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                      <td style={{ padding: '1rem', fontWeight: 700 }}>{tenant.name}</td>
                       <td style={{ padding: '1rem' }}>Room {tenant.room}</td>
-                      <td style={{ padding: '1rem' }}>
+                      <td style={{ padding: '1rem' }} className="ledger-mono">
                         <div>{new Date(l.start_date).toLocaleDateString()}</div>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>to {new Date(l.end_date).toLocaleDateString()}</div>
                       </td>
                       <td style={{ padding: '1rem' }}>
-                        <span style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                        <span style={{ background: 'rgba(46,82,102,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--slate-teal)', fontWeight: 600 }}>
                           {meals.join(" • ") || "None"}
                         </span>
                       </td>
-                      <td style={{ padding: '1rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={l.reason}>
+                      <td style={{ padding: '1rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-muted)' }} title={l.reason}>
                         {l.reason}
                       </td>
                       <td style={{ padding: '1rem', textAlign: 'right' }}>
@@ -181,14 +151,14 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                           <button 
                             disabled={actionLoadingId === l.id}
                             onClick={() => handleStatusUpdate(l.id, 'Approved')}
-                            style={{ background: 'var(--success)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            style={{ background: 'var(--primary)', border: 'none', color: 'white', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                           >
                             <Check size={14} /> Approve
                           </button>
                           <button 
                             disabled={actionLoadingId === l.id}
                             onClick={() => handleStatusUpdate(l.id, 'Rejected')}
-                            style={{ background: 'var(--danger)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            style={{ background: 'transparent', border: '1px solid var(--rust)', color: 'var(--rust)', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                           >
                             <X size={14} /> Reject
                           </button>
@@ -204,14 +174,14 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
       </div>
 
       {/* History Log with Filters */}
-      <div className="dashboard-card glass" style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+      <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
             <FileText size={18} /> Leave Request History
           </h3>
           <button 
             onClick={handleExportCSV}
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--text)', border: '1px solid var(--border)', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '99px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
             📥 Export CSV
           </button>
@@ -220,30 +190,30 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
         {/* Filter Bar */}
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-teal)' }} />
             <input 
               type="text"
               placeholder="Search by name or reason..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ width: '100%', padding: '8px 12px 8px 36px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+              style={{ width: '100%', padding: '8px 12px 8px 36px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
             />
           </div>
           <select 
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            style={{ padding: '8px 16px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+            style={{ padding: '8px 16px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
           >
-            <option value="" style={{ background: '#1e293b' }}>All Statuses</option>
-            <option value="Approved" style={{ background: '#1e293b' }}>Approved</option>
-            <option value="Rejected" style={{ background: '#1e293b' }}>Rejected</option>
-            <option value="Pending" style={{ background: '#1e293b' }}>Pending</option>
+            <option value="" style={{ background: 'var(--chalk)' }}>All Statuses</option>
+            <option value="Approved" style={{ background: 'var(--chalk)' }}>Approved</option>
+            <option value="Rejected" style={{ background: 'var(--chalk)' }}>Rejected</option>
+            <option value="Pending" style={{ background: 'var(--chalk)' }}>Pending</option>
           </select>
           <input 
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+            style={{ padding: '6px 12px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
             title="Filter by date overlapping"
           />
         </div>
@@ -256,14 +226,14 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Tenant</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Room</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Leave Dates</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Absence Meals</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Reason</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Tenant</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Room</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Leave Dates</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Absence Meals</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Reason</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Status</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -274,31 +244,29 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                   if (l.lunch) meals.push("Lunch");
                   if (l.dinner) meals.push("Dinner");
 
-                  let badgeColor = "rgba(245, 158, 11, 0.15)";
-                  let textColor = "var(--warning)";
+                  let badgeColor = "rgba(185, 141, 62, 0.15)";
+                  let textColor = "var(--brass)";
                   if (l.status === 'Approved') {
-                    badgeColor = "rgba(16, 185, 129, 0.15)";
-                    textColor = "var(--success)";
+                    badgeColor = "rgba(185, 141, 62, 0.15)";
+                    textColor = "var(--brass)";
                   } else if (l.status === 'Rejected') {
-                    badgeColor = "rgba(239, 68, 68, 0.15)";
-                    textColor = "var(--danger)";
+                    badgeColor = "rgba(193, 68, 30, 0.15)";
+                    textColor = "var(--rust)";
                   }
 
                   return (
-                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '1rem' }}><strong>{tenant.name}</strong></td>
+                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                      <td style={{ padding: '1rem', fontWeight: 700 }}>{tenant.name}</td>
                       <td style={{ padding: '1rem' }}>Room {tenant.room}</td>
-                      <td style={{ padding: '1rem' }}>
+                      <td style={{ padding: '1rem' }} className="ledger-mono">
                         {new Date(l.start_date).toLocaleDateString()} to {new Date(l.end_date).toLocaleDateString()}
                       </td>
                       <td style={{ padding: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                         {meals.join(", ") || "None"}
                       </td>
-                      <td style={{ padding: '1rem', maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {l.reason}
-                      </td>
+                      <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{l.reason}</td>
                       <td style={{ padding: '1rem' }}>
-                        <span style={{ background: badgeColor, color: textColor, padding: '4px 10px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>
+                        <span style={{ background: badgeColor, color: textColor, padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
                           {l.status}
                         </span>
                       </td>
@@ -306,9 +274,8 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                         <button 
                           disabled={actionLoadingId === l.id}
                           onClick={() => handleDelete(l.id)}
-                          style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '6px' }}
+                          style={{ background: 'transparent', border: 'none', color: 'var(--rust)', cursor: 'pointer', padding: '6px' }}
                           title="Delete Record"
-                          className="btn-hover-danger"
                         >
                           <Trash2 size={16} />
                         </button>

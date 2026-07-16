@@ -3,6 +3,7 @@ import { supabase } from "@/utils/supabase";
 import LeavesClient from "./LeavesClient";
 import Link from "next/link";
 import { AlertTriangle, Terminal } from "lucide-react";
+import AddLeaveModal from "@/components/AddLeaveModal";
 
 export const revalidate = 0;
 
@@ -39,11 +40,14 @@ export default async function LeavesPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1rem' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.25rem' }}>Leave Tracker</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Manage tenant leaves and view daily meal absences.</p>
         </div>
+        {!isTableMissing && (
+          <AddLeaveModal tenants={tenants || []} propertyId={propertyId} />
+        )}
       </div>
 
       {isTableMissing ? (

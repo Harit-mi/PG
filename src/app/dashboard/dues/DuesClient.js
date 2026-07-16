@@ -1,16 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
-import { CheckCircle, Clock, Search, Filter } from "lucide-react";
+import { CheckCircle, Clock, Search, Send, FileText, AlertTriangle } from "lucide-react";
 import MarkPaidModal from "@/components/MarkPaidModal";
 import ReceiptGenerator from "@/components/ReceiptGenerator";
 import { supabase } from "@/utils/supabase";
 
 export default function DuesClient({ initialDues, propertyId, paymentMethods = [] }) {
+  const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Pending"); // "All", "Paid", "Pending", "Overdue"
   const [dateFilter, setDateFilter] = useState("All"); // "Today", "This Week", "This Month", "All"
+
+  useEffect(() => {
+    const query = searchParams?.get("search");
+    if (query) {
+      setSearchTerm(query);
+      setStatusFilter("All"); // clear status filter so the user actually sees the dues of this tenant regardless of status!
+    }
+  }, [searchParams]);
 
   const filteredDues = initialDues.filter(due => {
     const tenant = due.tenants || {};
@@ -40,145 +50,125 @@ export default function DuesClient({ initialDues, propertyId, paymentMethods = [
     return matchesSearch && matchesStatus && matchesDate;
   });
 
-  const generateDummyData = async () => {
-    if (propertyId === 'all' || !propertyId) {
-      alert("Please select a specific property from the sidebar to generate dummy data.");
-      return;
-    }
-    
-    // Find some tenants
-    const { data: tenants } = await supabase.from('tenants').select('id').eq('property_id', propertyId).limit(3);
-    
-    if (!tenants || tenants.length === 0) {
-      alert("You need at least one tenant to generate dummy dues.");
-      return;
-    }
-
-    const dummyTransactions = [
-      {
-        property_id: propertyId,
-        tenant_id: tenants[0]?.id,
-        type: 'Income',
-        category: 'Rent',
-        amount: 8000,
-        status: 'Pending',
-        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // Overdue
-      },
-      {
-        property_id: propertyId,
-        tenant_id: tenants[1]?.id || tenants[0]?.id,
-        type: 'Income',
-        category: 'Rent',
-        amount: 9500,
-        status: 'Pending',
-        date: new Date().toISOString() // Today
-      },
-      {
-        property_id: propertyId,
-        tenant_id: tenants[2]?.id || tenants[0]?.id,
-        type: 'Income',
-        category: 'Rent',
-        amount: 7000,
-        status: 'Completed',
-        date: new Date().toISOString()
-      }
-    ];
-
-    await supabase.from('transactions').insert(dummyTransactions);
-    window.location.reload();
-  };
 
   return (
-    <div>
-      <div className={styles.controls} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        <div className={styles.searchBar} style={{ flex: 1, minWidth: '250px', background: 'rgba(255, 255, 255, 0.5)', padding: '0.5rem 1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid rgba(255, 255, 255, 0.3)' }}>
-          <Search size={20} className={styles.searchIcon} color="var(--text-muted)" />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      
+      {/* Ledger Filter Bar */}
+      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '250px' }}>
+          <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-teal)' }} />
           <input 
             type="text" 
-            placeholder="Search by name or room number..." 
+            placeholder="Filter by name or room..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%' }}
+            style={{ width: '100%', paddingLeft: '2.5rem', border: '1px solid var(--border)', borderRadius: '4px' }}
           />
         </div>
         
-        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.5)', outline: 'none' }}>
-          <option value="All">All Statuses</option>
-          <option value="Paid">Paid</option>
-          <option value="Pending">Pending</option>
-          <option value="Overdue">Overdue</option>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={{ border: '1px solid var(--border)', borderRadius: '4px' }}>
+          <option value="All" style={{ background: 'var(--chalk)' }}>All Statuses</option>
+          <option value="Paid" style={{ background: 'var(--chalk)' }}>Paid</option>
+          <option value="Pending" style={{ background: 'var(--chalk)' }}>Pending</option>
+          <option value="Overdue" style={{ background: 'var(--chalk)' }}>Overdue</option>
         </select>
 
-        <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} style={{ padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.5)', outline: 'none' }}>
-          <option value="All">All Dates</option>
-          <option value="Today">Today</option>
-          <option value="This Week">This Week</option>
-          <option value="This Month">This Month</option>
+        <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} style={{ border: '1px solid var(--border)', borderRadius: '4px' }}>
+          <option value="All" style={{ background: 'var(--chalk)' }}>All Dates</option>
+          <option value="Today" style={{ background: 'var(--chalk)' }}>Today</option>
+          <option value="This Week" style={{ background: 'var(--chalk)' }}>This Week</option>
+          <option value="This Month" style={{ background: 'var(--chalk)' }}>This Month</option>
         </select>
 
-        <button onClick={generateDummyData} style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'var(--primary)', color: 'white', border: 'none', cursor: 'pointer' }}>
-          Generate Dummy Data
-        </button>
+
       </div>
 
-      <div className={`${styles.tableContainer} glass`}>
+      {/* Ruled Ledger Table */}
+      <div className="glass" style={{ padding: '1.5rem', overflowX: 'auto', background: 'var(--card-bg)' }}>
         {filteredDues.length === 0 ? (
           <div style={{ padding: "3rem", textAlign: "center", color: "var(--text-muted)" }}>
-            <CheckCircle size={48} style={{ margin: "0 auto 1rem", color: "var(--success)" }} />
-            <h3>No Records Found</h3>
-            <p>Try adjusting your filters.</p>
+            <CheckCircle size={48} style={{ margin: "0 auto 1rem", color: "var(--primary)" }} />
+            <h3>No Records in Register</h3>
+            <p>Try adjusting your ledger search filters.</p>
           </div>
         ) : (
-          <table className={styles.table}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th>Tenant</th>
-                <th>Room</th>
-                <th>Due Date</th>
-                <th>Status</th>
-                <th>Amount</th>
-                <th>Actions</th>
+              <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem' }}>Tenant Name</th>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem' }}>Room / Bed</th>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem' }}>Due Date</th>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem' }}>Status</th>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem' }}>Amount</th>
+                <th style={{ textTransform: 'uppercase', padding: '0.85rem 1rem', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredDues.map((due) => {
                 const tenant = due.tenants || {};
+                const isOverdue = due.status === 'Pending' && new Date(due.date) < new Date();
+                
                 const upiId = "yourname@upi";
                 const message = `Hi ${tenant.name}, a gentle reminder that your rent of ₹${due.amount} is pending. Please pay via UPI: ${upiId}.`;
                 const whatsappUrl = `https://wa.me/${tenant.phone?.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
 
+                // Style overdue row with Rust highlight
+                const rowStyle = isOverdue ? {
+                  borderLeft: '4px solid var(--rust)',
+                  backgroundColor: 'rgba(193, 68, 30, 0.04)'
+                } : {};
+
                 return (
-                  <tr key={due.id}>
-                    <td style={{ fontWeight: '600' }}>{tenant.name || 'Unknown'}</td>
-                    <td><span className={styles.roomBadge}>{tenant.room_number || 'N/A'}</span></td>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Clock size={14} style={{ color: due.status === 'Completed' ? 'var(--success)' : 'var(--warning)' }} />
+                  <tr key={due.id} style={rowStyle}>
+                    <td style={{ padding: '1rem', fontWeight: 700 }}>{tenant.name || 'Unknown'}</td>
+                    <td style={{ padding: '1rem' }}>
+                      <span className="ledger-mono" style={{ background: 'rgba(46,82,102,0.1)', color: 'var(--slate-teal)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
+                        {tenant.room_number || 'N/A'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem' }} className="ledger-mono">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Clock size={13} style={{ color: isOverdue ? 'var(--rust)' : 'var(--slate-teal)' }} />
                         {new Date(due.date).toLocaleDateString()}
                       </div>
                     </td>
-                    <td>
+                    <td style={{ padding: '1rem' }}>
                       {due.status === 'Pending' && due.payment_reference ? (
-                        <span style={{ background: 'rgba(245, 158, 11, 0.15)', color: 'var(--warning)', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                        <span style={{ background: 'rgba(185, 141, 62, 0.15)', color: 'var(--brass)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
                           Pending Verification
                         </span>
+                      ) : isOverdue ? (
+                        <span style={{ background: 'rgba(193, 68, 30, 0.15)', color: 'var(--rust)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                          <AlertTriangle size={12} /> Overdue
+                        </span>
                       ) : (
-                        <span className={`${styles.statusBadge} ${due.status === 'Completed' ? styles.Completed : ''}`} style={due.status === 'Pending' ? { background: '#fef3c7', color: '#d97706', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' } : {}}>
-                          {due.status}
+                        <span style={{ 
+                          background: due.status === 'Completed' ? 'rgba(185, 141, 62, 0.15)' : 'rgba(46, 82, 102, 0.15)', 
+                          color: due.status === 'Completed' ? 'var(--brass)' : 'var(--slate-teal)', 
+                          padding: '4px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '0.75rem', 
+                          fontWeight: 700, 
+                          textTransform: 'uppercase' 
+                        }}>
+                          {due.status === 'Completed' ? 'Paid' : 'Pending'}
                         </span>
                       )}
                     </td>
-                    <td style={{ color: due.status === 'Completed' ? 'var(--success)' : 'var(--danger)', fontWeight: '600' }}>₹{due.amount.toLocaleString()}</td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <td style={{ padding: '1rem', fontWeight: 700, color: isOverdue ? 'var(--rust)' : (due.status === 'Completed' ? 'var(--brass)' : 'var(--foreground)') }} className="ledger-mono">
+                      ₹{due.amount.toLocaleString()}
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'right' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', justifyContent: 'flex-end' }}>
                         {due.status === 'Pending' && (
                           <>
-                            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.waBtn} style={{ background: '#25D366', color: 'white', padding: '0.25rem 0.5rem', borderRadius: '4px', textDecoration: 'none', fontSize: '0.8rem' }}>
-                              WhatsApp
+                            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" style={{ background: 'var(--primary)', color: 'white', padding: '6px 12px', borderRadius: '99px', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600 }}>
+                              Remind
                             </a>
                             <MarkPaidModal transactionId={due.id} paymentMethods={paymentMethods} />
                             {due.payment_reference && (
-                              <div style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600, background: 'rgba(56,189,248,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'rgba(185,141,62,0.1)', padding: '2px 6px', borderRadius: '4px' }}>
                                 Ref: {due.payment_reference}
                               </div>
                             )}
@@ -186,7 +176,6 @@ export default function DuesClient({ initialDues, propertyId, paymentMethods = [
                         )}
                         {due.status === 'Completed' && (
                           <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span style={{ fontSize: '0.8rem', color: 'var(--success)' }}>Paid</span>
                             <ReceiptGenerator transaction={due} />
                           </div>
                         )}
@@ -199,6 +188,7 @@ export default function DuesClient({ initialDues, propertyId, paymentMethods = [
           </table>
         )}
       </div>
+
     </div>
   );
 }

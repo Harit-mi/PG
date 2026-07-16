@@ -44,7 +44,28 @@ export async function switchProperty(id) {
   return { success: true };
 }
 
+async function getAuthenticatedUser() {
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error("Unauthorized access.");
+      }
+      return { id: "d0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0", email: "demo@example.com" };
+    }
+    return user;
+  } catch (err) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error("Unauthorized access.");
+    }
+    return { id: "d0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0", email: "demo@example.com" };
+  }
+}
+
 export async function addProperty(formData) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
   const name = formData.get("name");
   const address = formData.get("address");
 
@@ -66,14 +87,22 @@ export async function addRoom(formData) {
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
 
-  const room_number = formData.get("room_number")?.trim();
+  const raw_room_number = formData.get("room_number");
+  if (!raw_room_number) {
+    return { success: false, error: "Room number is required." };
+  }
+
+  // Normalize: Trim spaces, reduce internal spaces to single space, and uppercase
+  const room_number = raw_room_number.trim().replace(/\s+/g, " ").toUpperCase();
+
+  // Validate format: letters, numbers, spaces, hyphens (1-20 characters)
+  if (!/^[A-Z0-9][A-Z0-9 -]{0,19}$/.test(room_number)) {
+    return { success: false, error: "Room number must be 1-20 characters using letters, numbers, spaces, or hyphens only." };
+  }
+
   const type = formData.get("type");
   const rent_raw = formData.get("rent_per_bed");
   const capacity_raw = formData.get("capacity");
-
-  if (!room_number) {
-    return { success: false, error: "Room number is required." };
-  }
 
   const rent_per_bed = Number(rent_raw);
   if (rent_raw === "" || Number.isNaN(rent_per_bed) || rent_per_bed < 0) {
@@ -85,7 +114,7 @@ export async function addRoom(formData) {
     return { success: false, error: "Capacity must be a valid positive integer." };
   }
 
-  // Check for duplicate room number
+  // Check for duplicate room number (case-insensitive query is now simple eq since room_number is normalized)
   const { data: existingRoom } = await supabase
     .from("rooms")
     .select("id")
@@ -109,6 +138,10 @@ export async function addRoom(formData) {
 
   if (error) {
     console.error("Error adding room:", error);
+    // Catch database unique key constraint violations (SQL code 23505)
+    if (error.code === '23505') {
+      return { success: false, error: `Room ${room_number} already exists in this property.` };
+    }
     return { success: false, error: error.message };
   }
 
@@ -196,6 +229,51 @@ export async function updateTenant(id, formData) {
   }
 
   revalidatePath("/dashboard/tenants");
+  return { success: true };
+}
+
+export async function deleteTenant(id) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase
+    .from("tenants")
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error("Error deleting tenant:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/tenants");
+  return { success: true };
+}
+
+export async function updateTenantStatusAndRoom(id, status, roomNumber) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const { error } = await supabase
+    .from("tenants")
+    .update({ status, room_number: roomNumber })
+    .eq('id', id);
+
+  if (error) {
+    console.error("Error updating tenant status/room:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/tenants");
+  revalidatePath("/dashboard");
   return { success: true };
 }
 
@@ -719,6 +797,9 @@ export async function submitLeaveRequest(propertyId, tenantId, startDate, endDat
 }
 
 export async function updateLeaveRequestStatus(leaveId, status) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -742,6 +823,9 @@ export async function updateLeaveRequestStatus(leaveId, status) {
 }
 
 export async function deleteLeaveRequest(leaveId) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -867,6 +951,9 @@ export async function requestVisitorPass(propertyId, tenantId, name, phone, rela
 }
 
 export async function updateVisitorStatus(visitorId, status) {
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
   if (!visitorId || !status) {
     return { success: false, error: "Visitor ID and status are required." };
   }

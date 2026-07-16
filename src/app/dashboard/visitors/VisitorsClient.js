@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UserCheck, Check, X, ShieldAlert, LogIn, LogOut, Trash2 } from "lucide-react";
+import { UserCheck, Check, X, ShieldAlert, LogIn, LogOut, Calendar } from "lucide-react";
 import { updateVisitorStatus } from "@/app/actions";
 
 export default function VisitorsClient({ initialVisitors = [], initialTenants = [] }) {
@@ -39,7 +39,7 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Pending Requests Table */}
-      <div className="dashboard-card glass" style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+      <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 0 }}>
           ⏳ Pending Gate-Pass Requests
         </h3>
@@ -52,37 +52,37 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Visitor</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Host Resident</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Visit Date</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Purpose</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Visitor Name</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Host Resident</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Visit Date</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Purpose</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {pendingRequests.map(v => (
-                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <td style={{ padding: '1rem' }}>
                       <strong>{v.name}</strong>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Ph: {v.phone} ({v.relationship})</div>
                     </td>
-                    <td style={{ padding: '1rem' }}>{getTenantName(v.tenant_id)}</td>
-                    <td style={{ padding: '1rem' }}>{new Date(v.visit_date).toLocaleDateString()}</td>
-                    <td style={{ padding: '1rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.purpose}</td>
+                    <td style={{ padding: '1rem', fontWeight: 600 }}>{getTenantName(v.tenant_id)}</td>
+                    <td style={{ padding: '1rem' }} className="ledger-mono">{new Date(v.visit_date).toLocaleDateString()}</td>
+                    <td style={{ padding: '1rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-muted)' }}>{v.purpose}</td>
                     <td style={{ padding: '1rem', textAlign: 'right' }}>
                       <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
                         <button 
                           disabled={loadingId === v.id}
                           onClick={() => handleStatusChange(v.id, 'Approved')}
-                          style={{ background: 'var(--success)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}
+                          style={{ background: 'var(--primary)', border: 'none', color: 'white', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                         >
                           <Check size={14} /> Approve
                         </button>
                         <button 
                           disabled={loadingId === v.id}
                           onClick={() => handleStatusChange(v.id, 'Rejected')}
-                          style={{ background: 'var(--danger)', border: 'none', color: 'white', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}
+                          style={{ background: 'transparent', border: '1px solid var(--rust)', color: 'var(--rust)', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                         >
                           <X size={14} /> Reject
                         </button>
@@ -97,7 +97,7 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
       </div>
 
       {/* Active Passes / Checked In Table */}
-      <div className="dashboard-card glass" style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+      <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 0 }}>
           🟢 Active Gate Passes & Checked-In Guests
         </h3>
@@ -110,28 +110,28 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Visitor</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Host Resident</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Pass Date</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)', textAlign: 'right' }}>Clearance Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Visitor Name</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Host Resident</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Pass Date</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Status</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Clearance Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {activePasses.map(v => (
-                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <td style={{ padding: '1rem' }}>
                       <strong>{v.name}</strong>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Ph: {v.phone} ({v.relationship})</div>
                     </td>
-                    <td style={{ padding: '1rem' }}>{getTenantName(v.tenant_id)}</td>
-                    <td style={{ padding: '1rem' }}>{new Date(v.visit_date).toLocaleDateString()}</td>
+                    <td style={{ padding: '1rem', fontWeight: 600 }}>{getTenantName(v.tenant_id)}</td>
+                    <td style={{ padding: '1rem' }} className="ledger-mono">{new Date(v.visit_date).toLocaleDateString()}</td>
                     <td style={{ padding: '1rem' }}>
                       <span style={{ 
-                        background: v.status === 'Checked In' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                        color: v.status === 'Checked In' ? 'var(--success)' : 'var(--warning)',
-                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase'
+                        background: 'rgba(185, 141, 62, 0.15)',
+                        color: 'var(--brass)',
+                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase'
                       }}>
                         {v.status}
                       </span>
@@ -141,18 +141,18 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
                         <button 
                           disabled={loadingId === v.id}
                           onClick={() => handleStatusChange(v.id, 'Checked In')}
-                          style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56,189,248,0.3)', color: '#38bdf8', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', marginLeft: 'auto' }}
+                          style={{ background: 'var(--primary)', border: 'none', color: 'white', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                         >
-                          <LogIn size={14} /> Mark Check-In
+                          <LogIn size={14} /> Check-In
                         </button>
                       )}
                       {v.status === 'Checked In' && (
                         <button 
                           disabled={loadingId === v.id}
                           onClick={() => handleStatusChange(v.id, 'Checked Out')}
-                          style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', marginLeft: 'auto' }}
+                          style={{ background: 'transparent', border: '1px solid var(--rust)', color: 'var(--rust)', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
                         >
-                          <LogOut size={14} /> Mark Check-Out
+                          <LogOut size={14} /> Check-Out
                         </button>
                       )}
                     </td>
@@ -165,7 +165,7 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
       </div>
 
       {/* Historical Passes */}
-      <div className="dashboard-card glass" style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
+      <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', marginTop: 0 }}>
           📋 Historical Visitor Logs
         </h3>
@@ -178,29 +178,29 @@ export default function VisitorsClient({ initialVisitors = [], initialTenants = 
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Visitor</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Host Resident</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Visit Date</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Purpose</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>Status</th>
+                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Visitor Name</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Host Resident</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Visit Date</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Purpose</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {pastVisits.map(v => (
-                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <tr key={v.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
                     <td style={{ padding: '1rem' }}>
                       <strong>{v.name}</strong>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Ph: {v.phone} ({v.relationship})</div>
                     </td>
-                    <td style={{ padding: '1rem' }}>{getTenantName(v.tenant_id)}</td>
-                    <td style={{ padding: '1rem' }}>{new Date(v.visit_date).toLocaleDateString()}</td>
-                    <td style={{ padding: '1rem' }}>{v.purpose}</td>
+                    <td style={{ padding: '1rem', fontWeight: 600 }}>{getTenantName(v.tenant_id)}</td>
+                    <td style={{ padding: '1rem' }} className="ledger-mono">{new Date(v.visit_date).toLocaleDateString()}</td>
+                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{v.purpose}</td>
                     <td style={{ padding: '1rem' }}>
                       <span style={{ 
-                        background: v.status === 'Checked Out' ? 'rgba(255,255,255,0.05)' : 'rgba(239, 68, 68, 0.05)',
-                        color: v.status === 'Checked Out' ? 'var(--text-muted)' : 'var(--danger)',
-                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase'
+                        background: v.status === 'Checked Out' ? 'rgba(46, 82, 102, 0.1)' : 'rgba(193, 68, 30, 0.1)',
+                        color: v.status === 'Checked Out' ? 'var(--slate-teal)' : 'var(--rust)',
+                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase'
                       }}>
                         {v.status}
                       </span>
