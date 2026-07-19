@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Building2, ArrowRight, Loader2, Key } from "lucide-react";
+import FAIcon from "@/components/FAIcon";
 import styles from "./page.module.css";
 
 export default function LoginPage() {
@@ -28,7 +28,7 @@ export default function LoginPage() {
           {/* Header Branding */}
           <div className={styles.logoHeader}>
             <div className={styles.logoContainer}>
-              <Building2 size={28} className={styles.logoIcon} />
+              <FAIcon icon="building" style={{ fontSize: "28px" }} className={styles.logoIcon} />
             </div>
             <h1 className={styles.mainTitle}>OUR-PG</h1>
             <p className={styles.subTitle}>A perfect hostel management software</p>
@@ -68,17 +68,17 @@ export default function LoginPage() {
               className={styles.loginBtn}
             >
               {loading ? (
-                <Loader2 className="spin" size={18} />
+                <FAIcon icon="spinner fa-spin" />
               ) : (
                 <>
-                  Login to Dashboard <ArrowRight size={18} />
+                  Login to Dashboard <FAIcon icon="arrow-right" />
                 </>
               )}
             </button>
           </form>
           
           <div className={styles.footerNote}>
-            <Key size={12} />
+            <FAIcon icon="key" />
             <span>Secure operator access portal.</span>
           </div>
         </div>

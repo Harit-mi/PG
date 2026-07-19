@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Check } from "lucide-react";
+import FAIcon from "@/components/FAIcon";
 import styles from "../page.module.css";
 
 const PLANS = [
@@ -60,7 +60,7 @@ export default function PricingPage() {
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {plan.features.map((feat, i) => (
                   <li key={i} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.85rem', alignItems: 'center', color: 'var(--foreground)' }}>
-                    <Check size={16} style={{ color: 'var(--primary)' }} /> 
+                    <FAIcon icon="check" style={{ color: 'var(--primary)' }} /> 
                     <span>{feat}</span>
                   </li>
                 ))}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Calendar, User, Phone, FileText, ArrowRight, ShieldAlert, Sparkles, UserCheck } from "lucide-react";
+import FAIcon from "./FAIcon";
 import styles from "./RoomBoard.module.css";
 
 export default function RoomBoard({ rooms = [], tenants = [], transactions = [], visitors = [] }) {
@@ -169,7 +169,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
                 className={styles.closeBtn}
                 aria-label="Close tenant panel"
               >
-                <X size={20} />
+                <FAIcon icon="xmark" />
               </button>
             </div>
 
@@ -179,7 +179,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Profile Card */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <User size={16} style={{ color: 'var(--primary)' }} />
+                  <FAIcon icon="user" style={{ color: 'var(--primary)' }} />
                   <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>CONTACT INFORMATION</strong>
                 </div>
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>Phone: <span className="ledger-mono">{selectedTenant.phone}</span></p>
@@ -189,7 +189,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Rent & Payments Ledger */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                  <FileText size={16} style={{ color: 'var(--primary)' }} />
+                  <FAIcon icon="file-invoice" style={{ color: 'var(--primary)' }} />
                   <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>LEASE & RENT STATEMENT</strong>
                 </div>
                 
@@ -226,7 +226,7 @@ export default function RoomBoard({ rooms = [], tenants = [], transactions = [],
               {/* Visitor logs timeline */}
               <div className={styles.infoCard}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  <UserCheck size={16} style={{ color: 'var(--primary)' }} />
+                  <FAIcon icon="user-check" style={{ color: 'var(--primary)' }} />
                   <strong style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>VISITOR REGISTER TIMELINE</strong>
                 </div>
                 {(() => {
