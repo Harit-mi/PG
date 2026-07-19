@@ -4,6 +4,17 @@ import { supabase } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
+function sanitizeInput(text) {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;")
+    .replace(/\//g, "&#x2F;");
+}
+
 async function checkSubscription(property_id) {
   if (!property_id || property_id === 'all') return { success: false, error: "Please select a specific property from the sidebar to perform this action." };
   
@@ -66,8 +77,8 @@ export async function addProperty(formData) {
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
-  const name = formData.get("name");
-  const address = formData.get("address");
+  const name = sanitizeInput(formData.get("name")?.trim());
+  const address = sanitizeInput(formData.get("address")?.trim());
 
   const { error } = await supabase.from("properties").insert([{
     name,
@@ -154,14 +165,14 @@ export async function addTenant(formData) {
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
 
-  const name = formData.get("name");
-  const phone = formData.get("phone");
-  const room_number = formData.get("room_number");
-  const permanent_address = formData.get("permanent_address");
-  const father_mother_name = formData.get("father_mother_name");
-  const parent_contact_number = formData.get("parent_contact_number");
-  const blood_group = formData.get("blood_group");
-  const workplace_details = formData.get("workplace_details");
+  const name = sanitizeInput(formData.get("name")?.trim());
+  const phone = sanitizeInput(formData.get("phone")?.trim());
+  const room_number = sanitizeInput(formData.get("room_number")?.trim());
+  const permanent_address = sanitizeInput(formData.get("permanent_address")?.trim());
+  const father_mother_name = sanitizeInput(formData.get("father_mother_name")?.trim());
+  const parent_contact_number = sanitizeInput(formData.get("parent_contact_number")?.trim());
+  const blood_group = sanitizeInput(formData.get("blood_group")?.trim());
+  const workplace_details = sanitizeInput(formData.get("workplace_details")?.trim());
   
   const { error } = await supabase.from("tenants").insert([{
     name,
@@ -190,16 +201,16 @@ export async function updateTenant(id, formData) {
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
 
-  const name = formData.get("name")?.trim();
-  const phone = formData.get("phone")?.trim();
-  const room_number = formData.get("room_number") || null;
-  const status = formData.get("status");
+  const name = sanitizeInput(formData.get("name")?.trim());
+  const phone = sanitizeInput(formData.get("phone")?.trim());
+  const room_number = sanitizeInput(formData.get("room_number") || null);
+  const status = sanitizeInput(formData.get("status")?.trim());
   const move_in_date = formData.get("move_in_date") || null;
-  const permanent_address = formData.get("permanent_address")?.trim() || null;
-  const father_mother_name = formData.get("father_mother_name")?.trim() || null;
-  const parent_contact_number = formData.get("parent_contact_number")?.trim() || null;
-  const blood_group = formData.get("blood_group")?.trim() || null;
-  const workplace_details = formData.get("workplace_details")?.trim() || null;
+  const permanent_address = sanitizeInput(formData.get("permanent_address")?.trim() || null);
+  const father_mother_name = sanitizeInput(formData.get("father_mother_name")?.trim() || null);
+  const parent_contact_number = sanitizeInput(formData.get("parent_contact_number")?.trim() || null);
+  const blood_group = sanitizeInput(formData.get("blood_group")?.trim() || null);
+  const workplace_details = sanitizeInput(formData.get("workplace_details")?.trim() || null);
 
   if (!name || !phone) {
     return { success: false, error: "Name and phone number are required." };
@@ -315,9 +326,9 @@ export async function addComplaint(formData) {
   if (!subCheck.success) return subCheck;
 
   const tenant_id = formData.get("tenant_id");
-  const issue = formData.get("issue");
-  const category = formData.get("category");
-  const priority = formData.get("priority");
+  const issue = sanitizeInput(formData.get("issue")?.trim());
+  const category = sanitizeInput(formData.get("category")?.trim());
+  const priority = sanitizeInput(formData.get("priority")?.trim());
 
   const { error } = await supabase.from("complaints").insert([{
     tenant_id,
@@ -360,8 +371,8 @@ export async function addNotice(formData) {
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
 
-  const title = formData.get("title");
-  const content = formData.get("content");
+  const title = sanitizeInput(formData.get("title")?.trim());
+  const content = sanitizeInput(formData.get("content")?.trim());
 
   const { error } = await supabase.from("notices").insert([{
     title,

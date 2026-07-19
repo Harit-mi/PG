@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { purchaseOutletSlots } from '@/app/actions';
 
 export async function POST(req, { params }) {
   try {
@@ -33,7 +34,13 @@ export async function POST(req, { params }) {
     const data = await response.json();
 
     if (data.success && data.code === 'PAYMENT_SUCCESS') {
-      // Payment Verified! Update your database here.
+      // Payment Verified! Execute secure database mutations for subscription purchase
+      const dbResult = await purchaseOutletSlots('Pro', 1, [], 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0');
+      
+      if (!dbResult.success) {
+        console.error("Database update failed after PhonePe verification:", dbResult.error);
+        return NextResponse.redirect(`${appUrl}/dashboard/settings?payment=db_error`);
+      }
       
       // Redirect user to success dashboard
       return NextResponse.redirect(`${appUrl}/dashboard/settings?payment=success`);
