@@ -3,19 +3,60 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FAIcon from "@/components/FAIcon";
+import { supabase } from "@/utils/supabase";
 import styles from "./page.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate login and redirect to pricing
-    setTimeout(() => {
-      router.push("/pricing");
-    }, 1000);
+    setError("");
+
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Check organization status if organization_id exists in user metadata
+      const user = data.user;
+      const orgId = user?.user_metadata?.organization_id;
+
+      if (orgId) {
+        const { data: org, error: orgErr } = await supabase
+          .from("organizations")
+          .select("status")
+          .eq("id", orgId)
+          .single();
+
+        if (!orgErr && org) {
+          if (org.status !== 'Active') {
+            await supabase.auth.signOut();
+            setError(`Your account status is currently "${org.status}". Access has been restricted. Please contact admin support.`);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      router.push("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred during login.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +77,12 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleLogin} className={styles.loginForm}>
+            {error && (
+              <div style={{ color: 'var(--danger)', fontSize: '0.85rem', marginBottom: '1rem', fontWeight: 600, background: 'rgba(230, 43, 57, 0.05)', padding: '0.5rem 0.75rem', borderRadius: '6px', border: '1px solid rgba(230, 43, 57, 0.15)' }}>
+                {error}
+              </div>
+            )}
+
             <div className={styles.inputGroup}>
               <label htmlFor="email" className={styles.fieldLabel}>
                 Owner Email
@@ -44,6 +91,8 @@ export default function LoginPage() {
                 id="email"
                 type="email" 
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="owner@example.com" 
                 className={styles.textField}
               />
@@ -57,6 +106,8 @@ export default function LoginPage() {
                 id="password"
                 type="password" 
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••" 
                 className={styles.textField}
               />

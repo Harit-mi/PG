@@ -10,6 +10,7 @@ export default function SidebarNav() {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: "chart-pie" },
+    { href: "/dashboard/room-board", label: "Room Board", icon: "key" },
     { href: "/dashboard/rooms", label: "Rooms", icon: "door-open" },
     { href: "/dashboard/tenants", label: "Tenants", icon: "users" },
     { href: "/dashboard/leaves", label: "Leaves", icon: "calendar-days" },

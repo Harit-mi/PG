@@ -55,7 +55,7 @@ export async function switchProperty(id) {
   return { success: true };
 }
 
-async function getAuthenticatedUser() {
+export async function getAuthenticatedUser() {
   try {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) {
@@ -1042,8 +1042,11 @@ export async function deleteRoomAsset(assetId) {
 // SAAS MULTI-OUTLET SLOT & SUBSCRIPTION ACTIONS
 // -------------------------------------------------------------
 
-export async function fetchUnassignedSlotsCount(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+export async function fetchUnassignedSlotsCount() {
   try {
+    const user = await getAuthenticatedUser();
+    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+
     const { count, error } = await supabase
       .from("outlet_slots")
       .select("*", { count: "exact", head: true })
@@ -1058,8 +1061,11 @@ export async function fetchUnassignedSlotsCount(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0
   }
 }
 
-export async function fetchUnassignedSlots(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+export async function fetchUnassignedSlots() {
   try {
+    const user = await getAuthenticatedUser();
+    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+
     const { data, error } = await supabase
       .from("outlet_slots")
       .select("*")
@@ -1074,8 +1080,11 @@ export async function fetchUnassignedSlots(orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0
   }
 }
 
-export async function assignSlotToOutlet(slotId, name, address, orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+export async function assignSlotToOutlet(slotId, name, address) {
   try {
+    const user = await getAuthenticatedUser();
+    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+
     // 1. Fetch the slot to get plan and expiry
     const { data: slot, error: slotErr } = await supabase
       .from("outlet_slots")

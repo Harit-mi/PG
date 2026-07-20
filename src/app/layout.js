@@ -1,16 +1,16 @@
-import { Poppins, Anton, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Poppins, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const anton = Anton({
-  variable: "--font-anton",
-  subsets: ["latin"],
-  weight: ["400"],
 });
 
 const mono = IBM_Plex_Mono({
@@ -31,7 +31,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${anton.variable} ${mono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${mono.variable}`}>
       <head>
         <link 
           rel="stylesheet" 

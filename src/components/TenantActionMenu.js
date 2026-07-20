@@ -114,14 +114,21 @@ export default function TenantActionMenu({ tenant }) {
   };
 
   const handleDeleteTenant = async () => {
+    if (loading) return;
     setLoading(true);
-    const res = await deleteTenant(tenant.id);
-    setLoading(false);
-    if (res.success) {
-      setShowDelete(false);
-      router.refresh();
-    } else {
-      alert(res.error || "Failed to delete tenant");
+    try {
+      const res = await deleteTenant(tenant.id);
+      if (res.success) {
+        setShowDelete(false);
+        router.refresh();
+      } else {
+        alert(res.error || "Failed to delete tenant");
+      }
+    } catch (err) {
+      console.error("Error in handleDeleteTenant:", err);
+      alert(err.message || "An unexpected error occurred while deleting the tenant.");
+    } finally {
+      setLoading(false);
     }
   };
 

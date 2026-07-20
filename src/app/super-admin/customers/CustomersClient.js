@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Edit2, ShieldAlert, Sparkles, X, Loader2, Info, Building2, Ticket, Settings } from "lucide-react";
-import { updateCustomerStatus, updateCustomerSubscription, grantComplimentarySlot, fetchBusinessDetails } from "../actions";
+import { Search, Edit2, ShieldAlert, Sparkles, X, Loader2, Info, Building2, Ticket, Settings, Plus } from "lucide-react";
+import { updateCustomerStatus, updateCustomerSubscription, grantComplimentarySlot, fetchBusinessDetails, registerNewCustomer } from "../actions";
 
 export default function CustomersClient({ initialCustomers = [] }) {
   const [customers, setCustomers] = useState(initialCustomers);
@@ -30,6 +30,56 @@ export default function CustomersClient({ initialCustomers = [] }) {
   const [newExpiry, setNewExpiry] = useState("");
   const [subReason, setSubReason] = useState("");
   const [submittingSub, setSubmittingSub] = useState(false);
+
+  // Add Customer Modal states
+  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
+  const [custName, setCustName] = useState("");
+  const [custMobile, setCustMobile] = useState("");
+  const [custEmail, setCustEmail] = useState("");
+  const [custStartDate, setCustStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [custPlanType, setCustPlanType] = useState("Monthly");
+  const [custPassword, setCustPassword] = useState("");
+  const [custConfirmPassword, setCustConfirmPassword] = useState("");
+  const [registering, setRegistering] = useState(false);
+
+  const handleRegisterCustomer = async (e) => {
+    e.preventDefault();
+    if (custPassword !== custConfirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+    setRegistering(true);
+    try {
+      const res = await registerNewCustomer({
+        name: custName,
+        mobile: custMobile,
+        email: custEmail,
+        startDate: custStartDate,
+        planType: custPlanType,
+        password: custPassword,
+        confirmPassword: custConfirmPassword
+      });
+      if (res.success) {
+        alert("Customer registered successfully!");
+        setShowAddCustomerModal(false);
+        setCustName("");
+        setCustMobile("");
+        setCustEmail("");
+        setCustStartDate(new Date().toISOString().split('T')[0]);
+        setCustPlanType("Monthly");
+        setCustPassword("");
+        setCustConfirmPassword("");
+        window.location.reload();
+      } else {
+        alert(res.error || "Failed to register customer.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred during registration.");
+    } finally {
+      setRegistering(false);
+    }
+  };
 
   const handleOpenManage = async (cust) => {
     setSelectedCust(cust);
@@ -144,8 +194,8 @@ export default function CustomersClient({ initialCustomers = [] }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
       {/* Search Filter Header */}
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <div style={{ position: 'relative', flex: 1 }}>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
           <Search size={16} style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input 
             type="text"
@@ -155,6 +205,24 @@ export default function CustomersClient({ initialCustomers = [] }) {
             style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 3rem' }}
           />
         </div>
+        <button
+          onClick={() => setShowAddCustomerModal(true)}
+          style={{
+            background: 'var(--primary)',
+            color: 'white',
+            border: 'none',
+            padding: '0.65rem 1.25rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.9rem'
+          }}
+        >
+          <Plus size={16} /> Add New Customer
+        </button>
       </div>
 
       {/* Datatable */}
@@ -484,6 +552,133 @@ export default function CustomersClient({ initialCustomers = [] }) {
               </>
             )}
 
+          </div>
+        </div>
+      )}
+
+      {/* Add New Customer Modal */}
+      {showAddCustomerModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass animate-fade-in" style={{ width: '100%', maxWidth: '520px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', maxHeight: '90vh', overflowY: 'auto' }}>
+            
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>SUPER ADMIN PANEL</span>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: '4px 0 0' }}>Register New Customer</h3>
+              </div>
+              <button onClick={() => setShowAddCustomerModal(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleRegisterCustomer} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>CUSTOMER NAME</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. John Doe"
+                  value={custName}
+                  onChange={(e) => setCustName(e.target.value)}
+                  required
+                  style={{ width: '100%' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>MOBILE NUMBER</label>
+                  <input 
+                    type="tel" 
+                    placeholder="e.g. +91 9999999999"
+                    value={custMobile}
+                    onChange={(e) => setCustMobile(e.target.value)}
+                    required
+                    style={{ width: '100%' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>EMAIL ADDRESS</label>
+                  <input 
+                    type="email" 
+                    placeholder="e.g. owner@example.com"
+                    value={custEmail}
+                    onChange={(e) => setCustEmail(e.target.value)}
+                    required
+                    style={{ width: '100%' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>SUBSCRIPTION START DATE</label>
+                  <input 
+                    type="date" 
+                    value={custStartDate}
+                    onChange={(e) => setCustStartDate(e.target.value)}
+                    required
+                    style={{ width: '100%' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>PLAN TYPE</label>
+                  <select 
+                    value={custPlanType}
+                    onChange={(e) => setCustPlanType(e.target.value)}
+                    style={{ width: '100%' }}
+                  >
+                    <option value="Monthly" style={{ background: '#0a1716' }}>Monthly Plan</option>
+                    <option value="Yearly" style={{ background: '#0a1716' }}>Yearly Plan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>PASSWORD</label>
+                  <input 
+                    type="password" 
+                    placeholder="••••••••"
+                    value={custPassword}
+                    onChange={(e) => setCustPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    style={{ width: '100%' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem', fontWeight: 600 }}>CONFIRM PASSWORD</label>
+                  <input 
+                    type="password" 
+                    placeholder="••••••••"
+                    value={custConfirmPassword}
+                    onChange={(e) => setCustConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    style={{ width: '100%' }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1.25rem' }}>
+                <button 
+                  type="button" 
+                  onClick={() => setShowAddCustomerModal(false)}
+                  style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--foreground)', padding: '0.65rem 1.5rem', borderRadius: '99px', cursor: 'pointer', fontWeight: 600 }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={registering}
+                  style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0.65rem 1.75rem', borderRadius: '99px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  {registering ? <Loader2 size={16} className="spin" /> : "Register Customer"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

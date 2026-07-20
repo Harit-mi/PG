@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, X, Trash2, Calendar, FileText, Search, User, Filter, AlertCircle, Sparkles } from "lucide-react";
+import FAIcon from "@/components/FAIcon";
 import { updateLeaveRequestStatus, deleteLeaveRequest } from "@/app/actions";
 
 export default function LeavesClient({ propertyId, initialTenants = [], initialLeaves = [] }) {
@@ -56,7 +56,7 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
   const filteredLeaves = leaves.filter(l => {
     const tenant = getTenantInfo(l.tenant_id);
     const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          l.reason.toLowerCase().includes(searchQuery.toLowerCase());
+                          (l.reason || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "" || l.status === statusFilter;
     const matchesDate = dateFilter === "" || (dateFilter >= l.start_date && dateFilter <= l.end_date);
     return matchesSearch && matchesStatus && matchesDate;
@@ -71,10 +71,40 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
   const onLeaveTodayCount = new Set(activeLeavesToday.map(l => l.tenant_id)).size;
   const totalTenantsCount = initialTenants.length;
   const presentTodayCount = Math.max(totalTenantsCount - onLeaveTodayCount, 0);
-  const percentPresent = totalTenantsCount > 0 ? Math.round((presentTodayCount / totalTenantsCount) * 100) : 100;
 
   const pendingLeaves = filteredLeaves.filter(l => l.status === "Pending");
   const processedLeaves = filteredLeaves.filter(l => l.status !== "Pending");
+
+  // Export leaves to CSV securely
+  const handleExportCSV = () => {
+    if (leaves.length === 0) return;
+    const headers = ["Resident Name", "Room", "Start Date", "End Date", "Breakfast", "Lunch", "Dinner", "Reason", "Status"];
+    const rows = leaves.map(l => {
+      const tenant = getTenantInfo(l.tenant_id);
+      return [
+        tenant.name,
+        `Room ${tenant.room}`,
+        l.start_date,
+        l.end_date,
+        l.breakfast ? "Yes" : "No",
+        l.lunch ? "Yes" : "No",
+        l.dinner ? "Yes" : "No",
+        l.reason || "",
+        l.status
+      ];
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + [headers.join(","), ...rows.map(e => e.map(val => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `leave_logs_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -82,27 +112,27 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
       {/* Overview Analytics Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
         <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Total Residents</p>
+          <p style={{ fontSize: '0.75rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Total Residents</p>
           <div style={{ fontSize: '1.8rem', fontWeight: 800 }} className="ledger-mono">{totalTenantsCount}</div>
         </div>
         <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Present Today</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--brass)' }} className="ledger-mono">{presentTodayCount}</div>
+          <p style={{ fontSize: '0.75rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Present Today</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)' }} className="ledger-mono">{presentTodayCount}</div>
         </div>
         <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>On Leave Today</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--rust)' }} className="ledger-mono">{onLeaveTodayCount}</div>
+          <p style={{ fontSize: '0.75rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>On Leave Today</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--danger)' }} className="ledger-mono">{onLeaveTodayCount}</div>
         </div>
         <div className="glass" style={{ padding: '1.25rem', background: 'var(--card-bg)' }}>
-          <p style={{ fontSize: '0.75rem', color: 'var(--slate-teal)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Pending Approvals</p>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--brass)' }} className="ledger-mono">{pendingCount}</div>
+          <p style={{ fontSize: '0.75rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, margin: '0 0 4px' }}>Pending Approvals</p>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)' }} className="ledger-mono">{pendingCount}</div>
         </div>
       </div>
 
       {/* Pending Approvals Table */}
       <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 0 }}>
-          ⏳ Pending Leave Approvals
+          <FAIcon icon="clock" style={{ color: 'var(--primary)' }} /> Pending Leave Approvals
         </h3>
         
         {pendingLeaves.length === 0 ? (
@@ -113,13 +143,13 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Tenant</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Room</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Leave Dates</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Missed Meals</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Reason</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Tenant</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Room</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Leave Dates</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Missed Meals</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Reason</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,7 +161,7 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                   if (l.dinner) meals.push("D");
                   
                   return (
-                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border)' }}>
                       <td style={{ padding: '1rem', fontWeight: 700 }}>{tenant.name}</td>
                       <td style={{ padding: '1rem' }}>Room {tenant.room}</td>
                       <td style={{ padding: '1rem' }} className="ledger-mono">
@@ -139,28 +169,28 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>to {new Date(l.end_date).toLocaleDateString()}</div>
                       </td>
                       <td style={{ padding: '1rem' }}>
-                        <span style={{ background: 'rgba(46,82,102,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--slate-teal)', fontWeight: 600 }}>
+                        <span style={{ background: 'rgba(30,72,119,0.1)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 600 }}>
                           {meals.join(" • ") || "None"}
                         </span>
                       </td>
                       <td style={{ padding: '1rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-muted)' }} title={l.reason}>
-                        {l.reason}
+                        {l.reason || "—"}
                       </td>
                       <td style={{ padding: '1rem', textAlign: 'right' }}>
                         <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
                           <button 
                             disabled={actionLoadingId === l.id}
                             onClick={() => handleStatusUpdate(l.id, 'Approved')}
-                            style={{ background: 'var(--primary)', border: 'none', color: 'white', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
+                            style={{ background: 'var(--primary)', border: 'none', color: 'white', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600 }}
                           >
-                            <Check size={14} /> Approve
+                            <FAIcon icon="check" /> Approve
                           </button>
                           <button 
                             disabled={actionLoadingId === l.id}
                             onClick={() => handleStatusUpdate(l.id, 'Rejected')}
-                            style={{ background: 'transparent', border: '1px solid var(--rust)', color: 'var(--rust)', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: 600 }}
+                            style={{ background: 'transparent', border: '1px solid var(--danger)', color: 'var(--danger)', padding: '6px 14px', borderRadius: '99px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600 }}
                           >
-                            <X size={14} /> Reject
+                            <FAIcon icon="xmark" /> Reject
                           </button>
                         </div>
                       </td>
@@ -177,43 +207,43 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
       <div className="glass" style={{ padding: '1.5rem', background: 'var(--card-bg)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0 }}>
-            <FileText size={18} /> Leave Request History
+            <FAIcon icon="file-lines" style={{ color: 'var(--primary)' }} /> Leave Request History
           </h3>
           <button 
             onClick={handleExportCSV}
             style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '99px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            📥 Export CSV
+            <FAIcon icon="download" /> Export CSV
           </button>
         </div>
 
         {/* Filter Bar */}
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-teal)' }} />
+            <FAIcon icon="magnifying-glass" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
             <input 
               type="text"
               placeholder="Search by name or reason..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{ width: '100%', padding: '8px 12px 8px 36px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
+              style={{ width: '100%', padding: '8px 12px 8px 36px', borderRadius: '8px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
             />
           </div>
           <select 
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            style={{ padding: '8px 16px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
+            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
           >
-            <option value="" style={{ background: 'var(--chalk)' }}>All Statuses</option>
-            <option value="Approved" style={{ background: 'var(--chalk)' }}>Approved</option>
-            <option value="Rejected" style={{ background: 'var(--chalk)' }}>Rejected</option>
-            <option value="Pending" style={{ background: 'var(--chalk)' }}>Pending</option>
+            <option value="">All Statuses</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Pending">Pending</option>
           </select>
           <input 
             type="date"
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            style={{ padding: '6px 12px', borderRadius: '4px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
+            style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--border)', color: 'var(--foreground)', outline: 'none' }}
             title="Filter by date overlapping"
           />
         </div>
@@ -226,14 +256,14 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
               <thead>
-                <tr style={{ borderBottom: '2px solid var(--slate-teal)' }}>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Tenant</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Room</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Leave Dates</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Absence Meals</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Reason</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1rem', color: 'var(--slate-teal)', textAlign: 'right' }}>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Tenant</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Room</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Leave Dates</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Absence Meals</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Reason</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)' }}>Status</th>
+                  <th style={{ padding: '0.75rem 1rem', color: 'var(--primary)', textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,18 +274,18 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                   if (l.lunch) meals.push("Lunch");
                   if (l.dinner) meals.push("Dinner");
 
-                  let badgeColor = "rgba(185, 141, 62, 0.15)";
-                  let textColor = "var(--brass)";
+                  let badgeColor = "rgba(30, 72, 119, 0.1)";
+                  let textColor = "var(--primary)";
                   if (l.status === 'Approved') {
-                    badgeColor = "rgba(185, 141, 62, 0.15)";
-                    textColor = "var(--brass)";
+                    badgeColor = "rgba(30, 72, 119, 0.15)";
+                    textColor = "var(--primary)";
                   } else if (l.status === 'Rejected') {
-                    badgeColor = "rgba(193, 68, 30, 0.15)";
-                    textColor = "var(--rust)";
+                    badgeColor = "rgba(230, 43, 57, 0.15)";
+                    textColor = "var(--danger)";
                   }
 
                   return (
-                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                    <tr key={l.id} style={{ borderBottom: '1px solid var(--border)' }}>
                       <td style={{ padding: '1rem', fontWeight: 700 }}>{tenant.name}</td>
                       <td style={{ padding: '1rem' }}>Room {tenant.room}</td>
                       <td style={{ padding: '1rem' }} className="ledger-mono">
@@ -264,7 +294,7 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                       <td style={{ padding: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                         {meals.join(", ") || "None"}
                       </td>
-                      <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{l.reason}</td>
+                      <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{l.reason || "—"}</td>
                       <td style={{ padding: '1rem' }}>
                         <span style={{ background: badgeColor, color: textColor, padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
                           {l.status}
@@ -274,10 +304,10 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
                         <button 
                           disabled={actionLoadingId === l.id}
                           onClick={() => handleDelete(l.id)}
-                          style={{ background: 'transparent', border: 'none', color: 'var(--rust)', cursor: 'pointer', padding: '6px' }}
+                          style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: '6px' }}
                           title="Delete Record"
                         >
-                          <Trash2 size={16} />
+                          <FAIcon icon="trash-can" />
                         </button>
                       </td>
                     </tr>

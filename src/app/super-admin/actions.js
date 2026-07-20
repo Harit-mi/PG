@@ -2,6 +2,11 @@
 
 import { supabase } from "@/utils/supabase";
 import { revalidatePath } from "next/cache";
+import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
 export async function fetchSuperAdminMetrics() {
   try {
@@ -316,3 +321,126 @@ export async function fetchBusinessDetails(orgId) {
     return { success: false, error: err.message };
   }
 }
+
+export async function registerNewCustomer(data) {
+  const { name, mobile, email, startDate, planType, password, confirmPassword } = data;
+
+  if (!name || !mobile || !email || !startDate || !planType || !password) {
+    return { success: false, error: "All fields are required." };
+  }
+
+  if (password !== confirmPassword) {
+    return { success: false, error: "Passwords do not match." };
+  }
+
+  // Calculate expiry date
+  const start = new Date(startDate);
+  const expiry = new Date(start);
+  if (planType === 'Yearly') {
+    expiry.setFullYear(expiry.getFullYear() + 1);
+  } else {
+    expiry.setMonth(expiry.getMonth() + 1);
+  }
+  const expiryStr = expiry.toISOString().split('T')[0];
+
+  let orgId = null;
+
+  try {
+    // 1. Create Supabase Auth User first (to ensure email/password check and prevent orphan orgs)
+    const tempSupabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    });
+
+    // We generate a temp org UUID first so we can map the auth user to it
+    const tempOrgUuid = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+
+    const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          organization_id: tempOrgUuid,
+          name,
+          phone: mobile
+        }
+      }
+    });
+
+    if (authError) {
+      throw new Error(`Auth Error: ${authError.message}`);
+    }
+
+    const authUser = authData.user;
+    if (!authUser) {
+      throw new Error("Failed to register user in Auth provider.");
+    }
+
+    // 2. Create organization with the same UUID
+    const { data: orgData, error: orgErr } = await supabase
+      .from('organizations')
+      .insert([{
+        id: tempOrgUuid,
+        name: name,
+        status: 'Active'
+      }])
+      .select()
+      .single();
+
+    if (orgErr) {
+      throw orgErr;
+    }
+
+    orgId = orgData.id;
+
+    // 3. Create Subscription
+    const { error: subErr } = await supabase
+      .from('subscriptions')
+      .insert([{
+        organization_id: orgId,
+        plan_name: planType === 'Yearly' ? 'Pro Yearly' : 'Pro Monthly',
+        status: 'Active',
+        expiry_date: expiryStr
+      }]);
+
+    if (subErr) throw subErr;
+
+    // 4. Create 3 default unassigned slots so they can assign up to 3 outlets right away!
+    const { error: slotErr } = await supabase
+      .from('outlet_slots')
+      .insert([
+        { organization_id: orgId, plan_name: 'Professional', status: 'Unassigned', expiry_date: expiryStr },
+        { organization_id: orgId, plan_name: 'Professional', status: 'Unassigned', expiry_date: expiryStr },
+        { organization_id: orgId, plan_name: 'Professional', status: 'Unassigned', expiry_date: expiryStr }
+      ]);
+
+    if (slotErr) throw slotErr;
+
+    // 5. Log admin action
+    const details = `Registered new customer: ${name} (${email}), Plan: ${planType}, Expiry: ${expiryStr}`;
+    await supabase.from('admin_audit_logs').insert([{
+      admin_email: 'admin@pgmanagement.com',
+      action: 'Register Customer',
+      details,
+      reason: 'New customer onboarded via Super Admin panel'
+    }]);
+
+    revalidatePath("/super-admin/customers");
+    return { success: true };
+
+  } catch (err) {
+    console.error("registerNewCustomer error:", err);
+    // clean up created organization if it was inserted before error
+    if (orgId) {
+      await supabase.from('organizations').delete().eq('id', orgId);
+    }
+    return { success: false, error: err.message };
+  }
+}
+

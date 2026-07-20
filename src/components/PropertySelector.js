@@ -32,18 +32,30 @@ export default function PropertySelector() {
   };
 
   const fetchProperties = async () => {
-    const { data, error } = await supabase.from('properties').select('*').order('created_at', { ascending: true });
-    if (!error && data) {
-      const propertiesWithAll = [{ id: 'all', name: 'All PGs (Aggregated)' }, ...data];
-      setProperties(propertiesWithAll);
-      // Try to read active property from cookies
-      const match = document.cookie.match(new RegExp('(^| )activePropertyId=([^;]+)'));
-      if (match) {
-        setActivePropertyId(match[2]);
-      } else if (data.length > 0) {
-        // Default to first property if no cookie
-        handleSelect(data[0].id);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('organization_id', orgId)
+        .order('created_at', { ascending: true });
+
+      if (!error && data) {
+        const propertiesWithAll = [{ id: 'all', name: 'All PGs (Aggregated)' }, ...data];
+        setProperties(propertiesWithAll);
+        // Try to read active property from cookies
+        const match = document.cookie.match(new RegExp('(^| )activePropertyId=([^;]+)'));
+        if (match) {
+          setActivePropertyId(match[2]);
+        } else if (data.length > 0) {
+          // Default to first property if no cookie
+          handleSelect(data[0].id);
+        }
       }
+    } catch (err) {
+      console.error("Error fetching properties:", err);
     }
   };
 
