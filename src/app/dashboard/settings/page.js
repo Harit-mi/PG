@@ -188,11 +188,26 @@ export default async function SettingsPage() {
 
         <section className={`${styles.section} glass`}>
           <div className={styles.sectionHeader}>
-            <Check size={20} className={styles.icon} />
-            <h2>Room Types</h2>
+            <Shield size={20} className={styles.icon} />
+            <h2>Legal & Privacy Agreements</h2>
           </div>
-          <p className={styles.textMuted}>Configure custom room types, defaults for capacity and rent.</p>
-          <RoomTypesManager initialRoomTypes={initialRoomTypes || []} />
+          <p className={styles.textMuted}>Review terms of service, data processor responsibilities, and tenant privacy commitments.</p>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+            <a 
+              href="/terms" 
+              target="_blank"
+              style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--primary)', padding: '0.5rem 1.25rem', borderRadius: '99px', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}
+            >
+              Terms of Service ↗
+            </a>
+            <a 
+              href="/privacy" 
+              target="_blank"
+              style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--primary)', padding: '0.5rem 1.25rem', borderRadius: '99px', fontWeight: 600, textDecoration: 'none', fontSize: '0.85rem' }}
+            >
+              Privacy Policy ↗
+            </a>
+          </div>
         </section>
       </div>
     </div>

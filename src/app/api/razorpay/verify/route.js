@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { purchaseOutletSlots } from '@/app/actions';
+import { checkRateLimit } from '@/utils/rateLimiter';
 
 export async function POST(req) {
+  // Enforce rate limiting: max 10 verification requests per minute per IP
+  const rateLimit = checkRateLimit(req, 10, 60000);
+  if (!rateLimit.success) return rateLimit.response;
+
   try {
     const { 
       razorpay_order_id, 
@@ -24,7 +29,7 @@ export async function POST(req) {
       const digest = shasum.digest('hex');
 
       if (digest !== razorpay_signature) {
-        return NextResponse.json({ error: "Transaction is not legit!" }, { status: 400 });
+        return NextResponse.json({ error: "Transaction signature verification failed." }, { status: 400 });
       }
     }
 
@@ -40,14 +45,10 @@ export async function POST(req) {
       return NextResponse.json({ error: dbResult.error || "Failed to update subscription slots in database." }, { status: 500 });
     }
 
-    return NextResponse.json({
-      success: true,
-      message: "Payment verified and slots successfully assigned.",
-      paymentId: razorpay_payment_id
-    }, { status: 200 });
+    return NextResponse.json({ status: 'ok', success: true });
 
   } catch (error) {
-    console.error("Verification Error:", error);
-    return NextResponse.json({ error: "Verification failed" }, { status: 500 });
+    console.error("Razorpay Verification Error:", error);
+    return NextResponse.json({ error: "Verification failed due to internal error." }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import FAIcon from "@/components/FAIcon";
 import { supabase } from "@/utils/supabase";
 import styles from "./page.module.css";
@@ -131,6 +132,12 @@ export default function LoginPage() {
           <div className={styles.footerNote}>
             <FAIcon icon="key" />
             <span>Secure operator access portal.</span>
+          </div>
+
+          <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border)', textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+            <Link href="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Terms of Service</Link>
+            <span>•</span>
+            <Link href="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'underline' }}>Privacy Policy</Link>
           </div>
         </div>
       </main>
