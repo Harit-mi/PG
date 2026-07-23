@@ -26,7 +26,11 @@ export default function LoginPage() {
       });
 
       if (authError) {
-        setError(authError.message);
+        if (authError.message.toLowerCase().includes("email not confirmed")) {
+          setError("Email not confirmed in Supabase Auth. Run 'UPDATE auth.users SET email_confirmed_at = NOW() WHERE email = \'" + email + "\';' in Supabase SQL Editor or disable 'Confirm Email' in Supabase Dashboard.");
+        } else {
+          setError(authError.message);
+        }
         setLoading(false);
         return;
       }
