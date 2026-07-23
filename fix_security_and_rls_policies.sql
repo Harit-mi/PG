@@ -3,13 +3,11 @@
 -- https://supabase.com/dashboard/project/creeorxpcmzpcgtzcxaw/editor
 
 -- 1. Helper function for fast, secure organization lookup from JWT claims
+-- Fails closed (returns NULL) if user metadata does not contain a valid organization_id
 CREATE OR REPLACE FUNCTION public.get_auth_org_id()
 RETURNS UUID AS $$
 BEGIN
-  RETURN COALESCE(
-    (NULLIF(auth.jwt() -> 'user_metadata' ->> 'organization_id', ''))::uuid,
-    'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0'::uuid
-  );
+  RETURN (NULLIF(auth.jwt() -> 'user_metadata' ->> 'organization_id', ''))::uuid;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
