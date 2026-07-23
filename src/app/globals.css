@@ -10,9 +10,9 @@
   
   /* Alert/State semantics */
   --success: #28A745; /* Leaf green for vacant or success state */
-  --danger: #E62B39; /* Crimson red for overdue or notice-period */
+  --danger: #DC2626; /* Distinct warning/error red (differentiates from brand accent #E62B39) */
   --warning: #F59E0B;
-  --accent: #E62B39; /* Crimson accent */
+  --accent: #E62B39; /* Crimson brand accent */
   --card-bg: #FFFFFF;
 
   /* Custom layouts */
