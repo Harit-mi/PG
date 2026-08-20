@@ -1,85 +1,146 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 1.75rem;
+  width: 100%;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-muted));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0 0 4px;
 }
 
 .subtitle {
+  font-size: 0.85rem;
   color: var(--text-muted);
+  margin: 0;
 }
 
-.tableContainer {
-  border-radius: 12px;
-  overflow: hidden;
+/* Ruled Ledger Table Container */
+.ledgerContainer {
+  background: var(--card-bg);
   border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: var(--cst-shadow);
+  overflow-x: auto;
 }
 
-.table {
+.ruledTable {
   width: 100%;
   border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: 1rem 1.5rem;
   text-align: left;
-  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
 }
 
-.table th {
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--text-muted);
-  font-weight: 500;
-  font-size: 0.9rem;
+.ruledTable th {
+  padding: 0.85rem 1rem;
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border);
 }
 
-.table tr:last-child td {
-  border-bottom: none;
+.ruledTable td {
+  padding: 1rem;
+  border-bottom: 1px dashed var(--border);
 }
 
-.fw600 {
-  font-weight: 600;
+/* Row Urgency Variants */
+.rowSeverelyOverdue {
+  border-left: 4px solid var(--danger) !important;
+  background-color: rgba(220, 38, 38, 0.05);
 }
 
-.roomBadge {
-  background: rgba(255, 255, 255, 0.1);
+.rowModeratelyOverdue {
+  border-left: 4px solid var(--warning) !important;
+  background-color: rgba(245, 158, 11, 0.04);
+}
+
+.rowPendingNormal {
+  border-left: 4px solid var(--primary) !important;
+}
+
+.rowPaid {
+  border-left: 4px solid var(--success) !important;
+  opacity: 0.85;
+}
+
+/* Badges */
+.badgeSeverelyOverdue {
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--danger);
   padding: 4px 10px;
-  border-radius: 20px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badgeModeratelyOverdue {
+  background: rgba(245, 158, 11, 0.15);
+  color: #B45309;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badgePending {
+  background: rgba(30, 72, 119, 0.12);
+  color: var(--primary);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.badgePaid {
+  background: rgba(40, 167, 69, 0.15);
+  color: var(--success);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+/* Tab Switcher */
+.tabNav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
 }
 
-.waBtn {
-  background: #25D366;
+.tabActive {
+  background: var(--primary);
   color: white;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 500;
-  display: inline-block;
-  transition: opacity 0.2s;
-}
-
-.waBtn:hover {
-  opacity: 0.9;
 }
