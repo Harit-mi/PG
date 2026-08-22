@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import DuesClient from "./DuesClient";
 import { Suspense } from "react";
@@ -7,9 +7,10 @@ import { Suspense } from "react";
 export const revalidate = 0;
 
 export default async function DuesPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
-  // Fetch all income transactions for filtering
+  // Fetch income transactions using authenticated server client
   let query = supabase
     .from('transactions')
     .select('*, tenants(name, phone, room_number), properties(name)')

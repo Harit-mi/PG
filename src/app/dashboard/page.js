@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { getAuthenticatedUser } from "@/app/actions";
 import DashboardClient from "./DashboardClient";
@@ -8,13 +8,14 @@ import FAIcon from "@/components/FAIcon";
 export const revalidate = 0;
 
 export default async function DashboardPage() {
+  const supabase = await createClient();
   const user = await getAuthenticatedUser();
   const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
 
   // Read activePropertyId cookie (could be 'all' or specific property id)
   const cookiePropertyId = (await cookies()).get('activePropertyId')?.value || 'all';
 
-  // 1. Fetch properties
+  // 1. Fetch properties using authenticated server client
   const { data: properties, error: propertiesErr } = await supabase
     .from('properties')
     .select('*')
@@ -35,7 +36,7 @@ export default async function DashboardPage() {
   let subscription = null;
 
   if (propertyIds.length > 0) {
-    // 2. Fetch all other operational datasets concurrently for the organization's properties
+    // 2. Fetch operational datasets concurrently using authenticated session
     const [
       { data: roomsData },
       { data: tenantsData },
@@ -87,7 +88,6 @@ export default async function DashboardPage() {
           <h3 style={{ fontSize: '1.25rem', fontWeight: 650, color: 'var(--primary)', marginBottom: '0.5rem' }}>No Active Outlets Provisioned</h3>
           <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem' }}>You need to configure your first PG outlet before you can view metrics or operations stats.</p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {/* The PropertySelector modal button handles adding outlet slots */}
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Please use the "+ Add Outlet" selector in the sidebar to activate a property.</span>
           </div>
         </div>

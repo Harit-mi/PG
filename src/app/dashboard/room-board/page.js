@@ -1,5 +1,5 @@
 import styles from "../page.module.css";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import RoomBoard from "@/components/RoomBoard";
 import FAIcon from "@/components/FAIcon";
@@ -14,6 +14,7 @@ function withProperty(query, propertyId) {
 }
 
 export default async function RoomBoardPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get('activePropertyId')?.value;
 
   if (!propertyId) {
@@ -27,7 +28,7 @@ export default async function RoomBoardPage() {
     );
   }
 
-  // Fetch all necessary room board data
+  // Fetch room board data using authenticated server client
   const [
     { data: rooms, error: roomsErr },
     { data: tenants, error: tenantsErr },

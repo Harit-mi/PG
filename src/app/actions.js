@@ -55,9 +55,12 @@ export async function switchProperty(id) {
   return { success: true };
 }
 
+import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
+
 export async function getAuthenticatedUser() {
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const supabaseServer = await createServerSupabaseClient();
+    const { data: { user }, error } = await supabaseServer.auth.getUser();
     if (!error && user) {
       return user;
     }
