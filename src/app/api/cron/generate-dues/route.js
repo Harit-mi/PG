@@ -3,6 +3,12 @@ import { createAdminClient } from "@/utils/supabase/admin";
 
 export async function POST(request) {
   try {
+    // 0. Verify Authorization Header against CRON_SECRET if configured
+    const authHeader = request.headers.get("authorization");
+    if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return NextResponse.json({ success: false, error: "Unauthorized cron execution." }, { status: 401 });
+    }
+
     const supabase = createAdminClient();
     
     // 1. Fetch all active tenants and their room details
@@ -19,7 +25,7 @@ export async function POST(request) {
 
     const invoicesToCreate = [];
 
-    // 2. Iterate and check for existing rent transactions for this month
+    // 2. Iterate and check for existing rent transactions for this month (Idempotent Check)
     for (const tenant of tenants) {
       if (!tenant.rooms || !tenant.rooms.rent_per_bed) continue;
 
