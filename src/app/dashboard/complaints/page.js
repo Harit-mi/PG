@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
 import { AlertCircle, CheckCircle2, Clock, Filter } from "lucide-react";
 import { cookies } from "next/headers";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import AddComplaintModal from "@/components/AddComplaintModal";
 import TicketCard from "@/components/TicketCard";
 import ExportComplaintsExcel from "@/components/ExportComplaintsExcel";
@@ -9,6 +9,7 @@ import ExportComplaintsExcel from "@/components/ExportComplaintsExcel";
 export const revalidate = 0;
 
 export default async function ComplaintsPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
 
   let complaintsQuery = supabase
@@ -23,79 +24,31 @@ export default async function ComplaintsPage() {
     tenantsQuery = tenantsQuery.eq('property_id', propertyId);
   }
 
-  const { data: complaints, error } = await complaintsQuery;
-  const { data: tenants } = await tenantsQuery;
+  const [{ data: complaints }, { data: tenants }] = await Promise.all([
+    complaintsQuery,
+    tenantsQuery
+  ]);
 
-  if (error) {
-    console.error("Error fetching complaints:", error);
-  }
-
-  const displayComplaints = complaints?.length > 0 ? complaints : [];
+  const displayComplaints = complaints || [];
+  const displayTenants = tenants || [];
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Complaints & Requests</h1>
-          <p className={styles.subtitle}>Track and resolve tenant issues.</p>
+          <h1 className={styles.title}>Maintenance & Complaints</h1>
+          <p className={styles.subtitle}>Track resident tickets, repairs, and service requests.</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: "flex", gap: "0.75rem" }}>
           <ExportComplaintsExcel complaints={displayComplaints} />
-          <button className={styles.filterBtn}>
-            <Filter size={18} /> Filter
-          </button>
-          <AddComplaintModal buttonClass={styles.filterBtn} tenants={tenants || []} />
+          <AddComplaintModal tenants={displayTenants} propertyId={propertyId} />
         </div>
       </div>
 
-      <div className={styles.kanbanBoard}>
-        {/* Open Column */}
-        <div className={`${styles.column} glass`}>
-          <div className={styles.columnHeader}>
-            <div className={styles.columnTitle}>
-              <AlertCircle size={18} className={styles.iconOpen} />
-              <h3>Open</h3>
-            </div>
-            <span className={styles.countBadge}>{displayComplaints.filter(c => c.status === "Open").length}</span>
-          </div>
-          <div className={styles.ticketList}>
-            {displayComplaints.filter(c => c.status === "Open").map(ticket => (
-              <TicketCard key={ticket.id} ticket={ticket} />
-            ))}
-          </div>
-        </div>
-
-        {/* In Progress Column */}
-        <div className={`${styles.column} glass`}>
-          <div className={styles.columnHeader}>
-            <div className={styles.columnTitle}>
-              <Clock size={18} className={styles.iconProgress} />
-              <h3>In Progress</h3>
-            </div>
-            <span className={styles.countBadge}>{displayComplaints.filter(c => c.status === "In Progress").length}</span>
-          </div>
-          <div className={styles.ticketList}>
-            {displayComplaints.filter(c => c.status === "In Progress").map(ticket => (
-              <TicketCard key={ticket.id} ticket={ticket} />
-            ))}
-          </div>
-        </div>
-
-        {/* Resolved Column */}
-        <div className={`${styles.column} glass`}>
-          <div className={styles.columnHeader}>
-            <div className={styles.columnTitle}>
-              <CheckCircle2 size={18} className={styles.iconResolved} />
-              <h3>Resolved</h3>
-            </div>
-            <span className={styles.countBadge}>{displayComplaints.filter(c => c.status === "Resolved").length}</span>
-          </div>
-          <div className={styles.ticketList}>
-            {displayComplaints.filter(c => c.status === "Resolved").map(ticket => (
-              <TicketCard key={ticket.id} ticket={ticket} />
-            ))}
-          </div>
-        </div>
+      <div className={styles.grid}>
+        {displayComplaints.map((ticket) => (
+          <TicketCard key={ticket.id} ticket={ticket} />
+        ))}
       </div>
     </div>
   );

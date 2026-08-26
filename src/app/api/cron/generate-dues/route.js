@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/utils/supabase";
+import { createAdminClient } from "@/utils/supabase/admin";
 
-// This endpoint should be protected, e.g., by checking an Authorization header 
-// if triggered by an external cron service (like Vercel Cron).
 export async function POST(request) {
   try {
+    const supabase = createAdminClient();
+    
     // 1. Fetch all active tenants and their room details
     const { data: tenants, error: tenantsError } = await supabase
       .from("tenants")
@@ -23,46 +23,41 @@ export async function POST(request) {
     for (const tenant of tenants) {
       if (!tenant.rooms || !tenant.rooms.rent_per_bed) continue;
 
-      // Check if rent transaction already exists for this month
-      const { data: existingDues, error: duesError } = await supabase
+      const { data: existingDues } = await supabase
         .from("transactions")
         .select("id")
         .eq("tenant_id", tenant.id)
+        .eq("type", "Income")
         .eq("category", "Rent")
-        .gte("date", startOfMonth.toISOString().split("T")[0]);
-
-      if (duesError) console.error("Error checking existing dues:", duesError);
+        .gte("date", startOfMonth.toISOString());
 
       if (!existingDues || existingDues.length === 0) {
-        // No due generated yet this month, so we queue it
         invoicesToCreate.push({
-          tenant_id: tenant.id,
           property_id: tenant.property_id,
+          tenant_id: tenant.id,
           type: "Income",
           category: "Rent",
           amount: tenant.rooms.rent_per_bed,
-          status: "Pending", // Important: Set to Pending
-          date: startOfMonth.toISOString().split("T")[0] // 1st of the month
+          status: "Pending",
+          date: new Date().toISOString().split('T')[0]
         });
       }
     }
 
-    // 3. Bulk insert the pending invoices
     if (invoicesToCreate.length > 0) {
       const { error: insertError } = await supabase
         .from("transactions")
         .insert(invoicesToCreate);
-      
+
       if (insertError) throw insertError;
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Generated ${invoicesToCreate.length} pending rent invoices.` 
+    return NextResponse.json({
+      success: true,
+      message: `Generated ${invoicesToCreate.length} due invoices.`
     });
-
   } catch (error) {
-    console.error("Cron Job Error:", error);
+    console.error("Cron Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

@@ -4,12 +4,13 @@ import AddEmployeeModal from "@/components/AddEmployeeModal";
 import EmployeeActionMenu from "@/components/EmployeeActionMenu";
 import Link from "next/link";
 import { cookies } from "next/headers";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import EmployeesClient from "./EmployeesClient";
 
 export const revalidate = 0;
 
 export default async function EmployeesPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let employeeQuery = supabase.from('employees').select('*, properties(name)').order('name');
@@ -33,10 +34,10 @@ export default async function EmployeesPage() {
           <h1 className={styles.title}>Employee Management</h1>
           <p className={styles.subtitle}>Manage staff, salaries, and assignments.</p>
         </div>
-        <AddEmployeeModal buttonClass={styles.addButton} />
+        <AddEmployeeModal propertyId={propertyId} />
       </div>
 
-      <EmployeesClient initialEmployees={displayEmployees} />
+      <EmployeesClient initialEmployees={displayEmployees} propertyId={propertyId} />
     </div>
   );
 }

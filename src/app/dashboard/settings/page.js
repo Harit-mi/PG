@@ -6,9 +6,10 @@ import RoomTypesManager from "@/components/RoomTypesManager";
 import CopyablePortalLink from "@/components/CopyablePortalLink";
 import { getPaymentMethods, getRoomTypes } from "@/app/actions";
 import { cookies, headers } from "next/headers";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function SettingsPage() {
+  const supabase = await createClient();
   const { data: initialMethods } = await getPaymentMethods();
   const { data: initialRoomTypes } = await getRoomTypes();
 

@@ -1,10 +1,13 @@
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
+import { getAuthenticatedUser } from "@/app/actions";
 import OutletsClient from "./OutletsClient";
 
 export const revalidate = 0;
 
 export default async function OutletsManagementPage() {
-  const orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+  const supabase = await createClient();
+  const user = await getAuthenticatedUser();
+  const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
 
   // 1. Fetch properties
   const { data: properties } = await supabase
@@ -24,28 +27,16 @@ export default async function OutletsManagementPage() {
     .from("outlet_slots")
     .select("*")
     .eq("organization_id", orgId)
-    .eq("status", "Unassigned");
-
-  // Mix slot details into properties list
-  const outlets = (properties || []).map(p => {
-    const slot = slots?.find(s => s.assigned_property_id === p.id);
-    return {
-      ...p,
-      plan_name: slot?.plan_name || 'Professional',
-      slot_status: slot?.status || 'Assigned'
-    };
-  });
+    .is("assigned_property_id", null);
 
   return (
-    <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      
-      <div>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 900, marginBottom: '0.25rem' }}>My Property Outlets</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Review subscriptions, handle independent renewals, or deactivate locations.</p>
-      </div>
-
-      <OutletsClient initialOutlets={outlets} unassignedSlots={unassignedSlots || []} />
-
+    <div style={{ padding: "2rem" }}>
+      <OutletsClient 
+        initialProperties={properties || []}
+        initialSlots={slots || []}
+        initialUnassignedSlots={unassignedSlots || []}
+        organizationId={orgId}
+      />
     </div>
   );
 }

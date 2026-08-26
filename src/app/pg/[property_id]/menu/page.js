@@ -1,106 +1,87 @@
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import styles from "./page.module.css";
 import { Utensils, CalendarDays, Coffee, Sunrise, Sunset, Moon } from "lucide-react";
 
 export const revalidate = 0;
 
 export default async function PublicMenuPage({ params }) {
-  const propertyId = params.property_id;
+  const supabase = await createClient();
+  const propertyId = (await params).property_id;
   
-  // Get current week's Monday date string
   const getMonday = (d) => {
     d = new Date(d);
     var day = d.getDay(),
-        diff = d.getDate() - day + (day == 0 ? -6: 1); // adjust when day is sunday
+        diff = d.getDate() - day + (day == 0 ? -6: 1);
     return new Date(d.setDate(diff)).toISOString().split('T')[0];
   };
   
   const currentWeekStart = getMonday(new Date());
 
-  // Fetch the menu for this property and current week
   const { data: menuItems, error } = await supabase
     .from('food_menus')
     .select('*')
     .eq('property_id', propertyId)
     .eq('week_start_date', currentWeekStart);
 
-  // Fetch property details for branding
-  const { data: property } = await supabase
-    .from('properties')
-    .select('name')
-    .eq('id', propertyId)
-    .single();
+  const items = menuItems || [];
 
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  const getDayMenu = (day) => {
-    if (!menuItems) return null;
-    return menuItems.find(m => m.day_of_week === day);
-  };
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.branding}>
-          <Utensils size={28} className={styles.icon} />
-          <h1>{property?.name || "PG Property"}</h1>
+      <div className={styles.header}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+          <Utensils style={{ color: "var(--accent)" }} size={28} />
+          <h1 className={styles.title}>Weekly Dining Menu</h1>
         </div>
-        <p className={styles.subtitle}>Weekly Food Menu</p>
-        <div className={styles.dateBadge}>
-          <CalendarDays size={16} /> Week of {new Date(currentWeekStart).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-        </div>
-      </header>
+        <p className={styles.subtitle}>Fresh meal schedule updated for week starting {currentWeekStart}</p>
+      </div>
 
-      <div className={styles.menuList}>
-        {daysOfWeek.map(day => {
-          const dayMenu = getDayMenu(day);
-          const isToday = new Date().toLocaleDateString('en-US', { weekday: 'long' }) === day;
-          
+      <div className={styles.grid}>
+        {daysOfWeek.map((day) => {
+          const dayMenu = items.find((item) => item.day_of_week === day) || {};
           return (
-            <div key={day} className={`${styles.dayCard} ${isToday ? styles.todayCard : ''} glass`}>
-              <div className={styles.dayHeader}>
-                <h2>{day}</h2>
-                {isToday && <span className={styles.todayBadge}>Today</span>}
+            <div key={day} className={`${styles.dayCard} glass`}>
+              <h3 className={styles.dayTitle}>
+                <CalendarDays size={18} style={{ display: "inline", marginRight: "6px" }} />
+                {day}
+              </h3>
+
+              <div className={styles.mealSection}>
+                <div className={styles.mealHeader}>
+                  <Sunrise size={16} style={{ color: "#F59E0B" }} />
+                  <span>Breakfast</span>
+                </div>
+                <div className={styles.mealText}>{dayMenu.breakfast || "Not specified"}</div>
               </div>
-              
-              <div className={styles.mealsGrid}>
-                <div className={styles.mealBlock}>
-                  <div className={styles.mealTitle}>
-                    <Sunrise size={16} /> Breakfast
-                  </div>
-                  <p>{dayMenu?.breakfast || "Not specified"}</p>
+
+              <div className={styles.mealSection}>
+                <div className={styles.mealHeader}>
+                  <Sunset size={16} style={{ color: "#EF4444" }} />
+                  <span>Lunch</span>
                 </div>
-                
-                <div className={styles.mealBlock}>
-                  <div className={styles.mealTitle}>
-                    <Coffee size={16} /> Lunch
-                  </div>
-                  <p>{dayMenu?.lunch || "Not specified"}</p>
+                <div className={styles.mealText}>{dayMenu.lunch || "Not specified"}</div>
+              </div>
+
+              <div className={styles.mealSection}>
+                <div className={styles.mealHeader}>
+                  <Coffee size={16} style={{ color: "#8B5CF6" }} />
+                  <span>Snacks</span>
                 </div>
-                
-                <div className={styles.mealBlock}>
-                  <div className={styles.mealTitle}>
-                    <Sunset size={16} /> Snacks
-                  </div>
-                  <p>{dayMenu?.evening_snack || "Not specified"}</p>
+                <div className={styles.mealText}>{dayMenu.snacks || "Not specified"}</div>
+              </div>
+
+              <div className={styles.mealSection}>
+                <div className={styles.mealHeader}>
+                  <Moon size={16} style={{ color: "#3B82F6" }} />
+                  <span>Dinner</span>
                 </div>
-                
-                <div className={styles.mealBlock}>
-                  <div className={styles.mealTitle}>
-                    <Moon size={16} /> Dinner
-                  </div>
-                  <p>{dayMenu?.dinner || "Not specified"}</p>
-                </div>
+                <div className={styles.mealText}>{dayMenu.dinner || "Not specified"}</div>
               </div>
             </div>
           );
         })}
       </div>
-      
-      <footer className={styles.footer}>
-        <p>Menu is subject to change based on availability.</p>
-        <p>Powered by RestroIQ</p>
-      </footer>
     </div>
   );
 }

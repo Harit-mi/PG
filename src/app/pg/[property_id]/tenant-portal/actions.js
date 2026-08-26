@@ -1,97 +1,126 @@
 "use server";
 
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 
-export async function submitPublicComplaint(property_id, formData) {
-  const tenant_name = formData.get("tenant_name");
-  const room_number = formData.get("room_number");
-  const issue = formData.get("issue");
-  const category = formData.get("category");
+export async function verifyTenantPhone(propertyId, phone) {
+  const supabase = await createClient();
+  const cleanPhone = phone.trim();
 
-  const formattedIssue = `[${room_number}] ${tenant_name}: ${issue}`;
-  const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-
-  const { error } = await supabase.from("complaints").insert([{
-    property_id,
-    ticket_id: ticketId,
-    issue: formattedIssue,
-    category,
-    priority: "Medium",
-    status: "Open"
-  }]);
-
-  if (error) {
-    console.error("Submit Complaint Error:", error);
-    return { success: false, error: error.message };
-  }
-
-  return { success: true, ticketId };
-}
-
-export async function checkComplaintStatus(property_id, ticket_id) {
-  const { data, error } = await supabase
-    .from("complaints")
-    .select("status, category, issue")
-    .eq("property_id", property_id)
-    .eq("ticket_id", ticket_id.toUpperCase())
+  const { data: tenant, error } = await supabase
+    .from("tenants")
+    .select("*, properties(name)")
+    .eq("property_id", propertyId)
+    .eq("phone", cleanPhone)
     .single();
 
-  if (error) {
-    return { success: false, error: "Ticket not found." };
+  if (error || !tenant) {
+    return { success: false, error: "No active resident record found matching this mobile number for this property." };
   }
 
-  return { success: true, complaint: data };
+  // Fetch pending dues
+  const { data: dues } = await supabase
+    .from("transactions")
+    .select("*")
+    .eq("tenant_id", tenant.id)
+    .eq("type", "Income")
+    .eq("status", "Pending");
+
+  return { 
+    success: true, 
+    tenant,
+    dues: dues || []
+  };
 }
 
-export async function submitComplaintTicket({ propertyId, tenantId, title, description, category }) {
-  const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-  const { error } = await supabase.from("complaints").insert([{
-    property_id: propertyId,
-    tenant_id: tenantId,
-    ticket_id: ticketId,
-    title,
-    issue: `${title}: ${description}`,
-    category: category || "Maintenance",
-    priority: "Medium",
-    status: "Open"
-  }]);
+export async function submitLeaveRequest(propertyId, tenantId, leaveData) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("leaves")
+    .insert([{
+      property_id: propertyId,
+      tenant_id: tenantId,
+      start_date: leaveData.startDate,
+      end_date: leaveData.endDate,
+      breakfast: leaveData.breakfast,
+      lunch: leaveData.lunch,
+      dinner: leaveData.dinner,
+      reason: leaveData.reason,
+      status: "Pending"
+    }]);
 
   if (error) {
-    console.error("Submit Complaint Error:", error);
-    return { success: false, error: error.message };
-  }
-
-  return { success: true, ticketId };
-}
-
-export async function submitLeaveRequest({ propertyId, tenantId, startDate, endDate, reason, meals }) {
-  const { error } = await supabase.from("leaves").insert([{
-    property_id: propertyId,
-    tenant_id: tenantId,
-    start_date: startDate,
-    end_date: endDate,
-    reason: reason || "Personal",
-    meals_skipped: meals ? meals.join(", ") : "All Meals",
-    status: "Pending"
-  }]);
-
-  if (error) {
-    console.error("Submit Leave Error:", error);
+    console.error("Leave Request Error:", error);
     return { success: false, error: error.message };
   }
 
   return { success: true };
 }
 
-export async function submitPaymentProof({ propertyId, tenantId, transactionId, paymentRef, proofUrl }) {
-  const { error } = await supabase.from("transactions").update({
-    payment_reference: paymentRef,
-    proof_url: proofUrl,
-    status: "Pending"
-  }).eq("id", transactionId);
+export async function submitComplaintTicket(propertyId, tenantId, complaintData) {
+  const supabase = await createClient();
+  const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+
+  const { error } = await supabase
+    .from("complaints")
+    .insert([{
+      property_id: propertyId,
+      tenant_id: tenantId,
+      ticket_id: ticketId,
+      category: complaintData.category,
+      issue: complaintData.issue,
+      priority: complaintData.priority || "Medium",
+      status: "Open"
+    }]);
 
   if (error) {
-    console.error("Submit Payment Proof Error:", error);
+    console.error("Complaint Ticket Error:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function submitPaymentProof(propertyId, tenantId, paymentData) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("transactions")
+    .insert([{
+      property_id: propertyId,
+      tenant_id: tenantId,
+      type: "Income",
+      category: "Rent",
+      amount: parseFloat(paymentData.amount),
+      payment_method: paymentData.method,
+      status: "Pending Owner Verification",
+      date: new Date().toISOString().split('T')[0]
+    }]);
+
+  if (error) {
+    console.error("Payment Proof Error:", error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function submitPublicVisitor(property_id, formData) {
+  const supabase = await createClient();
+  const visitor_name = formData.get("visitor_name");
+  const visitor_phone = formData.get("visitor_phone");
+  const host_tenant = formData.get("host_tenant");
+  const purpose = formData.get("purpose");
+
+  const { error } = await supabase.from("visitors").insert([{
+    property_id,
+    visitor_name,
+    visitor_phone,
+    purpose: `Visiting ${host_tenant} - ${purpose}`,
+    status: "Checked In",
+    check_in_time: new Date().toISOString()
+  }]);
+
+  if (error) {
+    console.error("Submit Visitor Error:", error);
     return { success: false, error: error.message };
   }
 

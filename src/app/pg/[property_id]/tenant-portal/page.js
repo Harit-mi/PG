@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 import TenantPortalClient from "./TenantPortalClient";
 
 export const revalidate = 0;
@@ -18,6 +18,7 @@ function getMondayOfCurrentWeek() {
 }
 
 export default async function TenantPortalPage({ params }) {
+  const supabase = await createClient();
   const { property_id } = await params;
   const today = getTodayString();
   const currentWeekStart = getMondayOfCurrentWeek();
@@ -29,7 +30,7 @@ export default async function TenantPortalPage({ params }) {
     .eq('id', property_id)
     .single();
 
-  // 2. Fetch today's menu
+  // 2. Fetch food menu for today
   const { data: menuData } = await supabase
     .from('food_menus')
     .select('*')
@@ -38,44 +39,19 @@ export default async function TenantPortalPage({ params }) {
     .eq('day_of_week', today)
     .single();
 
-  // 3. Fetch latest notices
-  const { data: notices } = await supabase
-    .from('notices')
+  // 3. Fetch payment methods for UPI/bank details
+  const { data: paymentMethods } = await supabase
+    .from('payment_methods')
     .select('*')
     .eq('property_id', property_id)
-    .order('created_at', { ascending: false })
-    .limit(5);
-
-  // 4. Fetch tenants for validation
-  const { data: tenants } = await supabase
-    .from('tenants')
-    .select('*')
-    .eq('property_id', property_id)
-    .eq('status', 'Active');
-
-  // 5. Fetch leaves
-  const { data: leaves } = await supabase
-    .from('leaves')
-    .select('*')
-    .eq('property_id', property_id)
-    .order('created_at', { ascending: false });
-
-  // 6. Fetch transactions / dues for tenant
-  const { data: transactions } = await supabase
-    .from('transactions')
-    .select('*')
-    .eq('property_id', property_id)
-    .order('date', { ascending: false });
+    .eq('is_active', true);
 
   return (
     <TenantPortalClient
+      property={property}
       propertyId={property_id}
-      propertyName={property?.name || "Hostel PG"}
       todayMenu={menuData}
-      notices={notices || []}
-      tenants={tenants || []}
-      leaves={leaves || []}
-      transactions={transactions || []}
+      paymentMethods={paymentMethods || []}
     />
   );
 }
