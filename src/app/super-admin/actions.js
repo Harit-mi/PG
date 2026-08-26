@@ -1,15 +1,16 @@
 "use server";
 
-import { supabase } from "@/utils/supabase";
+import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-project.supabase.co';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://creeorxpcmzpcgtzcxaw.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
 export async function fetchSuperAdminMetrics() {
   try {
+    const supabase = await createServerSupabaseClient();
     // 1. Fetch organization counts
     const { data: orgs } = await supabase.from('organizations').select('id, status');
     const totalCustomers = orgs?.length || 0;

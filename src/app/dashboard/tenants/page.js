@@ -5,11 +5,12 @@ import UploadKycModal from "@/components/UploadKycModal";
 import TenantProfileButton from "@/components/TenantProfileButton";
 import TenantActionMenu from "@/components/TenantActionMenu";
 import { cookies } from "next/headers";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 export const revalidate = 0; // Disable caching
 
 export default async function TenantsPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let tenantQuery = supabase.from('tenants').select('*').order('name');
@@ -42,68 +43,77 @@ export default async function TenantsPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Tenant Management</h1>
-          <p className={styles.subtitle}>View and manage all active tenants.</p>
+          <h1 className={styles.title}>Tenant Directory</h1>
+          <p className={styles.subtitle}>Manage resident details, leases, and contacts.</p>
         </div>
-        <AddTenantModal buttonClass={styles.addButton} availableRooms={availableRooms} />
+        <AddTenantModal availableRooms={availableRooms} />
       </div>
 
-      <div className={styles.controls}>
-        <div className={styles.searchBar}>
-          <Search size={20} className={styles.searchIcon} />
-          <input type="text" placeholder="Search by name, room, or phone..." className={styles.searchInput} />
-        </div>
+      {/* Tenant Search Bar */}
+      <div className={styles.searchBar}>
+        <Search className={styles.searchIcon} size={18} />
+        <input 
+          type="text" 
+          placeholder="Search by tenant name, room number, or phone..." 
+          className={styles.searchInput}
+        />
       </div>
 
-      <div className={`${styles.tableContainer} glass`}>
-        {displayTenants.length === 0 ? (
-          <div style={{ padding: "2rem", textAlign: "center", color: "var(--text-muted)" }}>
-            <p>No tenants found. Add a tenant to get started.</p>
-          </div>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Room</th>
-                <th>Contact</th>
-                <th>Move-in Date</th>
-                <th>Status</th>
-                <th>Actions</th>
+      {/* Tenants Table */}
+      <div className={`${styles.tableCard} glass`}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Room</th>
+              <th>Move-in Date</th>
+              <th>Status</th>
+              <th>Rent / Month</th>
+              <th>KYC Document</th>
+              <th style={{ textAlign: "right" }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {displayTenants.map((tenant) => (
+              <tr key={tenant.id}>
+                <td>
+                  <div className={styles.tenantInfo}>
+                    <TenantProfileButton tenant={tenant} />
+                    <div>
+                      <div className={styles.tenantName}>{tenant.name}</div>
+                      <div className={styles.tenantPhone}>
+                        <Phone size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                        {tenant.phone}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span className={styles.roomBadge}>Room {tenant.room_number}</span>
+                </td>
+                <td>{tenant.move_in_date || tenant.joined_date}</td>
+                <td>
+                  <span className={`${styles.statusPill} ${tenant.status === 'Active' ? styles.active : styles.notice}`}>
+                    {tenant.status}
+                  </span>
+                </td>
+                <td style={{ fontWeight: 650 }}>₹{tenant.rent_amount}/mo</td>
+                <td>
+                  {tenant.kyc_url ? (
+                    <a href={tenant.kyc_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontSize: '0.85rem', textDecoration: 'underline' }}>
+                      View KYC Document
+                    </a>
+                  ) : (
+                    <UploadKycModal tenantId={tenant.id} />
+                  )}
+                </td>
+                <td style={{ textAlign: "right" }}>
+                  <TenantActionMenu tenant={tenant} availableRooms={availableRooms} />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {displayTenants.map((tenant) => (
-                <tr key={tenant.id}>
-                  <td className={styles.fw600}>{tenant.name}</td>
-                  <td><span className={styles.roomBadge}>{tenant.room_number || 'Unassigned'}</span></td>
-                  <td>
-                    <div className={styles.contactCell}>
-                      <Phone size={14} className={styles.textMuted} /> {tenant.phone}
-                    </div>
-                  </td>
-                  <td>{new Date(tenant.move_in_date).toLocaleDateString()}</td>
-                  <td>
-                    <span className={`${styles.statusBadge} ${styles[tenant.status.replace(" ", "")]}`}>
-                      {tenant.status}
-                    </span>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                      <TenantProfileButton tenant={tenant} />
-                      <UploadKycModal 
-                        tenantId={tenant.id} 
-                        tenantName={tenant.name} 
-                        existingUrl={tenant.document_url} 
-                      />
-                      <TenantActionMenu tenant={tenant} />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

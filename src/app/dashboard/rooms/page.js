@@ -4,11 +4,12 @@ import AddRoomModal from "@/components/AddRoomModal";
 import { getRoomTypes } from "@/app/actions";
 
 import { cookies } from "next/headers";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 export const revalidate = 0; // Disable caching for now so data is always fresh
 
 export default async function RoomsPage() {
+  const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   
   let query = supabase.from('rooms').select('*').order('room_number');
@@ -16,7 +17,7 @@ export default async function RoomsPage() {
     query = query.eq('property_id', propertyId);
   }
   
-  const [{ data: rooms, error }, { data: roomTypes }] = await Promise.all([
+  const [{ data: rooms, error }, roomTypes] = await Promise.all([
     query,
     getRoomTypes()
   ]);
@@ -25,7 +26,6 @@ export default async function RoomsPage() {
     console.error("Error fetching rooms:", error);
   }
 
-  // Fallback if empty
   const displayRooms = rooms?.length > 0 ? rooms : [];
 
   return (
@@ -39,38 +39,46 @@ export default async function RoomsPage() {
       </div>
 
       <div className={styles.grid}>
-        {displayRooms.length === 0 ? (
-          <p className={styles.textMuted}>No rooms found. Add a room to get started.</p>
-        ) : (
-          displayRooms.map((room) => (
-            <div key={room.id} className={`${styles.card} glass`}>
-              <div className={styles.cardHeader}>
-                <h2 className={styles.roomNumber}>Room {room.room_number}</h2>
-                <span className={`${styles.badge} ${styles[room.status.replace(" ", "")]}`}>
-                  {room.status}
+        {displayRooms.map((room) => (
+          <div key={room.id} className={`${styles.card} glass`}>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.roomNumber}>Room {room.room_number}</h3>
+              <span 
+                className={`${styles.statusBadge} ${
+                  room.status === "Vacant" ? styles.vacant : styles.occupied
+                }`}
+              >
+                {room.status}
+              </span>
+            </div>
+            
+            <div className={styles.cardBody}>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Type:</span>
+                <span className={styles.value}>{room.room_type || room.type}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Capacity:</span>
+                <span className={styles.value}>
+                  <User size={14} style={{ display: 'inline', marginRight: '4px' }} />
+                  {room.capacity} Person(s)
                 </span>
               </div>
-            
-              <div className={styles.details}>
-                <p><strong>Type:</strong> {room.type}</p>
-                <p><strong>Rent/Bed:</strong> ₹{room.rent_per_bed}/mo</p>
-                <p><strong>Total Potential Rev:</strong> ₹{room.rent_per_bed * room.capacity}/mo</p>
-              </div>
-
-              <div className={styles.occupancy}>
-                <div className={styles.occupancyBar}>
-                  <div 
-                    className={styles.occupancyFill} 
-                    style={{ width: `${(0 / room.capacity) * 100}%` }}
-                  ></div>
-                </div>
-                <p className={styles.occupancyText}>
-                  <User size={14} /> 0 / {room.capacity} Tenants
-                </p>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>Rent / Bed:</span>
+                <span className={styles.value}>₹{room.rent_per_bed || room.rent_amount}/mo</span>
               </div>
             </div>
-          ))
-        )}
+
+            <div className={styles.cardFooter}>
+              <div className={styles.amenities}>
+                {room.amenities && Array.isArray(room.amenities) && room.amenities.map((item, idx) => (
+                  <span key={idx} className={styles.amenityTag}>{item}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

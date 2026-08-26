@@ -1,6 +1,6 @@
 "use server";
 
-import { supabase } from "@/utils/supabase";
+import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -18,6 +18,7 @@ function sanitizeInput(text) {
 async function checkSubscription(property_id) {
   if (!property_id || property_id === 'all') return { success: false, error: "Please select a specific property from the sidebar to perform this action." };
   
+  const supabase = await createServerSupabaseClient();
   const { data: property } = await supabase
     .from("properties")
     .select("subscription_status, expiry_date, organization_id")
@@ -54,8 +55,6 @@ export async function switchProperty(id) {
   revalidatePath("/dashboard", "layout");
   return { success: true };
 }
-
-import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 
 export async function getAuthenticatedUser() {
   try {

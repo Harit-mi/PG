@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FAIcon from "@/components/FAIcon";
-import { supabase } from "@/utils/supabase";
+import { createClient } from "@/utils/supabase/client";
 import styles from "./page.module.css";
+
+const supabase = createClient();
 
 export default function LoginPage() {
   const router = useRouter();
