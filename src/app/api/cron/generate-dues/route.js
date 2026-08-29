@@ -3,10 +3,15 @@ import { createAdminClient } from "@/utils/supabase/admin";
 
 export async function POST(request) {
   try {
-    // 0. Verify Authorization Header against CRON_SECRET if configured
+    // 0. Fail-Closed CRON_SECRET Authorization Check
+    const cronSecret = process.env.CRON_SECRET;
     const authHeader = request.headers.get("authorization");
-    if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json({ success: false, error: "Unauthorized cron execution." }, { status: 401 });
+
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Missing or invalid CRON_SECRET authorization header." },
+        { status: 401 }
+      );
     }
 
     const supabase = createAdminClient();
