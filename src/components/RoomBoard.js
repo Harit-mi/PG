@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FAIcon from "./FAIcon";
 import { updateTenantStatusAndRoom } from "@/app/actions";
+import { getFloorName } from "@/utils/roomUtils";
 import styles from "./RoomBoard.module.css";
 
 export default function RoomBoard({ 
@@ -42,18 +43,6 @@ export default function RoomBoard({
       tenantMap[t.room_number].push(t);
     }
   });
-
-  // Infer Floor from Room Number (e.g. Room 101 -> 1st Floor, Room 202 -> 2nd Floor, Room G01 -> Ground Floor)
-  const getFloorName = (roomNumStr) => {
-    const cleanNum = String(roomNumStr).trim().toUpperCase();
-    if (cleanNum.startsWith('G') || cleanNum.length <= 2) return "Ground Floor";
-    const firstDigit = cleanNum[0];
-    if (firstDigit === '1') return "1st Floor";
-    if (firstDigit === '2') return "2nd Floor";
-    if (firstDigit === '3') return "3rd Floor";
-    if (firstDigit === '4') return "4th Floor";
-    return `${firstDigit}th Floor`;
-  };
 
   // Group rooms by Floor
   const floorMap = {};

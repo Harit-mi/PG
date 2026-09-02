@@ -4,16 +4,8 @@ import { createClient as createServerSupabaseClient } from "@/utils/supabase/ser
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-function sanitizeInput(text) {
-  if (typeof text !== "string") return text;
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;")
-    .replace(/\//g, "&#x2F;");
-}
+import { sanitizeInput } from "@/utils/sanitizer";
+import { normalizeRoomNumber } from "@/utils/roomUtils";
 
 async function checkSubscription(property_id) {
   if (!property_id || property_id === 'all') return { success: false, error: "Please select a specific property from the sidebar to perform this action." };

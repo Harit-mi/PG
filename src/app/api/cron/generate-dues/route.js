@@ -1,17 +1,13 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
+import { verifyCronAuth } from "@/utils/cronAuth";
 
 export async function POST(request) {
   try {
     // 0. Fail-Closed CRON_SECRET Authorization Check
-    const cronSecret = process.env.CRON_SECRET;
-    const authHeader = request.headers.get("authorization");
-
-    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized: Missing or invalid CRON_SECRET authorization header." },
-        { status: 401 }
-      );
+    const authResult = verifyCronAuth(process.env.CRON_SECRET, request.headers.get("authorization"));
+    if (authResult.status !== 200) {
+      return NextResponse.json({ success: false, error: authResult.error }, { status: authResult.status });
     }
 
     const supabase = createAdminClient();
