@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, CheckCircle2, AlertCircle, XCircle } from "lucide-react";
+import { Calendar, CheckCircle2, AlertCircle, XCircle, Clock } from "lucide-react";
 import { submitLeaveRequest } from "@/app/actions";
 
 export default function LeaveSection({ propertyId, tenants = [], leaves = [] }) {

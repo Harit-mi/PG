@@ -88,7 +88,7 @@ export default async function DashboardPage() {
           <h3 style={{ fontSize: '1.25rem', fontWeight: 650, color: 'var(--primary)', marginBottom: '0.5rem' }}>No Active Outlets Provisioned</h3>
           <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem' }}>You need to configure your first PG outlet before you can view metrics or operations stats.</p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Please use the "+ Add Outlet" selector in the sidebar to activate a property.</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Please use the &quot;+ Add Outlet&quot; selector in the sidebar to activate a property.</span>
           </div>
         </div>
       ) : (

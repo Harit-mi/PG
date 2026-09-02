@@ -17,8 +17,10 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
   useEffect(() => {
     const query = searchParams?.get("search");
     if (query) {
-      setSearchTerm(query);
-      setStatusFilter("All");
+      Promise.resolve().then(() => {
+        setSearchTerm(query);
+        setStatusFilter("All");
+      });
     }
   }, [searchParams]);
 

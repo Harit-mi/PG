@@ -7,14 +7,10 @@ import styles from "./ActionDropdown.module.css";
 
 export default function ActionDropdown({ actions }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Close when clicking outside
   useEffect(() => {
@@ -93,7 +89,7 @@ export default function ActionDropdown({ actions }) {
         <MoreVertical size={18} />
       </button>
 
-      {mounted && createPortal(dropdownMenuContent, document.body)}
+      {typeof window !== 'undefined' && isOpen && createPortal(dropdownMenuContent, document.body)}
     </div>
   );
 }

@@ -15,16 +15,18 @@ export default function SuperAdminLayout({ children }) {
   useEffect(() => {
     // If we're on the login page, no need to check
     if (pathname === "/super-admin/login") {
-      setChecking(false);
+      Promise.resolve().then(() => setChecking(false));
       return;
     }
 
-    const session = localStorage.getItem("super_admin_session");
+    const session = typeof window !== "undefined" ? localStorage.getItem("super_admin_session") : null;
     if (!session) {
       router.push("/super-admin/login");
     } else {
-      setAuthorized(true);
-      setChecking(false);
+      Promise.resolve().then(() => {
+        setAuthorized(true);
+        setChecking(false);
+      });
     }
   }, [pathname, router]);
 

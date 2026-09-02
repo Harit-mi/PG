@@ -110,7 +110,7 @@ export default function KitchenClient({ initialTenants = [], initialLeaves = [] 
 
       {/* Occupant meal schedule status grid */}
       <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', padding: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.2rem', marginBottom: '1.25rem', marginTop: 0 }}>📋 Today's Occupant Meal Schedule</h3>
+        <h3 style={{ fontSize: '1.2rem', marginBottom: '1.25rem', marginTop: 0 }}>📋 Today&apos;s Occupant Meal Schedule</h3>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.95rem' }}>
             <thead>

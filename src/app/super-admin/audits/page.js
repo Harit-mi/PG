@@ -52,7 +52,7 @@ export default async function SuperAdminAuditLogsPage() {
                   </td>
                   <td style={{ padding: '1rem', fontSize: '0.85rem' }}>{log.details}</td>
                   <td style={{ padding: '1rem', fontSize: '0.85rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>
-                    "{log.reason || 'No reason provided'}"
+                    &quot;{log.reason || 'No reason provided'}&quot;
                   </td>
                 </tr>
               ))}

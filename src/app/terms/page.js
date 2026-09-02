@@ -25,7 +25,7 @@ export default function TermsPage() {
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>1. Agreement to Terms</h2>
           <p style={{ margin: 0, fontSize: '0.95rem' }}>
-            By accessing or using <strong>OUR-PG</strong> ("Platform", "We", "Us"), provided as a hostel and PG management software platform, you ("Customer", "PG Owner", "Operator") agree to be bound by these Terms of Service. If you are registering an account on behalf of an organization or PG business, you represent that you have authority to bind that entity.
+            By accessing or using <strong>OUR-PG</strong> (&quot;Platform&quot;, &quot;We&quot;, &quot;Us&quot;), provided as a hostel and PG management software platform, you (&quot;Customer&quot;, &quot;PG Owner&quot;, &quot;Operator&quot;) agree to be bound by these Terms of Service. If you are registering an account on behalf of an organization or PG business, you represent that you have authority to bind that entity.
           </p>
         </section>
 
@@ -50,7 +50,7 @@ export default function TermsPage() {
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>4. Acceptable Use & Account Security</h2>
           <p style={{ margin: 0, fontSize: '0.95rem' }}>
-            You are responsible for maintaining the confidentiality of your login credentials. You agree not to attempt unauthorized access to other organizations' data, bypass Row-Level Security controls, or use the platform for unlawful purposes.
+            You are responsible for maintaining the confidentiality of your login credentials. You agree not to attempt unauthorized access to other organizations&apos; data, bypass Row-Level Security controls, or use the platform for unlawful purposes.
           </p>
         </section>
 

@@ -14,11 +14,13 @@ export default function CheckoutPage() {
   const [price, setPrice] = useState("₹4,999");
 
   useEffect(() => {
-    const savedPlan = localStorage.getItem("pg_selected_plan");
+    const savedPlan = typeof window !== 'undefined' ? localStorage.getItem("pg_selected_plan") : null;
     if (savedPlan) {
-      setPlan(savedPlan);
-      if (savedPlan === "Starter") setPrice("₹1,999");
-      if (savedPlan === "Enterprise") setPrice("₹14,999");
+      Promise.resolve().then(() => {
+        setPlan(savedPlan);
+        if (savedPlan === "Starter") setPrice("₹1,999");
+        if (savedPlan === "Enterprise") setPrice("₹14,999");
+      });
     }
   }, []);
 

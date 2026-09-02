@@ -19,10 +19,12 @@ export default function PropertySelector() {
   const [unassignedSlots, setUnassignedSlots] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchProperties();
-    loadSlotsCount();
-  }, []);
+  const handleSelect = async (id) => {
+    setActivePropertyId(id);
+    setIsOpen(false);
+    await switchProperty(id);
+    window.location.reload();
+  };
 
   const loadSlotsCount = async () => {
     const res = await fetchUnassignedSlotsCount();
@@ -59,12 +61,17 @@ export default function PropertySelector() {
     }
   };
 
-  const handleSelect = async (id) => {
-    setActivePropertyId(id);
-    setIsOpen(false);
-    await switchProperty(id);
-    window.location.reload();
-  };
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (isMounted) {
+        await fetchProperties();
+        await loadSlotsCount();
+      }
+    })();
+    return () => { isMounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleAddOutletClick = async () => {
     setIsOpen(false);

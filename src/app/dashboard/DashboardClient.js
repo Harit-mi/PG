@@ -422,7 +422,7 @@ export default function DashboardClient({
       {/* 3. TODAY'S OPERATIONS SNAPSHOT STRIP */}
       <div className="glass" style={{ padding: '1.25rem 1.5rem', background: 'var(--card-bg)', borderRadius: '16px', border: '1px solid var(--border)' }}>
         <h3 style={{ fontSize: '1rem', margin: '0 0 1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>
-          <FAIcon icon="clock-rotate-left" /> Today's Operations Snapshot ({new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })})
+          <FAIcon icon="clock-rotate-left" /> Today&apos;s Operations Snapshot ({new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })})
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
           

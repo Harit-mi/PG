@@ -36,14 +36,16 @@ export default function TenantPortalClient({
 
   // Check saved session verification
   useEffect(() => {
-    const savedPhone = sessionStorage.getItem("tenant_portal_phone");
+    const savedPhone = typeof window !== 'undefined' ? sessionStorage.getItem("tenant_portal_phone") : null;
     if (savedPhone) {
-      setPhone(savedPhone);
       const found = tenants.find(t => t.phone && t.phone.replace(/[^0-9]/g, '').includes(savedPhone.replace(/[^0-9]/g, '')));
-      if (found) {
-        setMatchedTenant(found);
-        setIsVerified(true);
-      }
+      Promise.resolve().then(() => {
+        setPhone(savedPhone);
+        if (found) {
+          setMatchedTenant(found);
+          setIsVerified(true);
+        }
+      });
     }
   }, [tenants]);
 
@@ -479,7 +481,7 @@ export default function TenantPortalClient({
           {/* Today's Food Menu */}
           <div style={{ background: 'var(--card-bg)', padding: '1.25rem', borderRadius: '16px', border: '1px solid var(--border)' }}>
             <h4 style={{ fontSize: '0.95rem', margin: '0 0 0.85rem', fontWeight: 800, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FAIcon icon="utensils" /> Today's Food Menu
+              <FAIcon icon="utensils" /> Today&apos;s Food Menu
             </h4>
             {todayMenu ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
