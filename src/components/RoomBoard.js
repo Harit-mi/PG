@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import FAIcon from "./FAIcon";
+import { updateTenantStatusAndRoom } from "@/app/actions";
 import styles from "./RoomBoard.module.css";
 
 export default function RoomBoard({ 
@@ -14,6 +16,10 @@ export default function RoomBoard({
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [assigningBedIndex, setAssigningBedIndex] = useState(null);
+  const [assignSearch, setAssignSearch] = useState("");
+  const [assignError, setAssignError] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Quick initials helper
   const getInitials = (name) => {
@@ -65,6 +71,28 @@ export default function RoomBoard({
     setSelectedRoom(room);
     setModalOpen(true);
     setAssigningBedIndex(null);
+    setAssignSearch("");
+    setAssignError("");
+  };
+
+  // Unassigned tenants eligible for bed assignment
+  const unassignedTenants = tenants.filter(
+    (t) => (!t.room_number || t.room_number.trim() === "") && t.status !== "Checked Out"
+  );
+
+  const handleAssignTenant = (tenantId) => {
+    if (!selectedRoom) return;
+    setAssignError("");
+    startTransition(async () => {
+      const res = await updateTenantStatusAndRoom(tenantId, "Active", selectedRoom.room_number);
+      if (res.success) {
+        setAssigningBedIndex(null);
+        setAssignSearch("");
+        router.refresh();
+      } else {
+        setAssignError(res.error || "Could not assign tenant. Please try again.");
+      }
+    });
   };
 
   // Empty State handling
@@ -319,53 +347,140 @@ export default function RoomBoard({
                   return (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                       {beds.map((tenant, bedIdx) => (
-                        <div 
-                          key={bedIdx}
-                          style={{ 
-                            padding: '0.85rem 1rem', 
-                            borderRadius: '10px', 
-                            border: '1px solid var(--border)',
-                            background: tenant ? (tenant.status === 'Notice Period' ? 'rgba(220, 38, 38, 0.04)' : 'rgba(30, 72, 119, 0.03)') : 'rgba(40, 167, 69, 0.04)',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            gap: '1rem'
-                          }}
-                        >
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--primary)' }}>Bed {bedIdx + 1}:</span>
-                              {tenant ? (
-                                <span style={{ fontWeight: 750, fontSize: '0.9rem', color: 'var(--foreground)' }}>{tenant.name}</span>
-                              ) : (
-                                <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--success)' }}>Vacant & Ready</span>
+                        <div key={bedIdx}>
+                          <div
+                            style={{
+                              padding: '0.85rem 1rem',
+                              borderRadius: '10px',
+                              border: '1px solid var(--border)',
+                              background: tenant ? (tenant.status === 'Notice Period' ? 'rgba(220, 38, 38, 0.04)' : 'rgba(30, 72, 119, 0.03)') : 'rgba(40, 167, 69, 0.04)',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: '1rem'
+                            }}
+                          >
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--primary)' }}>Bed {bedIdx + 1}:</span>
+                                {tenant ? (
+                                  <span style={{ fontWeight: 750, fontSize: '0.9rem', color: 'var(--foreground)' }}>{tenant.name}</span>
+                                ) : (
+                                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--success)' }}>Vacant & Ready</span>
+                                )}
+                              </div>
+
+                              {tenant && (
+                                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                  Phone: <span className="tabular-nums">{tenant.phone}</span> • Joined: <span className="tabular-nums">{tenant.move_in_date || 'N/A'}</span>
+                                  {tenant.status === 'Notice Period' && (
+                                    <span style={{ color: 'var(--danger)', fontWeight: 700, marginLeft: '6px' }}>
+                                      ⚠️ Notice Period (Leaving: {tenant.notice_end_date || 'End of Month'})
+                                    </span>
+                                  )}
+                                </div>
                               )}
                             </div>
 
-                            {tenant && (
-                              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                                Phone: <span className="tabular-nums">{tenant.phone}</span> • Joined: <span className="tabular-nums">{tenant.move_in_date || 'N/A'}</span>
-                                {tenant.status === 'Notice Period' && (
-                                  <span style={{ color: 'var(--danger)', fontWeight: 700, marginLeft: '6px' }}>
-                                    ⚠️ Notice Period (Leaving: {tenant.notice_end_date || 'End of Month'})
-                                  </span>
-                                )}
-                              </div>
+                            {tenant ? (
+                              <Link href="/dashboard/tenants">
+                                <button style={{ background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>
+                                  Manage Resident →
+                                </button>
+                              </Link>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setAssigningBedIndex(assigningBedIndex === bedIdx ? null : bedIdx);
+                                  setAssignSearch("");
+                                  setAssignError("");
+                                }}
+                                style={{ background: 'var(--success)', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
+                              >
+                                {assigningBedIndex === bedIdx ? "Cancel" : "+ Assign Tenant"}
+                              </button>
                             )}
                           </div>
 
-                          {tenant ? (
-                            <Link href="/dashboard/tenants">
-                              <button style={{ background: 'transparent', border: '1px solid var(--primary)', color: 'var(--primary)', padding: '4px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>
-                                Manage Resident →
-                              </button>
-                            </Link>
-                          ) : (
-                            <Link href="/dashboard/tenants">
-                              <button style={{ background: 'var(--success)', color: 'white', border: 'none', padding: '6px 14px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}>
-                                + Assign Tenant
-                              </button>
-                            </Link>
+                          {/* Inline unassigned-tenant picker — no page navigation required */}
+                          {!tenant && assigningBedIndex === bedIdx && (
+                            <div
+                              style={{
+                                marginTop: '0.5rem',
+                                padding: '0.85rem',
+                                borderRadius: '10px',
+                                border: '1px dashed var(--primary)',
+                                background: 'rgba(30, 72, 119, 0.03)',
+                              }}
+                            >
+                              <input
+                                type="text"
+                                autoFocus
+                                placeholder="Search unassigned residents by name or phone…"
+                                value={assignSearch}
+                                onChange={(e) => setAssignSearch(e.target.value)}
+                                style={{
+                                  width: '100%',
+                                  padding: '0.5rem 0.75rem',
+                                  borderRadius: '8px',
+                                  border: '1px solid var(--border)',
+                                  fontSize: '0.8rem',
+                                  marginBottom: '0.5rem',
+                                  boxSizing: 'border-box',
+                                }}
+                              />
+
+                              {assignError && (
+                                <p style={{ color: 'var(--danger)', fontSize: '0.75rem', fontWeight: 700, margin: '0 0 0.5rem' }}>
+                                  {assignError}
+                                </p>
+                              )}
+
+                              <div style={{ maxHeight: '160px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                {unassignedTenants
+                                  .filter(
+                                    (t) =>
+                                      !assignSearch ||
+                                      t.name.toLowerCase().includes(assignSearch.toLowerCase()) ||
+                                      (t.phone && t.phone.includes(assignSearch))
+                                  )
+                                  .map((t) => (
+                                    <button
+                                      key={t.id}
+                                      disabled={isPending}
+                                      onClick={() => handleAssignTenant(t.id)}
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        padding: '0.5rem 0.75rem',
+                                        borderRadius: '8px',
+                                        border: '1px solid var(--border)',
+                                        background: 'var(--surface)',
+                                        cursor: isPending ? 'wait' : 'pointer',
+                                        fontSize: '0.8rem',
+                                        opacity: isPending ? 0.6 : 1,
+                                      }}
+                                    >
+                                      <span style={{ fontWeight: 700 }}>{t.name}</span>
+                                      <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }} className="tabular-nums">
+                                        {t.phone}
+                                      </span>
+                                    </button>
+                                  ))}
+
+                                {unassignedTenants.length === 0 && (
+                                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '4px 0' }}>
+                                    No unassigned residents on this property.{" "}
+                                    <Link href="/dashboard/tenants" style={{ color: 'var(--primary)', fontWeight: 700 }}>
+                                      Add a new tenant →
+                                    </Link>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                           )}
                         </div>
                       ))}

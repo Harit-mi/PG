@@ -49,6 +49,7 @@ export async function fetchSuperAdminMetrics() {
 }
 
 export async function fetchSuperAdminCustomers() {
+  const supabase = await createServerSupabaseClient();
   try {
     // Fetch organizations
     const { data: orgs, error: orgsErr } = await supabase
@@ -93,6 +94,7 @@ export async function fetchSuperAdminCustomers() {
 }
 
 export async function updateCustomerStatus(organizationId, status, reason, adminEmail = 'admin@pgmanagement.com') {
+  const supabase = await createServerSupabaseClient();
   try {
     const { error: updateErr } = await supabase
       .from('organizations')
@@ -120,6 +122,7 @@ export async function updateCustomerStatus(organizationId, status, reason, admin
 }
 
 export async function updateCustomerSubscription(organizationId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
+  const supabase = await createServerSupabaseClient();
   try {
     // Check if subscription exists
     const { data: existing } = await supabase
@@ -173,6 +176,7 @@ export async function updateCustomerSubscription(organizationId, planName, expir
 }
 
 export async function fetchSuperAdminTickets() {
+  const supabase = await createServerSupabaseClient();
   try {
     const { data: tickets, error: ticketsErr } = await supabase
       .from('support_tickets')
@@ -211,6 +215,7 @@ export async function fetchSuperAdminTickets() {
 }
 
 export async function addTicketReply(ticketId, message, isPrivate = false, senderName = 'Platform Admin', senderType = 'Admin') {
+  const supabase = await createServerSupabaseClient();
   try {
     const { error: insertErr } = await supabase
       .from('ticket_messages')
@@ -240,6 +245,7 @@ export async function addTicketReply(ticketId, message, isPrivate = false, sende
 }
 
 export async function updateTicketStatus(ticketId, status) {
+  const supabase = await createServerSupabaseClient();
   try {
     const { error } = await supabase
       .from('support_tickets')
@@ -257,6 +263,7 @@ export async function updateTicketStatus(ticketId, status) {
 }
 
 export async function fetchSuperAdminAuditLogs() {
+  const supabase = await createServerSupabaseClient();
   try {
     const { data: logs, error } = await supabase
       .from('admin_audit_logs')
@@ -272,6 +279,7 @@ export async function fetchSuperAdminAuditLogs() {
 }
 
 export async function grantComplimentarySlot(orgId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
+  const supabase = await createServerSupabaseClient();
   try {
     // 1. Insert unassigned slot
     const { error: slotErr } = await supabase
@@ -303,6 +311,7 @@ export async function grantComplimentarySlot(orgId, planName, expiryDate, reason
 }
 
 export async function fetchBusinessDetails(orgId) {
+  const supabase = await createServerSupabaseClient();
   try {
     // 1. Fetch properties
     const { data: properties } = await supabase
@@ -324,6 +333,7 @@ export async function fetchBusinessDetails(orgId) {
 }
 
 export async function registerNewCustomer(data) {
+  const supabase = await createServerSupabaseClient();
   const { name, mobile, email, startDate, planType, password, confirmPassword } = data;
 
   if (!name || !mobile || !email || !startDate || !planType || !password) {

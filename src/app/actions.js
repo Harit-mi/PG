@@ -51,12 +51,14 @@ async function checkSubscription(property_id) {
 }
 
 export async function switchProperty(id) {
+  const supabase = await createServerSupabaseClient();
   (await cookies()).set('activePropertyId', id, { path: '/' });
   revalidatePath("/dashboard", "layout");
   return { success: true };
 }
 
 export async function getAuthenticatedUser() {
+  const supabase = await createServerSupabaseClient();
   try {
     const supabaseServer = await createServerSupabaseClient();
     const { data: { user }, error } = await supabaseServer.auth.getUser();
@@ -74,6 +76,7 @@ export async function getAuthenticatedUser() {
 }
 
 export async function addProperty(formData) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -94,6 +97,7 @@ export async function addProperty(formData) {
 }
 
 export async function addRoom(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -161,6 +165,7 @@ export async function addRoom(formData) {
 }
 
 export async function addTenant(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -197,6 +202,7 @@ export async function addTenant(formData) {
 }
 
 export async function updateTenant(id, formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -244,6 +250,7 @@ export async function updateTenant(id, formData) {
 }
 
 export async function deleteTenant(id) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -266,6 +273,7 @@ export async function deleteTenant(id) {
 }
 
 export async function updateTenantStatusAndRoom(id, status, roomNumber) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -289,6 +297,7 @@ export async function updateTenantStatusAndRoom(id, status, roomNumber) {
 }
 
 export async function addTransaction(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -321,6 +330,7 @@ export async function addTransaction(formData) {
 }
 
 export async function addComplaint(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -349,6 +359,7 @@ export async function addComplaint(formData) {
 }
 
 export async function updateComplaintStatus(id, newStatus) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -367,6 +378,7 @@ export async function updateComplaintStatus(id, newStatus) {
 }
 
 export async function addNotice(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -390,6 +402,7 @@ export async function addNotice(formData) {
 }
 
 export async function updateTransactionStatus(id, newStatus, proofUrl = null, paymentMethod = null, paymentDate = null) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -420,6 +433,7 @@ export async function updateTransactionStatus(id, newStatus, proofUrl = null, pa
 }
 
 export async function saveMenu(menus) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -448,6 +462,7 @@ export async function saveMenu(menus) {
 }
 
 export async function copyPreviousWeekMenu(currentWeekStartDate) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -492,6 +507,7 @@ export async function copyPreviousWeekMenu(currentWeekStartDate) {
 }
 
 export async function addEmployee(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -522,6 +538,7 @@ export async function addEmployee(formData) {
 }
 
 export async function getPaymentMethods() {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id || property_id === 'all') return { success: true, data: [] };
 
@@ -540,6 +557,7 @@ export async function getPaymentMethods() {
 }
 
 export async function addPaymentMethod(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -570,6 +588,7 @@ export async function addPaymentMethod(formData) {
 }
 
 export async function deletePaymentMethod(id) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -586,6 +605,7 @@ export async function deletePaymentMethod(id) {
 }
 
 export async function getRoomTypes() {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   if (!property_id || property_id === 'all') return { success: true, data: [] };
 
@@ -604,6 +624,7 @@ export async function getRoomTypes() {
 }
 
 export async function addRoomType(formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -629,6 +650,7 @@ export async function addRoomType(formData) {
 }
 
 export async function deleteRoomType(id) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -645,6 +667,7 @@ export async function deleteRoomType(id) {
 }
 
 export async function updateEmployee(id, formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -670,6 +693,7 @@ export async function updateEmployee(id, formData) {
 }
 
 export async function deleteEmployee(id) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -686,6 +710,7 @@ export async function deleteEmployee(id) {
 }
 
 export async function updateTransaction(id, formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -718,6 +743,7 @@ export async function updateTransaction(id, formData) {
 }
 
 export async function deleteTransaction(id) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -735,6 +761,7 @@ export async function deleteTransaction(id) {
 }
 
 export async function updateComplaint(id, formData) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -758,6 +785,7 @@ export async function updateComplaint(id, formData) {
 }
 
 export async function deleteComplaint(id) {
+  const supabase = await createServerSupabaseClient();
   const property_id = (await cookies()).get('activePropertyId')?.value;
   const subCheck = await checkSubscription(property_id);
   if (!subCheck.success) return subCheck;
@@ -774,6 +802,7 @@ export async function deleteComplaint(id) {
 }
 
 export async function submitLeaveRequest(propertyId, tenantId, startDate, endDate, breakfast, lunch, dinner, reason) {
+  const supabase = await createServerSupabaseClient();
   const subCheck = await checkSubscription(propertyId);
   if (!subCheck.success) return subCheck;
 
@@ -808,6 +837,7 @@ export async function submitLeaveRequest(propertyId, tenantId, startDate, endDat
 }
 
 export async function updateLeaveRequestStatus(leaveId, status) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -834,6 +864,7 @@ export async function updateLeaveRequestStatus(leaveId, status) {
 }
 
 export async function deleteLeaveRequest(leaveId) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -858,6 +889,7 @@ export async function deleteLeaveRequest(leaveId) {
 }
 
 export async function verifyTenantByPhone(propertyId, phone) {
+  const supabase = await createServerSupabaseClient();
   if (!propertyId || !phone) {
     return { success: false, error: "Missing property or phone number." };
   }
@@ -888,6 +920,7 @@ export async function verifyTenantByPhone(propertyId, phone) {
 }
 
 export async function submitVerifiedComplaint(propertyId, tenantId, tenantName, roomNumber, category, issue) {
+  const supabase = await createServerSupabaseClient();
   if (!propertyId || !tenantId || !category || !issue) {
     return { success: false, error: "Missing required fields." };
   }
@@ -916,6 +949,7 @@ export async function submitVerifiedComplaint(propertyId, tenantId, tenantName, 
 }
 
 export async function submitTenantPayment(transactionId, paymentReference, screenshotUrl) {
+  const supabase = await createServerSupabaseClient();
   if (!transactionId || !paymentReference) {
     return { success: false, error: "Transaction ID and payment reference are required." };
   }
@@ -937,6 +971,7 @@ export async function submitTenantPayment(transactionId, paymentReference, scree
 }
 
 export async function requestVisitorPass(propertyId, tenantId, name, phone, relationship, visitDate, purpose) {
+  const supabase = await createServerSupabaseClient();
   if (!propertyId || !tenantId || !name || !phone || !relationship || !visitDate || !purpose) {
     return { success: false, error: "All fields are required." };
   }
@@ -962,6 +997,7 @@ export async function requestVisitorPass(propertyId, tenantId, name, phone, rela
 }
 
 export async function updateVisitorStatus(visitorId, status) {
+  const supabase = await createServerSupabaseClient();
   const user = await getAuthenticatedUser();
   if (!user) return { success: false, error: "Unauthorized access." };
 
@@ -983,6 +1019,7 @@ export async function updateVisitorStatus(visitorId, status) {
 }
 
 export async function addRoomAsset(propertyId, roomId, name, serialNumber, status) {
+  const supabase = await createServerSupabaseClient();
   if (!propertyId || !roomId || !name) {
     return { success: false, error: "Property ID, room ID, and asset name are required." };
   }
@@ -1005,6 +1042,7 @@ export async function addRoomAsset(propertyId, roomId, name, serialNumber, statu
 }
 
 export async function updateRoomAssetStatus(assetId, status) {
+  const supabase = await createServerSupabaseClient();
   if (!assetId || !status) {
     return { success: false, error: "Asset ID and status are required." };
   }
@@ -1023,6 +1061,7 @@ export async function updateRoomAssetStatus(assetId, status) {
 }
 
 export async function deleteRoomAsset(assetId) {
+  const supabase = await createServerSupabaseClient();
   if (!assetId) {
     return { success: false, error: "Asset ID is required." };
   }
@@ -1043,6 +1082,7 @@ export async function deleteRoomAsset(assetId) {
 // -------------------------------------------------------------
 
 export async function fetchUnassignedSlotsCount() {
+  const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
     const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
@@ -1062,6 +1102,7 @@ export async function fetchUnassignedSlotsCount() {
 }
 
 export async function fetchUnassignedSlots() {
+  const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
     const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
@@ -1081,6 +1122,7 @@ export async function fetchUnassignedSlots() {
 }
 
 export async function assignSlotToOutlet(slotId, name, address) {
+  const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
     const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
@@ -1129,6 +1171,7 @@ export async function assignSlotToOutlet(slotId, name, address) {
 }
 
 export async function purchaseOutletSlots(planName, quantity, propertyNamesList = [], orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+  const supabase = await createServerSupabaseClient();
   try {
     const expiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days trial/paid
 
@@ -1185,6 +1228,7 @@ export async function purchaseOutletSlots(planName, quantity, propertyNamesList 
 }
 
 export async function cancelRenewal(propertyId) {
+  const supabase = await createServerSupabaseClient();
   try {
     // Locate the slot
     const { data: slot } = await supabase
@@ -1209,6 +1253,7 @@ export async function cancelRenewal(propertyId) {
 }
 
 export async function deactivateOutlet(propertyId) {
+  const supabase = await createServerSupabaseClient();
   try {
     const { error } = await supabase
       .from("properties")
@@ -1227,6 +1272,7 @@ export async function deactivateOutlet(propertyId) {
 }
 
 export async function reactivateOutlet(propertyId, slotId) {
+  const supabase = await createServerSupabaseClient();
   try {
     // 1. Fetch the slot to get expiry
     const { data: slot, error: slotErr } = await supabase
