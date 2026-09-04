@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import FAIcon from "./FAIcon";
+import PropertySelector from "./PropertySelector";
 import styles from "@/app/dashboard/layout.module.css";
 
 export default function SidebarNav() {
@@ -26,21 +27,32 @@ export default function SidebarNav() {
   ];
 
   return (
-    <nav className={styles.nav}>
-      {navItems.map((item) => {
-        const isActive = pathname === item.href;
+    <aside className={styles.sidebar}>
+      <div className={styles.logo}>
+        <FAIcon icon="building-user" />
+        <span>OUR-PG</span>
+      </div>
 
-        return (
-          <Link 
-            key={item.href} 
-            href={item.href} 
-            className={`${styles.navItem} ${isActive ? styles.activeNavItem : ''}`}
-          >
-            <FAIcon icon={item.icon} />
-            <span>{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+      <div className={styles.sidebarSelector}>
+        <PropertySelector />
+      </div>
+
+      <nav className={styles.nav}>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href;
+
+          return (
+            <Link 
+              key={item.href} 
+              href={item.href} 
+              className={`${styles.navItem} ${isActive ? styles.activeNavItem : ''}`}
+            >
+              <FAIcon icon={item.icon} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
   );
 }

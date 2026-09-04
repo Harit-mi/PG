@@ -6,24 +6,26 @@
 
 .sidebar {
   width: 280px;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   position: fixed;
   height: 100vh;
+  top: 0;
+  left: 0;
   overflow-y: auto;
-  background-color: var(--primary); /* Steel blue sidebar */
+  background: linear-gradient(180deg, #0F1F35 0%, #1E4877 100%); /* Deep navy to steel blue */
   color: #FFFFFF;
   z-index: 100;
-  box-shadow: 4px 0 25px rgba(30, 72, 119, 0.05);
+  box-shadow: 4px 0 25px rgba(15, 31, 53, 0.3);
 }
 
 .logo {
   font-family: var(--font-anton), sans-serif;
   font-size: 1.6rem;
   font-weight: 400;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding: 0.5rem 0.5rem 1rem 0.5rem;
   color: #FFFFFF;
   letter-spacing: 0.05em;
@@ -49,7 +51,7 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.65rem 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.95);
   text-decoration: none;
   border-radius: 12px;
   transition: all 0.2s ease;
