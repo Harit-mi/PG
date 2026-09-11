@@ -45,11 +45,24 @@ export default async function ComplaintsPage() {
         </div>
       </div>
 
-      <div className={styles.grid}>
-        {displayComplaints.map((ticket) => (
-          <TicketCard key={ticket.id} ticket={ticket} />
-        ))}
-      </div>
+      {displayComplaints.length === 0 ? (
+        <div className="glass" style={{ textAlign: "center", padding: "3.5rem 2rem", borderRadius: "16px" }}>
+          <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(16, 185, 129, 0.1)", color: "#10b981", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
+            <CheckCircle2 size={32} />
+          </div>
+          <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>No Tickets Found</h3>
+          <p style={{ color: "var(--text-muted)", maxWidth: "420px", margin: "0 auto 1.5rem" }}>
+            There are currently no maintenance issues or complaints logged for this property.
+          </p>
+          <AddComplaintModal tenants={displayTenants} propertyId={propertyId} />
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {displayComplaints.map((ticket) => (
+            <TicketCard key={ticket.id} ticket={ticket} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

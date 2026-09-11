@@ -56,7 +56,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.label {
+  color: var(--text-muted);
+}
+
+.value {
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .roomNumber {

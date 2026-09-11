@@ -5,14 +5,15 @@ import styles from "./page.module.css";
 import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import TransactionActionMenu from "@/components/TransactionActionMenu";
 
-export default function FinancesClient({ initialTransactions }) {
+export default function FinancesClient({ transactions = [], initialTransactions = [], tenants = [], employees = [], propertyId }) {
+  const txList = transactions.length > 0 ? transactions : initialTransactions;
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("All"); // All, Income, Expense
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   // Filter and Search
-  const filteredTxns = initialTransactions.filter((txn) => {
+  const filteredTxns = txList.filter((txn) => {
     const searchMatch = 
       txn.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       txn.tenants?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -72,7 +73,7 @@ export default function FinancesClient({ initialTransactions }) {
         <tbody>
           {paginatedTxns.length === 0 ? (
             <tr>
-              <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }} className={styles.textMuted}>
+              <td colSpan="7" style={{ textAlign: "center", padding: "2rem" }} className={styles.textMuted}>
                 No transactions found.
               </td>
             </tr>

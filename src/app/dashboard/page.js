@@ -74,7 +74,7 @@ export default async function DashboardPage() {
     <div className={styles.container}>
       <div className={styles.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
-          <FAIcon icon="chart-pie" /> Consolidate Summary
+          <FAIcon icon="chart-pie" /> Consolidated Summary
         </div>
         <h1 className={styles.title}>Multi-Outlet Owner Dashboard</h1>
         <p className={styles.subtitle}>

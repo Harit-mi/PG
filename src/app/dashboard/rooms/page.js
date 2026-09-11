@@ -44,8 +44,8 @@ export default async function RoomsPage() {
             <div className={styles.cardHeader}>
               <h3 className={styles.roomNumber}>Room {room.room_number}</h3>
               <span 
-                className={`${styles.statusBadge} ${
-                  room.status === "Vacant" ? styles.vacant : styles.occupied
+                className={`${styles.badge} ${
+                  styles[room.status?.replace(/\s+/g, '')] || styles.Vacant
                 }`}
               >
                 {room.status}
@@ -54,19 +54,21 @@ export default async function RoomsPage() {
             
             <div className={styles.cardBody}>
               <div className={styles.infoRow}>
-                <span className={styles.label}>Type:</span>
+                <span className={styles.label}>Type</span>
                 <span className={styles.value}>{room.room_type || room.type}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.label}>Capacity:</span>
+                <span className={styles.label}>Capacity</span>
                 <span className={styles.value}>
-                  <User size={14} style={{ display: 'inline', marginRight: '4px' }} />
+                  <User size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
                   {room.capacity} Person(s)
                 </span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.label}>Rent / Bed:</span>
-                <span className={styles.value}>₹{room.rent_per_bed || room.rent_amount}/mo</span>
+                <span className={styles.label}>Rent / Bed</span>
+                <span className={`${styles.value} font-mono`}>
+                  ₹{Number(room.rent_per_bed || room.rent_amount || 0).toLocaleString('en-IN')}/mo
+                </span>
               </div>
             </div>
 

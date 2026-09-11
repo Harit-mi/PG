@@ -26,6 +26,11 @@ export default async function TenantsPage() {
   const displayTenants = tenants?.length > 0 ? tenants : [];
   const displayRooms = rooms?.length > 0 ? rooms : [];
 
+  const roomMap = {};
+  displayRooms.forEach(r => {
+    roomMap[r.room_number] = r;
+  });
+
   // Calculate occupancy to pass available rooms to the Add Tenant Modal
   const occupancyMap = {};
   displayTenants.forEach(t => {
@@ -74,44 +79,51 @@ export default async function TenantsPage() {
             </tr>
           </thead>
           <tbody>
-            {displayTenants.map((tenant) => (
-              <tr key={tenant.id}>
-                <td>
-                  <div className={styles.tenantInfo}>
-                    <TenantProfileButton tenant={tenant} />
-                    <div>
-                      <div className={styles.tenantName}>{tenant.name}</div>
-                      <div className={styles.tenantPhone}>
-                        <Phone size={12} style={{ display: 'inline', marginRight: '4px' }} />
-                        {tenant.phone}
+            {displayTenants.map((tenant) => {
+              const rent = tenant.rent_amount || tenant.rent || roomMap[tenant.room_number]?.rent_per_bed || roomMap[tenant.room_number]?.rent_amount || 0;
+              const statusClass = tenant.status === 'Notice Period' ? styles.NoticePeriod : styles.Active;
+              
+              return (
+                <tr key={tenant.id}>
+                  <td>
+                    <div className={styles.tenantInfo}>
+                      <TenantProfileButton tenant={tenant} />
+                      <div>
+                        <div className={styles.tenantName}>{tenant.name}</div>
+                        <div className={styles.tenantPhone}>
+                          <Phone size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                          {tenant.phone}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <span className={styles.roomBadge}>Room {tenant.room_number}</span>
-                </td>
-                <td>{tenant.move_in_date || tenant.joined_date}</td>
-                <td>
-                  <span className={`${styles.statusPill} ${tenant.status === 'Active' ? styles.active : styles.notice}`}>
-                    {tenant.status}
-                  </span>
-                </td>
-                <td style={{ fontWeight: 650 }}>₹{tenant.rent_amount}/mo</td>
-                <td>
-                  {tenant.kyc_url ? (
-                    <a href={tenant.kyc_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontSize: '0.85rem', textDecoration: 'underline' }}>
-                      View KYC Document
-                    </a>
-                  ) : (
-                    <UploadKycModal tenantId={tenant.id} />
-                  )}
-                </td>
-                <td style={{ textAlign: "right" }}>
-                  <TenantActionMenu tenant={tenant} availableRooms={availableRooms} />
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td>
+                    <span className={styles.roomBadge}>Room {tenant.room_number}</span>
+                  </td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{tenant.move_in_date || tenant.joined_date || '-'}</td>
+                  <td>
+                    <span className={`${styles.statusBadge} ${statusClass}`}>
+                      {tenant.status || 'Active'}
+                    </span>
+                  </td>
+                  <td style={{ fontWeight: 650, whiteSpace: 'nowrap' }} className="font-mono">
+                    ₹{rent > 0 ? Number(rent).toLocaleString('en-IN') : '0'}/mo
+                  </td>
+                  <td>
+                    {tenant.kyc_url ? (
+                      <a href={tenant.kyc_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontSize: '0.85rem', textDecoration: 'underline' }}>
+                        View KYC Document
+                      </a>
+                    ) : (
+                      <UploadKycModal tenantId={tenant.id} />
+                    )}
+                  </td>
+                  <td style={{ textAlign: "right" }}>
+                    <TenantActionMenu tenant={tenant} availableRooms={availableRooms} />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

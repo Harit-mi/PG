@@ -50,13 +50,13 @@ export default function KitchenClient({ initialTenants = [], initialLeaves = [] 
   });
 
   return (
-    <div style={{ background: '#0f172a', color: '#f8fafc', padding: '2rem', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="glass" style={{ padding: '2rem', borderRadius: '16px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1e293b', paddingBottom: '1.25rem' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'linear-gradient(to right, #ffffff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: 0 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1.25rem' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.75rem', margin: 0, color: 'var(--foreground)' }}>
           👨‍🍳 Kitchen Preparation Monitor
         </h2>
-        <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)', padding: '6px 16px', borderRadius: '9999px', border: '1px solid rgba(56, 189, 248, 0.2)' }}>
+        <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--primary)', background: 'rgba(79, 70, 229, 0.1)', padding: '6px 16px', borderRadius: '9999px', border: '1px solid var(--border)' }}>
           Today: {formatDateString(todayStr)}
         </div>
       </div>
