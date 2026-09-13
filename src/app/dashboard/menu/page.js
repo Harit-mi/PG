@@ -43,7 +43,7 @@ export default async function MenuPage() {
         </div>
       </div>
 
-      <MenuGrid initialMenuItems={menuItems || []} propertyId={propertyId} weekStartDate={currentWeekStart} />
+      <MenuGrid initialMenus={menuItems || []} propertyId={propertyId} weekStartDate={currentWeekStart} />
     </div>
   );
 }
