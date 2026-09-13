@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import FAIcon from "@/components/FAIcon";
 import { updateCustomerStatus, updateCustomerSubscription, grantComplimentarySlot, fetchBusinessDetails, registerNewCustomer } from "../actions";
 
@@ -28,17 +28,19 @@ export default function CustomersClient({ initialCustomers = [] }) {
   const [drawerError, setDrawerError] = useState("");
 
   // Filtered & Sorted Customer Roster
-  const filteredCustomers = customers.filter(cust => {
-    const matchesSearch = 
-      (cust.name || "").toLowerCase().includes(search.toLowerCase()) ||
-      (cust.email || "").toLowerCase().includes(search.toLowerCase()) ||
-      (cust.phone || "").toLowerCase().includes(search.toLowerCase());
-    
-    let matchesStatus = true;
-    if (statusFilter !== "All") matchesStatus = cust.status === statusFilter;
+  const filteredCustomers = useMemo(() => {
+    return customers.filter(cust => {
+      const matchesSearch = 
+        (cust.name || "").toLowerCase().includes(search.toLowerCase()) ||
+        (cust.email || "").toLowerCase().includes(search.toLowerCase()) ||
+        (cust.phone || "").toLowerCase().includes(search.toLowerCase());
+      
+      let matchesStatus = true;
+      if (statusFilter !== "All") matchesStatus = cust.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    });
+  }, [customers, search, statusFilter]);
 
   // Handle New Customer Registration
   const handleRegisterCustomer = async (e) => {

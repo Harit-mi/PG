@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
@@ -10,7 +11,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-an
 
 export async function fetchSuperAdminMetrics() {
   try {
-    const supabase = await createServerSupabaseClient();
+    const supabase = createAdminClient();
     // 1. Fetch organization counts
     const { data: orgs } = await supabase.from('organizations').select('id, status');
     const totalCustomers = orgs?.length || 0;
@@ -49,7 +50,7 @@ export async function fetchSuperAdminMetrics() {
 }
 
 export async function fetchSuperAdminCustomers() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     // Fetch organizations
     const { data: orgs, error: orgsErr } = await supabase
@@ -94,7 +95,7 @@ export async function fetchSuperAdminCustomers() {
 }
 
 export async function updateCustomerStatus(organizationId, status, reason, adminEmail = 'admin@pgmanagement.com') {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     const { error: updateErr } = await supabase
       .from('organizations')
@@ -122,7 +123,7 @@ export async function updateCustomerStatus(organizationId, status, reason, admin
 }
 
 export async function updateCustomerSubscription(organizationId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     // Check if subscription exists
     const { data: existing } = await supabase
@@ -176,7 +177,7 @@ export async function updateCustomerSubscription(organizationId, planName, expir
 }
 
 export async function fetchSuperAdminTickets() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     const { data: tickets, error: ticketsErr } = await supabase
       .from('support_tickets')
@@ -215,7 +216,7 @@ export async function fetchSuperAdminTickets() {
 }
 
 export async function addTicketReply(ticketId, message, isPrivate = false, senderName = 'Platform Admin', senderType = 'Admin') {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     const { error: insertErr } = await supabase
       .from('ticket_messages')
@@ -245,7 +246,7 @@ export async function addTicketReply(ticketId, message, isPrivate = false, sende
 }
 
 export async function updateTicketStatus(ticketId, status) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     const { error } = await supabase
       .from('support_tickets')
@@ -263,7 +264,7 @@ export async function updateTicketStatus(ticketId, status) {
 }
 
 export async function fetchSuperAdminAuditLogs() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     const { data: logs, error } = await supabase
       .from('admin_audit_logs')
@@ -279,7 +280,7 @@ export async function fetchSuperAdminAuditLogs() {
 }
 
 export async function grantComplimentarySlot(orgId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     // 1. Insert unassigned slot
     const { error: slotErr } = await supabase
@@ -311,7 +312,7 @@ export async function grantComplimentarySlot(orgId, planName, expiryDate, reason
 }
 
 export async function fetchBusinessDetails(orgId) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   try {
     // 1. Fetch properties
     const { data: properties } = await supabase
@@ -333,7 +334,7 @@ export async function fetchBusinessDetails(orgId) {
 }
 
 export async function registerNewCustomer(data) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = createAdminClient();
   const { name, mobile, email, startDate, planType, password, confirmPassword } = data;
 
   if (!name || !mobile || !email || !startDate || !planType || !password) {
@@ -358,29 +359,21 @@ export async function registerNewCustomer(data) {
 
   try {
     // 1. Create Supabase Auth User first (to ensure email/password check and prevent orphan orgs)
-    const tempSupabase = createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false
-      }
-    });
-
     // We generate a temp org UUID first so we can map the auth user to it
     const tempOrgUuid = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
 
-    const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+    // Use admin client to create user to bypass rate limits and auto-confirm email
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
-      options: {
-        data: {
-          organization_id: tempOrgUuid,
-          name,
-          phone: mobile
-        }
+      email_confirm: true,
+      user_metadata: {
+        organization_id: tempOrgUuid,
+        name,
+        phone: mobile
       }
     });
 
