@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { verifyCronAuth } from "@/utils/cronAuth";
+import { sendTenantNotification } from "@/utils/notifications";
 
 export async function POST(request) {
   try {
@@ -57,6 +58,16 @@ export async function POST(request) {
         .insert(invoicesToCreate);
 
       if (insertError) throw insertError;
+
+      // Send Rent Due notifications to all affected tenants
+      for (const invoice of invoicesToCreate) {
+        await sendTenantNotification({
+          tenantId: invoice.tenant_id,
+          title: "Rent Payment Due",
+          message: `Dear Tenant, your rent of ₹${invoice.amount} for the current month has been generated and is now due. Please pay via the Tenant Portal.`,
+          type: "RENT_DUE"
+        });
+      }
     }
 
     return NextResponse.json({

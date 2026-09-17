@@ -2,6 +2,7 @@
 
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { sendTenantNotification } from "@/utils/notifications";
 import { cookies } from "next/headers";
 
 import { sanitizeInput } from "@/utils/sanitizer";
