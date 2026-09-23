@@ -1,5 +1,8 @@
 /* ==========================================================================
-   MINIMALIST DASHBOARD DESIGN SYSTEM
+   OUR-PG LIGHT MINIMALIST DASHBOARD DESIGN SYSTEM
+   Theme: Crisp Architectural Light Theme
+   Typography: General Sans (Body & Headings) + Cabinet Grotesk (KPI Numbers)
+               + JetBrains Mono (Financials & Currency)
    ========================================================================== */
 
 .container {
@@ -7,6 +10,7 @@
   flex-direction: column;
   gap: 1.75rem;
   width: 100%;
+  position: relative;
 }
 
 /* --------------------------------------------------------------------------
@@ -15,43 +19,73 @@
 .topBar {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 1.25rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
 }
 
 .titleArea {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
 }
 
 .breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.75rem;
+  gap: 0.45rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #64748B;
+}
+
+.breadcrumbs span.active {
+  color: #2563EB;
+}
+
+.breadcrumbs span.divider {
+  color: #CBD5E1;
 }
 
 .pageTitle {
   font-family: var(--font-ui), sans-serif;
-  font-size: 1.65rem;
-  font-weight: 700;
-  color: var(--foreground);
+  font-size: 1.85rem;
+  font-weight: 750;
+  color: #0F172A;
   margin: 0;
   letter-spacing: -0.025em;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 650;
+  color: #059669;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10B981;
 }
 
 .pageSubtitle {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.88rem;
+  color: #64748B;
   margin: 0;
-  font-weight: 400;
+  font-weight: 450;
 }
 
 .controlsArea {
@@ -64,56 +98,57 @@
 /* Segmented Date Range Filter */
 .dateFilterGroup {
   display: flex;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 9px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
   padding: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .dateFilterBtn {
   background: transparent;
   border: none;
-  padding: 0.4rem 0.75rem;
+  padding: 0.45rem 0.85rem;
   font-size: 0.78rem;
   font-weight: 550;
-  color: var(--text-muted);
-  border-radius: 6px;
+  color: #64748B;
+  border-radius: 7px;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .dateFilterBtn:hover {
-  color: var(--foreground);
+  color: #0F172A;
 }
 
 .dateFilterBtnActive {
-  background: var(--primary);
+  background: #2563EB !important;
   color: #FFFFFF !important;
-  box-shadow: 0 1px 4px rgba(30, 72, 119, 0.2);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
 }
 
-/* Quick Action Triggers */
+/* Primary & Secondary Action Triggers */
 .actionBtnPrimary {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.5rem 1rem;
-  background: var(--primary);
+  padding: 0.55rem 1.15rem;
+  background: #2563EB;
   color: #FFFFFF;
   border: 1px solid transparent;
-  border-radius: 8px;
-  font-size: 0.82rem;
+  border-radius: 10px;
+  font-size: 0.83rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.15s ease;
-  box-shadow: 0 1px 3px rgba(30, 72, 119, 0.15);
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
 }
 
 .actionBtnPrimary:hover {
-  background: var(--primary-hover);
+  background: #1D4ED8;
   transform: translateY(-1px);
 }
 
@@ -121,30 +156,32 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.5rem 0.9rem;
-  background: var(--surface);
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 550;
+  padding: 0.55rem 1rem;
+  background: #FFFFFF;
+  color: #0F172A;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  font-size: 0.83rem;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .actionBtnSecondary:hover {
-  background: var(--surface-muted);
+  background: #F8FAFC;
   border-color: #CBD5E1;
+  transform: translateY(-1px);
 }
 
 /* --------------------------------------------------------------------------
-   Core Metric Tiles Grid (The 4-Card Pulse)
+   Core Metric Tiles Grid (The 4-Card Overview)
    -------------------------------------------------------------------------- */
 .metricsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.15rem;
 }
 
 @media (max-width: 1200px) {
@@ -160,86 +197,104 @@
 }
 
 .metricCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+  transition: all 0.2s ease;
 }
 
 .metricCard:hover {
   border-color: #CBD5E1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+  transform: translateY(-1px);
 }
 
 .metricHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.85rem;
 }
 
 .metricLabel {
-  font-size: 0.76rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.metricIconWrap {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748B;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  background: var(--surface-muted);
+  gap: 0.45rem;
 }
 
 .metricValueRow {
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin-bottom: 0.4rem;
+}
+
+.metricValueCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 .metricValue {
   font-family: var(--font-ui), sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 750;
-  letter-spacing: -0.03em;
-  color: var(--foreground);
+  letter-spacing: -0.025em;
+  color: #0F172A;
   line-height: 1;
+}
+
+.metricSubDelta {
+  font-size: 0.78rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+}
+
+.positiveDelta {
+  color: #059669;
+  font-weight: 600;
+}
+
+.negativeDelta {
+  color: #D97706;
+  font-weight: 600;
 }
 
 .metricFooter {
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: #64748B;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #F1F5F9;
 }
 
-/* Mini Progress Bar */
-.miniProgressBar {
-  width: 100%;
-  height: 4px;
-  background: #E2E8F0;
-  border-radius: 99px;
-  overflow: hidden;
-  margin-top: 0.75rem;
+/* Micro Sparkline SVG container */
+.sparklineSvg {
+  width: 85px;
+  height: 36px;
+  overflow: visible;
 }
 
-.miniProgressFill {
-  height: 100%;
-  border-radius: 99px;
-  transition: width 0.4s ease;
+/* Micro Radial Ring Container */
+.radialRingSvg {
+  width: 46px;
+  height: 46px;
+  transform: rotate(-90deg);
 }
 
 /* --------------------------------------------------------------------------
@@ -248,7 +303,7 @@
 .badge {
   font-size: 0.7rem;
   font-weight: 600;
-  padding: 2px 7px;
+  padding: 2.5px 8px;
   border-radius: 99px;
   display: inline-flex;
   align-items: center;
@@ -256,123 +311,223 @@
 }
 
 .badgeEmerald {
-  background: var(--badge-emerald-bg);
-  color: var(--badge-emerald-text);
-  border: 1px solid rgba(5, 150, 105, 0.2);
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
 }
 
 .badgeAmber {
-  background: var(--badge-amber-bg);
-  color: var(--badge-amber-text);
-  border: 1px solid rgba(217, 119, 6, 0.2);
+  background: #FFFBEB;
+  color: #D97706;
+  border: 1px solid #FDE68A;
 }
 
 .badgeRose {
-  background: var(--badge-rose-bg);
-  color: var(--badge-rose-text);
-  border: 1px solid rgba(225, 29, 72, 0.2);
+  background: #FFF1F2;
+  color: #E11D48;
+  border: 1px solid #FECDD3;
 }
 
 .badgeBlue {
-  background: var(--badge-blue-bg);
-  color: var(--badge-blue-text);
-  border: 1px solid rgba(37, 99, 235, 0.2);
+  background: #EFF6FF;
+  color: #2563EB;
+  border: 1px solid #BFDBFE;
 }
 
 /* --------------------------------------------------------------------------
-   Actionable Triage Queue (Attention Required)
+   Interactive Revenue & Occupancy Momentum Trajectory Deck
    -------------------------------------------------------------------------- */
-.sectionCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+.visualizerDeck {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.15rem;
+}
+
+@media (max-width: 1100px) {
+  .visualizerDeck {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cleanCard {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .cardTitle {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--foreground);
+  color: #0F172A;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
+  letter-spacing: -0.015em;
 }
 
-.triageList {
+.timeSegmentPills {
+  display: flex;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.timePill {
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #64748B;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.timePill:hover {
+  color: #0F172A;
+}
+
+.timePillActive {
+  background: #FFFFFF;
+  color: #2563EB !important;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+/* Trajectory SVG Chart */
+.chartContainer {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  margin-top: 0.5rem;
+}
+
+.trajectorySvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.chartLegend {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748B;
+}
+
+.legendColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+/* Spatial Bed Distribution Donut / Radial Spec */
+.spatialGaugeWrap {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.25rem;
+  height: 100%;
+  justify-content: space-between;
 }
 
-.triageRow {
+.spatialCenterMeter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0.75rem 0;
+}
+
+.spatialCenterText {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.spatialCenterNum {
+  font-family: var(--font-ui), sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1;
+}
+
+.spatialCenterLabel {
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  color: #64748B;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.roomBreakdownList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.roomBreakdownRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 0.85rem;
+  font-size: 0.83rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  background: var(--surface-muted);
-  border: 1px solid var(--border-light);
-  gap: 1rem;
-  flex-wrap: wrap;
-  transition: all 0.15s ease;
+  background: #F8FAFC;
+  border: 1px solid #F1F5F9;
 }
 
-.triageRow:hover {
-  background: #F1F5F9;
-  border-color: #CBD5E1;
-}
-
-.triageLeft {
+.breakdownLeft {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  color: #0F172A;
+  font-weight: 550;
 }
 
-.triageText {
-  font-size: 0.85rem;
-  color: var(--foreground);
-  font-weight: 500;
-}
-
-.triageBtn {
-  font-size: 0.78rem;
+.breakdownRight {
+  font-family: var(--font-mono), monospace;
   font-weight: 600;
-  color: var(--primary);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.15s ease;
-}
-
-.triageBtn:hover {
-  background: var(--primary);
-  color: #FFFFFF;
-  border-color: var(--primary);
+  color: #64748B;
 }
 
 /* --------------------------------------------------------------------------
-   Two-Column Operational Layout
+   Two-Column Operational Center (Action Items & Real-Time Velocity)
    -------------------------------------------------------------------------- */
 .dashboardSplit {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  gap: 1.25rem;
+  gap: 1.15rem;
 }
 
 @media (max-width: 1024px) {
@@ -381,7 +536,89 @@
   }
 }
 
-/* Today's Velocity Grid */
+/* Action Required List */
+.triageList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.triageRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  transition: all 0.15s ease;
+}
+
+.triageRow:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  transform: translateX(2px);
+}
+
+.triageLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+}
+
+.triageIconPip {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.triageDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.triageTitle {
+  font-size: 0.86rem;
+  color: #0F172A;
+  font-weight: 600;
+}
+
+.triageSub {
+  font-size: 0.77rem;
+  color: #64748B;
+}
+
+.triageBtn {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2563EB;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.triageBtn:hover {
+  background: #2563EB;
+  color: #FFFFFF;
+  border-color: #2563EB;
+}
+
+/* Today's Operational Velocity Strip */
 .velocityStrip {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -389,10 +626,10 @@
 }
 
 .velocityItem {
-  background: var(--surface-muted);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 0.85rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 0.9rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -402,18 +639,18 @@
   font-size: 0.72rem;
   font-weight: 650;
   text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  color: #64748B;
 }
 
 .velocityVal {
-  font-size: 1.25rem;
+  font-family: var(--font-ui), sans-serif;
+  font-size: 1.35rem;
   font-weight: 750;
-  color: var(--foreground);
+  color: #0F172A;
 }
 
-/* --------------------------------------------------------------------------
-   Minimalist Data Tables
-   -------------------------------------------------------------------------- */
+/* Multi-Outlet Comparison Matrix */
 .tableResponsive {
   width: 100%;
   overflow-x: auto;
@@ -427,26 +664,27 @@
 
 .minimalTable th {
   text-align: left;
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 0.95rem;
   font-size: 0.72rem;
   font-weight: 650;
-  color: var(--text-muted);
+  color: #64748B;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #E2E8F0;
   background: transparent;
   cursor: pointer;
   user-select: none;
+  transition: color 0.15s ease;
 }
 
 .minimalTable th:hover {
-  color: var(--foreground);
+  color: #0F172A;
 }
 
 .minimalTable td {
-  padding: 0.75rem 0.85rem;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--foreground);
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid #F1F5F9;
+  color: #0F172A;
 }
 
 .minimalTable tr:last-child td {
@@ -454,6 +692,22 @@
 }
 
 .minimalTable tr:hover td {
-  background: var(--surface-muted);
+  background: #F8FAFC;
 }
 
+.tableProgressTrack {
+  width: 80px;
+  height: 5px;
+  background: #E2E8F0;
+  border-radius: 99px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.tableProgressFill {
+  height: 100%;
+  border-radius: 99px;
+  background: #10B981;
+}

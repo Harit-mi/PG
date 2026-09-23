@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { getAuthenticatedUser } from "@/app/actions";
 import DashboardClient from "./DashboardClient";
 import FAIcon from "@/components/FAIcon";
+import { Building2 } from "lucide-react";
 
 export const revalidate = 0;
 
@@ -74,33 +75,35 @@ export default async function DashboardPage() {
     <div className={styles.container}>
       {activeProperties.length === 0 ? (
         <div style={{ 
-          background: 'var(--surface)', 
+          background: '#FFFFFF', 
           padding: '4rem 2rem', 
-          borderRadius: '12px', 
-          border: '1px solid var(--border)', 
+          borderRadius: '16px', 
+          border: '1px solid #E2E8F0', 
           textAlign: 'center', 
-          color: 'var(--text-muted)',
-          maxWidth: '600px',
-          margin: '2rem auto'
+          color: '#64748B',
+          maxWidth: '540px',
+          margin: '3rem auto',
+          boxShadow: '0 4px 20px -2px rgba(15, 23, 42, 0.05)'
         }}>
           <div style={{ 
-            width: '48px', 
-            height: '48px', 
-            borderRadius: '10px', 
-            background: 'var(--surface-muted)', 
+            width: '52px', 
+            height: '52px', 
+            borderRadius: '12px', 
+            background: '#EFF6FF', 
+            border: '1px solid #BFDBFE',
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center', 
-            margin: '0 auto 1.25rem',
-            color: 'var(--primary)' 
+            margin: '0 auto 1.5rem',
+            color: '#2563EB' 
           }}>
-            <FAIcon icon="building" style={{ fontSize: '20px' }} />
+            <Building2 size={24} />
           </div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--foreground)', margin: '0 0 0.5rem' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 750, color: '#0F172A', margin: '0 0 0.5rem', letterSpacing: '-0.02em' }}>
             No Outlets Provisioned Yet
           </h3>
-          <p style={{ margin: '0 0 1.25rem', fontSize: '0.88rem' }}>
-            Activate your first PG outlet from the sidebar selector to start monitoring real-time occupancy and rent collections.
+          <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem', lineHeight: 1.5 }}>
+            Activate your first PG branch outlet from the sidebar selector to start monitoring real-time occupancy and rent collections.
           </p>
         </div>
       ) : (

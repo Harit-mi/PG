@@ -1,12 +1,13 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #F8FAFC;
+  color: #0F172A;
+  position: relative;
 }
 
 /* ==========================================================================
-   MINIMALIST SIDEBAR
+   ELEGANT LIGHT MINIMALIST SIDEBAR
    ========================================================================== */
 .sidebar {
   width: 264px;
@@ -15,14 +16,14 @@
   left: 0;
   bottom: 0;
   height: 100vh;
-  background-color: var(--sidebar-bg);
-  border-right: 1px solid var(--sidebar-border);
+  background-color: #FFFFFF;
+  border-right: 1px solid #E2E8F0;
   display: flex;
   flex-direction: column;
   z-index: 100;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: #CBD5E1 transparent;
 }
 
 .sidebar::-webkit-scrollbar {
@@ -30,7 +31,7 @@
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: #E2E8F0;
   border-radius: 4px;
 }
 
@@ -53,12 +54,13 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  border: 1px solid rgba(37, 99, 235, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
 }
 
 .brandText {
@@ -66,7 +68,7 @@
   font-weight: 750;
   font-size: 1.05rem;
   letter-spacing: -0.02em;
-  color: #FFFFFF;
+  color: #0F172A;
 }
 
 .brandBadge {
@@ -76,9 +78,9 @@
   text-transform: uppercase;
   padding: 2px 7px;
   border-radius: 99px;
-  background: rgba(16, 185, 129, 0.12);
-  color: #10B981;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
 }
 
 /* Property Switcher Container */
@@ -115,35 +117,39 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  color: var(--sidebar-text);
+  padding: 0.55rem 0.75rem;
+  color: #475569;
   text-decoration: none;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition: all 0.15s ease;
   position: relative;
 }
 
 .navItem:hover {
-  background-color: var(--sidebar-item-hover);
-  color: var(--sidebar-text-active);
+  background-color: #F1F5F9;
+  color: #0F172A;
 }
 
 .navItem svg {
-  color: inherit;
+  color: #64748B;
   flex-shrink: 0;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.navItem:hover svg {
+  color: #0F172A;
 }
 
 .activeNavItem {
-  background-color: var(--sidebar-item-active);
-  color: #FFFFFF;
+  background-color: #EFF6FF;
+  color: #2563EB;
   font-weight: 600;
 }
 
 .activeNavItem svg {
-  color: #FFFFFF;
+  color: #2563EB;
 }
 
 .activeIndicator {
@@ -153,17 +159,17 @@
   bottom: 15%;
   width: 3px;
   border-radius: 0 3px 3px 0;
-  background-color: #38BDF8;
+  background-color: #2563EB;
 }
 
 /* Sidebar Footer */
 .sidebarFooter {
   padding: 1rem 1.25rem;
-  border-top: 1px solid var(--sidebar-border);
+  border-top: 1px solid #E2E8F0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(0, 0, 0, 0.15);
+  background: #F8FAFC;
 }
 
 .footerTenantLink {
@@ -171,13 +177,14 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.78rem;
-  color: #94A3B8;
+  color: #64748B;
   text-decoration: none;
   transition: color 0.15s ease;
+  font-weight: 500;
 }
 
 .footerTenantLink:hover {
-  color: #F8FAFC;
+  color: #0F172A;
 }
 
 /* ==========================================================================
@@ -190,6 +197,7 @@
   max-width: 1440px;
   min-height: 100vh;
   box-sizing: border-box;
+  background-color: #F8FAFC;
 }
 
 .mobileHeader {
@@ -209,8 +217,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--sidebar-bg);
-    border-bottom: 1px solid var(--sidebar-border);
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
     height: 56px;
     padding: 0 1.25rem;
     position: fixed;
@@ -225,7 +233,7 @@
     align-items: center;
     gap: 0.5rem;
     font-weight: 750;
-    color: #FFFFFF;
+    color: #0F172A;
     font-size: 0.95rem;
   }
 
@@ -242,7 +250,7 @@
     border-radius: 0;
     z-index: 1000;
     border-right: none;
-    border-top: 1px solid var(--sidebar-border);
+    border-top: 1px solid #E2E8F0;
     overflow: hidden;
   }
 
