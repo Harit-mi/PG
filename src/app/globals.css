@@ -20,6 +20,24 @@
   --cst-shadow: 0 10px 25px -5px rgba(30, 72, 119, 0.05), 0 8px 10px -6px rgba(30, 72, 119, 0.05);
   --cst-shadow-hover: 0 20px 25px -5px rgba(30, 72, 119, 0.1), 0 10px 10px -6px rgba(30, 72, 119, 0.1);
   
+  /* Dashboard & Minimalist Surface Tokens */
+  --sidebar-bg: #0C1523; /* Deep refined slate, crisp and modern */
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-text: #94A3B8;
+  --sidebar-text-active: #F8FAFC;
+  --sidebar-item-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-item-active: rgba(255, 255, 255, 0.1);
+  --surface-muted: #F8FAFC;
+  --surface-elevated: #FFFFFF;
+  --badge-emerald-bg: #ECFDF5;
+  --badge-emerald-text: #059669;
+  --badge-amber-bg: #FFFBEB;
+  --badge-amber-text: #D97706;
+  --badge-rose-bg: #FFF1F2;
+  --badge-rose-text: #E11D48;
+  --badge-blue-bg: #EFF6FF;
+  --badge-blue-text: #2563EB;
+
   --font-wide: "Syncopate", sans-serif;
   --font-ui: "General Sans", var(--font-sora), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: var(--font-space), "Cabinet Grotesk", "Bricolage Grotesque", sans-serif;

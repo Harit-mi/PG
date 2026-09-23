@@ -72,24 +72,36 @@ export default async function DashboardPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
-          <FAIcon icon="chart-pie" /> Consolidated Summary
-        </div>
-        <h1 className={styles.title}>Multi-Outlet Owner Dashboard</h1>
-        <p className={styles.subtitle}>
-          Consolidated business statistics, collections, dues, expenses, and tenant operations logs.
-        </p>
-      </div>
-
       {activeProperties.length === 0 ? (
-        <div className="glass" style={{ background: 'var(--card-bg)', padding: '4rem 2rem', borderRadius: '16px', border: '1px solid var(--border)', textAlign: 'center', color: 'var(--text-muted)' }}>
-          <FAIcon icon="building-circle-exclamation" style={{ fontSize: '48px', margin: '0 auto 1.5rem', color: 'var(--primary)', display: 'block' }} />
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 650, color: 'var(--primary)', marginBottom: '0.5rem' }}>No Active Outlets Provisioned</h3>
-          <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem' }}>You need to configure your first PG outlet before you can view metrics or operations stats.</p>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Please use the &quot;+ Add Outlet&quot; selector in the sidebar to activate a property.</span>
+        <div style={{ 
+          background: 'var(--surface)', 
+          padding: '4rem 2rem', 
+          borderRadius: '12px', 
+          border: '1px solid var(--border)', 
+          textAlign: 'center', 
+          color: 'var(--text-muted)',
+          maxWidth: '600px',
+          margin: '2rem auto'
+        }}>
+          <div style={{ 
+            width: '48px', 
+            height: '48px', 
+            borderRadius: '10px', 
+            background: 'var(--surface-muted)', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            margin: '0 auto 1.25rem',
+            color: 'var(--primary)' 
+          }}>
+            <FAIcon icon="building" style={{ fontSize: '20px' }} />
           </div>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--foreground)', margin: '0 0 0.5rem' }}>
+            No Outlets Provisioned Yet
+          </h3>
+          <p style={{ margin: '0 0 1.25rem', fontSize: '0.88rem' }}>
+            Activate your first PG outlet from the sidebar selector to start monitoring real-time occupancy and rent collections.
+          </p>
         </div>
       ) : (
         <DashboardClient

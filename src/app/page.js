@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { registerOwnerAccount } from "@/app/actions";
-import { superAdminLogin } from "@/app/super-admin/actions";
 import styles from "./page.module.css";
 
 const supabase = createClient();
@@ -126,15 +125,6 @@ export default function LandingPage() {
     setAuthSuccess("");
 
     try {
-      // 1. Seamlessly authenticate Super Admin if admin credentials are provided
-      const adminRes = await superAdminLogin(loginEmail.trim(), loginPassword);
-      if (adminRes.success) {
-        localStorage.setItem("super_admin_session", JSON.stringify({ email: loginEmail.trim(), role: "SuperAdmin" }));
-        router.push("/super-admin");
-        return;
-      }
-
-      // 2. Otherwise authenticate via Supabase Auth for PG Owner
       const { data, error } = await supabase.auth.signInWithPassword({
         email: loginEmail.trim(),
         password: loginPassword,
