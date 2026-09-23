@@ -583,7 +583,7 @@ export default function LandingPage() {
                         {inspectedBed.room} • {inspectedBed.label} // {inspectedBed.roomType}
                       </div>
                       <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginTop: "3px" }}>
-                        STATUS: <strong style={{ color: inspectedBed.status === "vacant" ? "#10B981" : "var(--accent)" }}>{inspectedBed.status.toUpperCase()}</strong> • RENT: ₹{inspectedBed.rent.toLocaleString()}/mo
+                        STATUS: <strong style={{ color: inspectedBed.status === "vacant" ? "#10B981" : "var(--accent)" }}>{inspectedBed.status.toUpperCase()}</strong> • RENT: ₹{inspectedBed.rent.toLocaleString("en-IN")}/mo
                         {inspectedBed.occupant && ` • RESIDENT: ${inspectedBed.occupant}`}
                       </div>
                     </div>
@@ -879,11 +879,11 @@ export default function LandingPage() {
           <div className={styles.calcResultStrip}>
             <div className={styles.calcResultCol}>
               <span className={styles.calcResultLabel}>ANNUAL RECOVERABLE NET MARGIN</span>
-              <span className={styles.calcResultValue}>+₹{recoveredAnnual.toLocaleString()}</span>
+              <span className={styles.calcResultValue} suppressHydrationWarning>+₹{recoveredAnnual.toLocaleString("en-IN")}</span>
             </div>
             <div className={styles.calcResultCol}>
               <span className={styles.calcResultLabel}>MONTHLY LEAK PREVENTED</span>
-              <span className={styles.calcResultValueMuted}>₹{vacancyLoss.toLocaleString()} / mo</span>
+              <span className={styles.calcResultValueMuted} suppressHydrationWarning>₹{vacancyLoss.toLocaleString("en-IN")} / mo</span>
             </div>
             <button 
               type="button" 

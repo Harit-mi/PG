@@ -222,7 +222,7 @@ export default function RoomBoard({
                         {/* Room Number & Type */}
                         <div className={styles.roomHeaderBlock}>
                           <div className={styles.roomNumLabel}>R-{room.room_number}</div>
-                          <div className={styles.roomTypeMeta}>{room.room_type || 'Standard'} • ₹{room.rent_per_bed?.toLocaleString() || room.rent_amount?.toLocaleString()}/mo</div>
+                          <div className={styles.roomTypeMeta}>{room.room_type || 'Standard'} • ₹{room.rent_per_bed?.toLocaleString("en-IN") || room.rent_amount?.toLocaleString("en-IN")}/mo</div>
                         </div>
 
                         {/* Per-Bed Granular Slots inside Peg Body */}
@@ -302,7 +302,7 @@ export default function RoomBoard({
                 <div>
                   <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>RENT PER BED</span>
                   <span className="tabular-nums" style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--primary)' }}>
-                    ₹{(selectedRoom.rent_per_bed || selectedRoom.rent_amount || 0).toLocaleString()}
+                    ₹{(selectedRoom.rent_per_bed || selectedRoom.rent_amount || 0).toLocaleString("en-IN")}
                   </span>
                 </div>
                 <div>
@@ -314,7 +314,7 @@ export default function RoomBoard({
                 <div>
                   <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>TOTAL POTENTIAL</span>
                   <span className="tabular-nums" style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--success)' }}>
-                    ₹{((selectedRoom.rent_per_bed || selectedRoom.rent_amount || 0) * (selectedRoom.capacity || 1)).toLocaleString()}
+                    ₹{((selectedRoom.rent_per_bed || selectedRoom.rent_amount || 0) * (selectedRoom.capacity || 1)).toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>
