@@ -51,16 +51,20 @@ export default async function RoomBoardPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
-          <FAIcon icon="key" /> Property Key Desk
+      <div className={styles.topBar}>
+        <div className={styles.titleArea}>
+          <div className={styles.breadcrumbs}>
+            <span>Dashboard</span>
+            <span>/</span>
+            <span>Room Board</span>
+          </div>
+          <h1 className={styles.pageTitle}>
+            {propertyId === 'all' ? "All Outlets Room Matrix" : "Room Board & Bed Matrix"}
+          </h1>
+          <p className={styles.pageSubtitle}>
+            Interactive floor plan and bed availability matrix. Monitor live occupancy and assign residents.
+          </p>
         </div>
-        <h1 className={styles.title}>
-          {propertyId === 'all' ? "All PG Properties (Aggregated)" : "Room Board Console"}
-        </h1>
-        <p className={styles.subtitle}>
-          Visual hostel warden key-rack system displaying room occupancies, notice states, and payment alerts.
-        </p>
       </div>
 
       {/* Hero Interactive Room Board */}
