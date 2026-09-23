@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server.js';
 
 // Memory store for tracking request timestamps per client IP
 const ipStore = new Map();
 
 // Cleanup old entries every 5 minutes to prevent memory leaks
 if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
+  const timer = setInterval(() => {
     const now = Date.now();
     for (const [ip, data] of ipStore.entries()) {
       if (now > data.resetTime) {
@@ -13,6 +13,9 @@ if (typeof setInterval !== 'undefined') {
       }
     }
   }, 5 * 60 * 1000);
+  if (timer && typeof timer.unref === 'function') {
+    timer.unref();
+  }
 }
 
 /**
@@ -67,3 +70,37 @@ export function checkRateLimit(req, maxRequests = 15, windowMs = 60000) {
 
   return { success: true };
 }
+
+/**
+ * Key-based Rate Limiter for Server Actions (tenantId, phone, actionName)
+ * @param {string} key - Unique identifier for the rate limit target
+ * @param {number} maxRequests - Max allowed requests per window
+ * @param {number} windowMs - Time window in milliseconds
+ * @returns { { success: boolean, retryAfter?: number, error?: string } }
+ */
+export function checkActionRateLimit(key, maxRequests = 10, windowMs = 60000) {
+  if (!key) return { success: true };
+  const now = Date.now();
+  const record = ipStore.get(key) || { count: 0, resetTime: now + windowMs };
+
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + windowMs;
+  } else {
+    record.count += 1;
+  }
+
+  ipStore.set(key, record);
+
+  if (record.count > maxRequests) {
+    const retryAfter = Math.ceil((record.resetTime - now) / 1000);
+    return {
+      success: false,
+      retryAfter,
+      error: `Rate limit exceeded. Please wait ${retryAfter} seconds before trying again.`
+    };
+  }
+
+  return { success: true };
+}
+

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { purchaseOutletSlots } from '@/app/actions';
+import { purchaseOutletSlots, getAuthenticatedUser } from '@/app/actions';
 import { checkRateLimit } from '@/utils/rateLimiter';
 
 export async function POST(req) {
@@ -9,36 +9,53 @@ export async function POST(req) {
   if (!rateLimit.success) return rateLimit.response;
 
   try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized access." }, { status: 401 });
+    }
+
+    const orgId = user.user_metadata?.organization_id;
+    if (!orgId) {
+      return NextResponse.json({ error: "No organization linked to account." }, { status: 400 });
+    }
+
     const { 
       razorpay_order_id, 
       razorpay_payment_id, 
       razorpay_signature,
       planName,
       quantity,
-      propertyNamesList,
-      orgId
+      propertyNamesList
     } = await req.json();
 
-    const secret = process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder';
-    const isProd = process.env.NODE_ENV === 'production';
-
-    // Signature verification logic
-    if (isProd || (razorpay_signature && razorpay_signature !== 'mock_signature')) {
-      const shasum = crypto.createHmac('sha256', secret);
-      shasum.update(`${razorpay_order_id}|${razorpay_payment_id}`);
-      const digest = shasum.digest('hex');
-
-      if (digest !== razorpay_signature) {
-        return NextResponse.json({ error: "Transaction signature verification failed." }, { status: 400 });
-      }
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: "Missing required transaction verification parameters." }, { status: 400 });
     }
 
-    // Call secure server action to execute database mutations
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!secret) {
+      console.error("RAZORPAY_KEY_SECRET is not configured.");
+      return NextResponse.json({ error: "Payment gateway configuration error." }, { status: 500 });
+    }
+
+    // Strict HMAC SHA256 signature verification using constant-time comparison
+    const shasum = crypto.createHmac('sha256', secret);
+    shasum.update(`${razorpay_order_id}|${razorpay_payment_id}`);
+    const digest = shasum.digest('hex');
+
+    const digestBuf = Buffer.from(digest, 'utf8');
+    const sigBuf = Buffer.from(razorpay_signature, 'utf8');
+
+    if (digestBuf.length !== sigBuf.length || !crypto.timingSafeEqual(digestBuf, sigBuf)) {
+      return NextResponse.json({ error: "Transaction signature verification failed." }, { status: 400 });
+    }
+
+    // Call secure server action to execute database mutations for authenticated user's organization
     const dbResult = await purchaseOutletSlots(
       planName || 'Pro', 
-      quantity || 1, 
-      propertyNamesList || [], 
-      orgId || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0'
+      Math.min(Math.max(parseInt(quantity, 10) || 1, 1), 50), 
+      Array.isArray(propertyNamesList) ? propertyNamesList : [], 
+      orgId
     );
 
     if (!dbResult.success) {

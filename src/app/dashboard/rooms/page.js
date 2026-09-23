@@ -5,20 +5,21 @@ import { getRoomTypes } from "@/app/actions";
 
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { getUserPropertyIds } from "@/app/actions";
 
 export const revalidate = 0; // Disable caching for now so data is always fresh
 
 export default async function RoomsPage() {
   const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
-  
-  let query = supabase.from('rooms').select('*').order('room_number');
-  if (propertyId && propertyId !== 'all') {
-    query = query.eq('property_id', propertyId);
-  }
-  
+  const userPropertyIds = await getUserPropertyIds();
+
+  const effectiveIds = (propertyId && propertyId !== 'all')
+    ? (userPropertyIds.includes(propertyId) ? [propertyId] : [])
+    : userPropertyIds;
+
   const [{ data: rooms, error }, roomTypes] = await Promise.all([
-    query,
+    supabase.from('rooms').select('*').in('property_id', effectiveIds).order('room_number'),
     getRoomTypes()
   ]);
 

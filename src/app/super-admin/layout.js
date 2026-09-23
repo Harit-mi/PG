@@ -6,6 +6,8 @@ import Link from "next/link";
 import { LayoutDashboard, Users, MessageSquare, ShieldAlert, LogOut, ArrowLeftRight } from "lucide-react";
 import styles from "../dashboard/layout.module.css";
 
+import { superAdminLogout } from "./actions";
+
 export default function SuperAdminLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -30,7 +32,8 @@ export default function SuperAdminLayout({ children }) {
     }
   }, [pathname, router]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await superAdminLogout();
     localStorage.removeItem("super_admin_session");
     router.push("/super-admin/login");
   };

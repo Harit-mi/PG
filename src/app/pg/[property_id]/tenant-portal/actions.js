@@ -1,10 +1,21 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { sanitizeInput } from "@/utils/sanitizer";
+import { checkActionRateLimit } from "@/utils/rateLimiter";
 
 export async function verifyTenantPhone(propertyId, phone) {
-  const supabase = await createClient();
+  if (!propertyId || !phone) {
+    return { success: false, error: "Property ID and phone number are required." };
+  }
+
   const cleanPhone = phone.trim();
+  const rateLimit = checkActionRateLimit(`verify_phone_${cleanPhone}`, 10, 60000);
+  if (!rateLimit.success) {
+    return { success: false, error: rateLimit.error };
+  }
+
+  const supabase = await createClient();
 
   const { data: tenant, error } = await supabase
     .from("tenants")
@@ -33,6 +44,15 @@ export async function verifyTenantPhone(propertyId, phone) {
 }
 
 export async function submitLeaveRequest(propertyId, tenantId, leaveData) {
+  if (!propertyId || !tenantId || !leaveData) {
+    return { success: false, error: "Missing required leave request parameters." };
+  }
+
+  const rateLimit = checkActionRateLimit(`leave_${tenantId}`, 5, 60000);
+  if (!rateLimit.success) {
+    return { success: false, error: rateLimit.error };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase
     .from("leaves")
@@ -41,10 +61,10 @@ export async function submitLeaveRequest(propertyId, tenantId, leaveData) {
       tenant_id: tenantId,
       start_date: leaveData.startDate,
       end_date: leaveData.endDate,
-      breakfast: leaveData.breakfast,
-      lunch: leaveData.lunch,
-      dinner: leaveData.dinner,
-      reason: leaveData.reason,
+      breakfast: Boolean(leaveData.breakfast),
+      lunch: Boolean(leaveData.lunch),
+      dinner: Boolean(leaveData.dinner),
+      reason: sanitizeInput(leaveData.reason?.slice(0, 500) || ""),
       status: "Pending"
     }]);
 
@@ -57,6 +77,15 @@ export async function submitLeaveRequest(propertyId, tenantId, leaveData) {
 }
 
 export async function submitComplaintTicket(propertyId, tenantId, complaintData) {
+  if (!propertyId || !tenantId || !complaintData?.category || !complaintData?.issue) {
+    return { success: false, error: "Category and issue description are required." };
+  }
+
+  const rateLimit = checkActionRateLimit(`complaint_${tenantId}`, 5, 60000);
+  if (!rateLimit.success) {
+    return { success: false, error: rateLimit.error };
+  }
+
   const supabase = await createClient();
   const ticketId = 'TKT-' + Math.random().toString(36).substr(2, 6).toUpperCase();
 
@@ -66,9 +95,9 @@ export async function submitComplaintTicket(propertyId, tenantId, complaintData)
       property_id: propertyId,
       tenant_id: tenantId,
       ticket_id: ticketId,
-      category: complaintData.category,
-      issue: complaintData.issue,
-      priority: complaintData.priority || "Medium",
+      category: sanitizeInput(complaintData.category?.slice(0, 100)),
+      issue: sanitizeInput(complaintData.issue?.slice(0, 1000)),
+      priority: sanitizeInput(complaintData.priority || "Medium"),
       status: "Open"
     }]);
 
@@ -81,6 +110,20 @@ export async function submitComplaintTicket(propertyId, tenantId, complaintData)
 }
 
 export async function submitPaymentProof(propertyId, tenantId, paymentData) {
+  if (!propertyId || !tenantId || !paymentData?.amount) {
+    return { success: false, error: "Amount and payment details are required." };
+  }
+
+  const numAmount = parseFloat(paymentData.amount);
+  if (isNaN(numAmount) || numAmount <= 0 || numAmount > 1000000) {
+    return { success: false, error: "Invalid payment amount." };
+  }
+
+  const rateLimit = checkActionRateLimit(`payment_proof_${tenantId}`, 5, 60000);
+  if (!rateLimit.success) {
+    return { success: false, error: rateLimit.error };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase
     .from("transactions")
@@ -89,8 +132,8 @@ export async function submitPaymentProof(propertyId, tenantId, paymentData) {
       tenant_id: tenantId,
       type: "Income",
       category: "Rent",
-      amount: parseFloat(paymentData.amount),
-      payment_method: paymentData.method,
+      amount: numAmount,
+      payment_method: sanitizeInput(paymentData.method || "UPI"),
       status: "Pending Owner Verification",
       date: new Date().toISOString().split('T')[0]
     }]);
@@ -104,17 +147,30 @@ export async function submitPaymentProof(propertyId, tenantId, paymentData) {
 }
 
 export async function submitPublicVisitor(property_id, formData) {
-  const supabase = await createClient();
-  const visitor_name = formData.get("visitor_name");
-  const visitor_phone = formData.get("visitor_phone");
-  const host_tenant = formData.get("host_tenant");
-  const purpose = formData.get("purpose");
+  if (!property_id || !formData) {
+    return { success: false, error: "Missing required visitor parameters." };
+  }
 
+  const visitor_name = sanitizeInput(formData.get("visitor_name")?.trim());
+  const visitor_phone = sanitizeInput(formData.get("visitor_phone")?.trim());
+  const host_tenant = sanitizeInput(formData.get("host_tenant")?.trim());
+  const purpose = sanitizeInput(formData.get("purpose")?.trim());
+
+  if (!visitor_name || !visitor_phone) {
+    return { success: false, error: "Visitor name and phone are required." };
+  }
+
+  const rateLimit = checkActionRateLimit(`visitor_${property_id}`, 15, 60000);
+  if (!rateLimit.success) {
+    return { success: false, error: rateLimit.error };
+  }
+
+  const supabase = await createClient();
   const { error } = await supabase.from("visitors").insert([{
     property_id,
     visitor_name,
     visitor_phone,
-    purpose: `Visiting ${host_tenant} - ${purpose}`,
+    purpose: `Visiting ${host_tenant || 'Resident'} - ${purpose || 'Personal'}`,
     status: "Checked In",
     check_in_time: new Date().toISOString()
   }]);

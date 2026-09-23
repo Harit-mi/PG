@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+import { getUserPropertyIds } from "@/app/actions";
 import DuesClient from "./DuesClient";
 import { Suspense } from "react";
 
@@ -9,19 +10,19 @@ export const revalidate = 0;
 export default async function DuesPage() {
   const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
-  
-  // Fetch income transactions using authenticated server client
-  let query = supabase
+  const userPropertyIds = await getUserPropertyIds();
+
+  const effectiveIds = (propertyId && propertyId !== 'all')
+    ? (userPropertyIds.includes(propertyId) ? [propertyId] : [])
+    : userPropertyIds;
+
+  // Fetch income transactions using authenticated server client scoped to user properties
+  const { data: allDues, error } = await supabase
     .from('transactions')
     .select('*, tenants(name, phone, room_number), properties(name)')
     .eq('type', 'Income')
+    .in('property_id', effectiveIds)
     .order('date', { ascending: false });
-
-  if (propertyId && propertyId !== 'all') {
-    query = query.eq('property_id', propertyId);
-  }
-  
-  const { data: allDues, error } = await query;
   if (error) console.error("Error fetching dues:", error);
 
   let paymentMethods = [];

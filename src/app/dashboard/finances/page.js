@@ -6,31 +6,27 @@ import ExportExcelButton from "@/components/ExportExcelButton";
 import FinancesClient from "./FinancesClient";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { getUserPropertyIds } from "@/app/actions";
 
 export const revalidate = 0;
 
 export default async function FinancesPage() {
   const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
+  const userPropertyIds = await getUserPropertyIds();
 
-  let txQuery = supabase
-    .from('transactions')
-    .select('*, tenants(name, room_number), employees(name, role)')
-    .order('date', { ascending: false });
+  const effectiveIds = (propertyId && propertyId !== 'all')
+    ? (userPropertyIds.includes(propertyId) ? [propertyId] : [])
+    : userPropertyIds;
 
-  let tenantsQuery = supabase.from('tenants').select('id, name, room_number').order('name');
-  let employeesQuery = supabase.from('employees').select('id, name, role').order('name');
-
-  if (propertyId && propertyId !== 'all') {
-    txQuery = txQuery.eq('property_id', propertyId);
-    tenantsQuery = tenantsQuery.eq('property_id', propertyId);
-    employeesQuery = employeesQuery.eq('property_id', propertyId);
-  }
-
-  const [{ data: transactions }, { data: tenants }, { data: employees }] = await Promise.all([
-    txQuery,
-    tenantsQuery,
-    employeesQuery
+  const [
+    { data: transactions },
+    { data: tenants },
+    { data: employees }
+  ] = await Promise.all([
+    supabase.from('transactions').select('*, tenants(name, room_number), employees(name, role)').in('property_id', effectiveIds).order('date', { ascending: false }),
+    supabase.from('tenants').select('id, name, room_number').in('property_id', effectiveIds).order('name'),
+    supabase.from('employees').select('id, name, role').in('property_id', effectiveIds).order('name')
   ]);
 
   const displayTx = transactions || [];

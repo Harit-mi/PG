@@ -3,13 +3,72 @@
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 import crypto from "crypto";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://creeorxpcmzpcgtzcxaw.supabase.co';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
+const ADMIN_SECRET = process.env.SUPER_ADMIN_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || 'pg-platform-master-secret';
+
+export async function superAdminLogin(email, password) {
+  const adminEmail = process.env.SUPER_ADMIN_EMAIL || 'admin@pgmanagement.com';
+  const adminPassword = process.env.SUPER_ADMIN_PASSWORD || 'adminpassword';
+
+  if (!email || !password || email.trim().toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
+    return { success: false, error: "Invalid administrative credentials." };
+  }
+
+  const timestamp = Date.now();
+  const signature = crypto.createHmac('sha256', ADMIN_SECRET).update(`${adminEmail}:${timestamp}`).digest('hex');
+  const token = `${adminEmail}:${timestamp}:${signature}`;
+
+  const cookieStore = await cookies();
+  cookieStore.set('super_admin_token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24, // 24 hours
+    path: '/'
+  });
+
+  return { success: true };
+}
+
+export async function superAdminLogout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('super_admin_token');
+  return { success: true };
+}
+
+export async function verifySuperAdminAuth() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('super_admin_token')?.value;
+    if (!token) return false;
+
+    const parts = token.split(':');
+    if (parts.length !== 3) return false;
+
+    const [email, timestamp, signature] = parts;
+    const time = parseInt(timestamp, 10);
+    if (isNaN(time) || Date.now() - time > 24 * 60 * 60 * 1000) return false;
+
+    const expectedSig = crypto.createHmac('sha256', ADMIN_SECRET).update(`${email}:${timestamp}`).digest('hex');
+    const sigBuf = Buffer.from(signature, 'hex');
+    const expBuf = Buffer.from(expectedSig, 'hex');
+    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error("verifySuperAdminAuth error:", err);
+    return false;
+  }
+}
 
 export async function fetchSuperAdminMetrics() {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   try {
     const supabase = createAdminClient();
     // 1. Fetch organization counts
@@ -50,6 +109,9 @@ export async function fetchSuperAdminMetrics() {
 }
 
 export async function fetchSuperAdminCustomers() {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     // Fetch organizations
@@ -95,6 +157,9 @@ export async function fetchSuperAdminCustomers() {
 }
 
 export async function updateCustomerStatus(organizationId, status, reason, adminEmail = 'admin@pgmanagement.com') {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     const { error: updateErr } = await supabase
@@ -123,6 +188,9 @@ export async function updateCustomerStatus(organizationId, status, reason, admin
 }
 
 export async function updateCustomerSubscription(organizationId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     // Check if subscription exists
@@ -177,6 +245,9 @@ export async function updateCustomerSubscription(organizationId, planName, expir
 }
 
 export async function fetchSuperAdminTickets() {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     const { data: tickets, error: ticketsErr } = await supabase
@@ -216,6 +287,9 @@ export async function fetchSuperAdminTickets() {
 }
 
 export async function addTicketReply(ticketId, message, isPrivate = false, senderName = 'Platform Admin', senderType = 'Admin') {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     const { error: insertErr } = await supabase
@@ -246,6 +320,9 @@ export async function addTicketReply(ticketId, message, isPrivate = false, sende
 }
 
 export async function updateTicketStatus(ticketId, status) {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     const { error } = await supabase
@@ -264,6 +341,9 @@ export async function updateTicketStatus(ticketId, status) {
 }
 
 export async function fetchSuperAdminAuditLogs() {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     const { data: logs, error } = await supabase
@@ -280,6 +360,9 @@ export async function fetchSuperAdminAuditLogs() {
 }
 
 export async function grantComplimentarySlot(orgId, planName, expiryDate, reason, adminEmail = 'admin@pgmanagement.com') {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     // 1. Insert unassigned slot
@@ -312,6 +395,9 @@ export async function grantComplimentarySlot(orgId, planName, expiryDate, reason
 }
 
 export async function fetchBusinessDetails(orgId) {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   try {
     // 1. Fetch properties
@@ -334,6 +420,9 @@ export async function fetchBusinessDetails(orgId) {
 }
 
 export async function registerNewCustomer(data) {
+  if (!(await verifySuperAdminAuth())) {
+    return { success: false, error: "Unauthorized access: Super Admin credentials required." };
+  }
   const supabase = createAdminClient();
   const { name, mobile, email, startDate, planType, password, confirmPassword } = data;
 

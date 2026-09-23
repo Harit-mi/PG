@@ -6,20 +6,21 @@ import TenantProfileButton from "@/components/TenantProfileButton";
 import TenantActionMenu from "@/components/TenantActionMenu";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { getUserPropertyIds } from "@/app/actions";
 
 export const revalidate = 0; // Disable caching
 
 export default async function TenantsPage() {
   const supabase = await createClient();
   const propertyId = (await cookies()).get("activePropertyId")?.value;
-  
-  let tenantQuery = supabase.from('tenants').select('*').order('name');
-  let roomQuery = supabase.from('rooms').select('*');
-  
-  if (propertyId && propertyId !== 'all') {
-    tenantQuery = tenantQuery.eq('property_id', propertyId);
-    roomQuery = roomQuery.eq('property_id', propertyId);
-  }
+  const userPropertyIds = await getUserPropertyIds();
+
+  const effectiveIds = (propertyId && propertyId !== 'all')
+    ? (userPropertyIds.includes(propertyId) ? [propertyId] : [])
+    : userPropertyIds;
+
+  let tenantQuery = supabase.from('tenants').select('*').in('property_id', effectiveIds).order('name');
+  let roomQuery = supabase.from('rooms').select('*').in('property_id', effectiveIds);
   
   const [{ data: tenants }, { data: rooms }] = await Promise.all([tenantQuery, roomQuery]);
 

@@ -1,6 +1,7 @@
 // Next.js layout template for PG Owner dashboard
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import styles from "./layout.module.css";
 import PropertySelector from "@/components/PropertySelector";
 import SidebarNav from "@/components/SidebarNav";
@@ -9,6 +10,11 @@ export const revalidate = 0;
 
 export default async function DashboardLayout({ children }) {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    redirect("/");
+  }
+
   const propertyId = (await cookies()).get("activePropertyId")?.value;
   let isExpired = false;
 

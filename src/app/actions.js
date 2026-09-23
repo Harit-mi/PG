@@ -1,9 +1,11 @@
 "use server";
 
 import { createClient as createServerSupabaseClient } from "@/utils/supabase/server";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { sendTenantNotification } from "@/utils/notifications";
 import { cookies } from "next/headers";
+import crypto from "crypto";
 
 import { sanitizeInput } from "@/utils/sanitizer";
 import { normalizeRoomNumber } from "@/utils/roomUtils";
@@ -51,7 +53,6 @@ export async function switchProperty(id) {
 }
 
 export async function getAuthenticatedUser() {
-  const supabase = await createServerSupabaseClient();
   try {
     const supabaseServer = await createServerSupabaseClient();
     const { data: { user }, error } = await supabaseServer.auth.getUser();
@@ -61,11 +62,20 @@ export async function getAuthenticatedUser() {
   } catch (err) {
     console.error("getAuthenticatedUser error:", err);
   }
-  return { 
-    id: "d0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0", 
-    email: "owner@pgmanagement.com",
-    user_metadata: { organization_id: "d0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0" }
-  };
+  return null;
+}
+
+export async function getUserPropertyIds() {
+  const user = await getAuthenticatedUser();
+  if (!user) return [];
+  const orgId = user.user_metadata?.organization_id;
+  if (!orgId) return [];
+  const supabase = await createServerSupabaseClient();
+  const { data: properties } = await supabase
+    .from('properties')
+    .select('id')
+    .eq('organization_id', orgId);
+  return properties?.map(p => p.id) || [];
 }
 
 export async function addProperty(formData) {
@@ -75,11 +85,14 @@ export async function addProperty(formData) {
 
   const name = sanitizeInput(formData.get("name")?.trim());
   const address = sanitizeInput(formData.get("address")?.trim());
+  const orgId = user.user_metadata?.organization_id;
 
-  const { error } = await supabase.from("properties").insert([{
-    name,
-    address
-  }]);
+  const insertData = { name, address };
+  if (orgId) {
+    insertData.organization_id = orgId;
+  }
+
+  const { error } = await supabase.from("properties").insert([insertData]);
 
   if (error) {
     console.error("Error adding property:", error);
@@ -1078,7 +1091,9 @@ export async function fetchUnassignedSlotsCount() {
   const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
-    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+    if (!user) return { success: false, error: "Unauthorized access." };
+    const orgId = user.user_metadata?.organization_id;
+    if (!orgId) return { success: true, count: 0 };
 
     const { count, error } = await supabase
       .from("outlet_slots")
@@ -1098,7 +1113,9 @@ export async function fetchUnassignedSlots() {
   const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
-    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+    if (!user) return { success: false, error: "Unauthorized access." };
+    const orgId = user.user_metadata?.organization_id;
+    if (!orgId) return { success: true, slots: [] };
 
     const { data, error } = await supabase
       .from("outlet_slots")
@@ -1118,13 +1135,16 @@ export async function assignSlotToOutlet(slotId, name, address) {
   const supabase = await createServerSupabaseClient();
   try {
     const user = await getAuthenticatedUser();
-    const orgId = user?.user_metadata?.organization_id || 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0';
+    if (!user) return { success: false, error: "Unauthorized access." };
+    const orgId = user.user_metadata?.organization_id;
+    if (!orgId) return { success: false, error: "No organization associated with this account." };
 
-    // 1. Fetch the slot to get plan and expiry
+    // 1. Fetch the slot to get plan and expiry, verifying it belongs to caller's org
     const { data: slot, error: slotErr } = await supabase
       .from("outlet_slots")
       .select("*")
       .eq("id", slotId)
+      .eq("organization_id", orgId)
       .single();
 
     if (slotErr || !slot) throw new Error("Slot not found or invalid.");
@@ -1163,7 +1183,22 @@ export async function assignSlotToOutlet(slotId, name, address) {
   }
 }
 
-export async function purchaseOutletSlots(planName, quantity, propertyNamesList = [], orgId = 'd0d0d0d0-d0d0-d0d0-d0d0-d0d0d0d0d0d0') {
+export async function purchaseOutletSlots(planName, quantity, propertyNamesList = [], orgId, internalToken = null) {
+  const user = await getAuthenticatedUser();
+  const callerOrgId = user?.user_metadata?.organization_id;
+  const isInternalCall = internalToken && process.env.INTERNAL_API_SECRET && internalToken === process.env.INTERNAL_API_SECRET;
+
+  if (!isInternalCall) {
+    if (!user || !callerOrgId || (orgId && callerOrgId !== orgId)) {
+      return { success: false, error: "Unauthorized: slot purchases must be verified through payment checkout." };
+    }
+  }
+
+  const targetOrgId = orgId || callerOrgId;
+  if (!targetOrgId) {
+    return { success: false, error: "Invalid organization identifier." };
+  }
+
   const supabase = await createServerSupabaseClient();
   try {
     const expiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; // 30 days trial/paid
@@ -1177,7 +1212,7 @@ export async function purchaseOutletSlots(planName, quantity, propertyNamesList 
           .insert([{
             name: name.trim(),
             address: "Address Pending Setup",
-            organization_id: orgId,
+            organization_id: targetOrgId,
             subscription_status: 'Active',
             expiry_date: expiry
           }])
@@ -1189,7 +1224,7 @@ export async function purchaseOutletSlots(planName, quantity, propertyNamesList 
         const { error: slotErr } = await supabase
           .from("outlet_slots")
           .insert([{
-            organization_id: orgId,
+            organization_id: targetOrgId,
             plan_name: planName,
             status: 'Assigned',
             assigned_property_id: prop.id,
@@ -1202,7 +1237,7 @@ export async function purchaseOutletSlots(planName, quantity, propertyNamesList 
         const { error: slotErr } = await supabase
           .from("outlet_slots")
           .insert([{
-            organization_id: orgId,
+            organization_id: targetOrgId,
             plan_name: planName,
             status: 'Unassigned',
             expiry_date: expiry
@@ -1303,6 +1338,106 @@ export async function reactivateOutlet(propertyId, slotId) {
     return { success: true };
   } catch (err) {
     console.error("Error reactivating property:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function registerOwnerAccount({ name, email, phone, pgName, password, confirmPassword }) {
+  if (!name || !email || !phone || !pgName || !password) {
+    return { success: false, error: "All fields are required to register your PG." };
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanName = sanitizeInput(name.trim());
+  const cleanPhone = sanitizeInput(phone.trim());
+  const cleanPgName = sanitizeInput(pgName.trim());
+
+  if (password.length < 6) {
+    return { success: false, error: "Password must be at least 6 characters." };
+  }
+
+  if (confirmPassword && password !== confirmPassword) {
+    return { success: false, error: "Passwords do not match." };
+  }
+
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceKey || serviceKey.includes("placeholder")) {
+    return {
+      success: false,
+      error: "Supabase database credentials are not configured. Please add your real SUPABASE_SERVICE_ROLE_KEY and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local (from Supabase Dashboard -> Project Settings -> API)."
+    };
+  }
+
+  const newOrgId = crypto.randomUUID();
+  const adminSupabase = createAdminClient();
+
+  try {
+    // 1. Create auth user with pre-confirmed email so they can log in instantly
+    const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
+      email: cleanEmail,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        name: cleanName,
+        phone: cleanPhone,
+        organization_id: newOrgId,
+        pg_name: cleanPgName
+      }
+    });
+
+    if (authError) {
+      throw new Error(authError.message);
+    }
+
+    // 2. Create organization
+    const { error: orgErr } = await adminSupabase.from("organizations").insert([{
+      id: newOrgId,
+      name: cleanPgName,
+      status: "Active"
+    }]);
+
+    if (orgErr) throw orgErr;
+
+    // 3. Create 30-day Free Trial Subscription
+    const expiryStr = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    await adminSupabase.from("subscriptions").insert([{
+      organization_id: newOrgId,
+      plan_name: "Pro Trial",
+      status: "Active",
+      expiry_date: expiryStr
+    }]);
+
+    // 4. Create first property
+    const { data: prop, error: propErr } = await adminSupabase.from("properties").insert([{
+      name: cleanPgName,
+      address: "Main Branch",
+      organization_id: newOrgId,
+      subscription_status: "Active",
+      expiry_date: expiryStr
+    }]).select().single();
+
+    if (propErr) throw propErr;
+
+    // 5. Provision 3 complimentary outlet slots
+    await adminSupabase.from("outlet_slots").insert([
+      { organization_id: newOrgId, plan_name: "Pro", status: "Assigned", assigned_property_id: prop?.id, expiry_date: expiryStr },
+      { organization_id: newOrgId, plan_name: "Pro", status: "Unassigned", expiry_date: expiryStr },
+      { organization_id: newOrgId, plan_name: "Pro", status: "Unassigned", expiry_date: expiryStr }
+    ]);
+
+    // Set active property cookie
+    if (prop?.id) {
+      (await cookies()).set('activePropertyId', prop.id, { path: '/' });
+    }
+
+    return { 
+      success: true, 
+      email: cleanEmail,
+      propertyId: prop?.id
+    };
+
+  } catch (err) {
+    console.error("registerOwnerAccount error:", err);
     return { success: false, error: err.message };
   }
 }

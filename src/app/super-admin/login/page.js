@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldAlert, ArrowRight, Loader2 } from "lucide-react";
 import styles from "../../page.module.css";
+import { superAdminLogin } from "../actions";
 
 export default function SuperAdminLoginPage() {
   const router = useRouter();
@@ -12,22 +13,24 @@ export default function SuperAdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Predefined secure admin login for platform owner
-    if (email === "admin@pgmanagement.com" && password === "adminpassword") {
-      setTimeout(() => {
+    try {
+      const res = await superAdminLogin(email, password);
+      if (res.success) {
         localStorage.setItem("super_admin_session", JSON.stringify({ email, role: "SuperAdmin" }));
         router.push("/super-admin");
-      }, 1000);
-    } else {
-      setTimeout(() => {
+      } else {
+        setError(res.error || "Invalid administrative credentials.");
         setLoading(false);
-        setError("Invalid administrative credentials.");
-      }, 1000);
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred during administrative login.");
+      setLoading(false);
     }
   };
 
