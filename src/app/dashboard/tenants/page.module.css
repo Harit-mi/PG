@@ -1,59 +1,75 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.85rem;
+  font-weight: 750;
   color: var(--foreground);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.025em;
 }
 
 .subtitle {
   color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 0;
 }
 
 .addButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
+  color: #FFFFFF;
+  border: 1px solid transparent;
+  padding: 0.55rem 1.15rem;
   border-radius: 8px;
   font-weight: 600;
-  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-  transition: all 0.2s;
+  font-size: 0.83rem;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+  transition: all 0.15s ease;
+  cursor: pointer;
 }
 
 .addButton:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.controls {
-  margin-bottom: 1.5rem;
+  transform: translateY(-1px);
 }
 
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: var(--surface);
+  background-color: #FFFFFF;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.85rem;
   width: 100%;
-  max-width: 440px;
-  margin-bottom: 1.5rem;
+  max-width: 420px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.searchBar:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .searchIcon {
   color: var(--text-muted);
   margin-right: 0.5rem;
+  flex-shrink: 0;
 }
 
 .searchInput {
@@ -63,42 +79,42 @@
   width: 100%;
   color: var(--foreground);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  padding: 0;
 }
 
-.tableContainer {
-  border-radius: 12px;
+.tableCard {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--cst-shadow);
   overflow-x: auto;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  font-size: 0.88rem;
 }
 
 .table th {
-  background-color: rgba(0, 0, 0, 0.03);
-  padding: 1rem 1.5rem;
-  font-weight: 600;
+  background-color: #F8FAFC;
+  padding: 0.85rem 1rem;
+  font-weight: 650;
   color: var(--text-muted);
-  font-size: 0.875rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--border);
 }
 
-@media (prefers-color-scheme: dark) {
-  .table th {
-    background-color: rgba(255, 255, 255, 0.03);
-  }
-}
-
 .table td {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid var(--border-light);
   vertical-align: middle;
+  color: var(--foreground);
 }
 
 .table tr:last-child td {
@@ -106,66 +122,76 @@
 }
 
 .table tr:hover td {
-  background-color: rgba(0, 0, 0, 0.01);
+  background-color: #F8FAFC;
 }
 
-@media (prefers-color-scheme: dark) {
-  .table tr:hover td {
-    background-color: rgba(255, 255, 255, 0.02);
-  }
-}
-
-.fw600 {
-  font-weight: 600;
-}
-
-.textMuted {
-  color: var(--text-muted);
-}
-
-.contactCell {
+.tenantInfo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.75rem;
+}
+
+.tenantName {
+  font-weight: 600;
+  color: var(--foreground);
+  font-size: 0.88rem;
+}
+
+.tenantPhone {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 1px;
 }
 
 .roomBadge {
-  background-color: var(--border);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  background-color: var(--surface-muted);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.82rem;
+  color: var(--foreground);
+  display: inline-block;
 }
 
-.statusBadge {
-  font-size: 0.75rem;
+.badge {
+  font-size: 0.72rem;
   font-weight: 600;
-  padding: 0.25rem 0.75rem;
+  padding: 2.5px 8px;
   border-radius: 9999px;
   display: inline-block;
 }
 
 .Active {
-  background-color: rgba(185, 141, 62, 0.15);
-  color: var(--brass);
+  background-color: #ECFDF5;
+  color: #059669;
+  border: 1px solid #A7F3D0;
 }
 
 .NoticePeriod {
-  background-color: rgba(193, 68, 30, 0.15);
-  color: var(--rust);
+  background-color: #FFFBEB;
+  color: #D97706;
+  border: 1px solid #FDE68A;
 }
 
 .actionBtn {
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
   color: var(--text-muted);
-  border-radius: 4px;
-  padding: 0.25rem;
-  transition: background-color 0.2s;
+  border-radius: 6px;
+  padding: 0.35rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .actionBtn:hover {
-  background-color: var(--border);
+  background-color: #F1F5F9;
   color: var(--foreground);
+  border-color: var(--border);
 }

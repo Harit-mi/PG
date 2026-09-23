@@ -58,66 +58,68 @@ export default function MenuGrid({ initialMenus, weekStartDate }) {
     const res = await copyPreviousWeekMenu(weekStartDate);
     setCopyLoading(false);
     if (!res.success) {
-      alert(res.error);
+      alert("Error copying menu: " + res.error);
     } else {
-      alert("Menu copied successfully!");
-      // Reload page to fetch new data
+      alert("Copied successfully!");
       window.location.reload();
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
         <button 
           onClick={handleCopy} 
           disabled={copyLoading}
           style={{ 
-            display: 'flex', alignItems: 'center', gap: '0.5rem', 
-            background: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', border: '1px solid var(--border)', 
-            padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '500'
+            display: 'inline-flex', alignItems: 'center', gap: '0.45rem', 
+            background: '#FFFFFF', color: '#0F172A', border: '1px solid #E2E8F0', 
+            padding: '0.55rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600',
+            fontSize: '0.83rem', boxShadow: '0 1px 2px rgba(15,23,42,0.04)'
           }}
         >
-          <Copy size={16} /> {copyLoading ? "Copying..." : "Copy Previous Week"}
+          <Copy size={15} /> {copyLoading ? "Copying..." : "Copy Previous Week"}
         </button>
         <button 
           onClick={handleSave} 
           disabled={loading}
           style={{ 
-            display: 'flex', alignItems: 'center', gap: '0.5rem', 
-            background: 'var(--accent)', color: 'white', border: 'none', 
-            padding: '8px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: '500'
+            display: 'inline-flex', alignItems: 'center', gap: '0.45rem', 
+            background: '#2563EB', color: '#FFFFFF', border: '1px solid transparent', 
+            padding: '0.55rem 1.15rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600',
+            fontSize: '0.83rem', boxShadow: '0 1px 3px rgba(37,99,235,0.25)'
           }}
         >
-          <Save size={16} /> {loading ? "Saving..." : "Save Menu"}
+          <Save size={15} /> {loading ? "Saving..." : "Save Menu"}
         </button>
       </div>
 
-      <div style={{ overflowX: 'auto', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: '12px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+      <div style={{ overflowX: 'auto', background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '14px', boxShadow: 'var(--cst-shadow)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
           <thead>
-            <tr style={{ background: 'rgba(0,0,0,0.2)' }}>
-              <th style={{ padding: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontWeight: 500 }}>Day</th>
-              <th style={{ padding: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontWeight: 500 }}>Breakfast</th>
-              <th style={{ padding: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontWeight: 500 }}>Lunch</th>
-              <th style={{ padding: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontWeight: 500 }}>Evening Snack</th>
-              <th style={{ padding: '1rem', borderBottom: '1px solid var(--border)', color: 'var(--text-muted)', fontWeight: 500 }}>Dinner</th>
+            <tr style={{ background: '#F8FAFC' }}>
+              <th style={{ padding: '0.85rem 1rem', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Day</th>
+              <th style={{ padding: '0.85rem 1rem', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Breakfast</th>
+              <th style={{ padding: '0.85rem 1rem', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Lunch</th>
+              <th style={{ padding: '0.85rem 1rem', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Evening Snack</th>
+              <th style={{ padding: '0.85rem 1rem', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Dinner</th>
             </tr>
           </thead>
           <tbody>
             {DAYS.map(day => (
-              <tr key={day} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '1rem', fontWeight: 600 }}>{day}</td>
+              <tr key={day} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                <td style={{ padding: '1rem', fontWeight: 700, color: '#0F172A' }}>{day}</td>
                 {["breakfast", "lunch", "evening_snack", "dinner"].map(meal => (
-                  <td key={meal} style={{ padding: '0.5rem' }}>
+                  <td key={meal} style={{ padding: '0.5rem 0.75rem' }}>
                     <input 
                       type="text" 
                       value={menus[day][meal] || ""}
                       onChange={(e) => handleInputChange(day, meal, e.target.value)}
                       placeholder={`Enter ${meal.replace('_', ' ')}`}
                       style={{ 
-                        width: '100%', padding: '0.5rem', background: 'rgba(255,255,255,0.05)', 
-                        border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-primary)'
+                        width: '100%', padding: '0.5rem 0.65rem', background: '#FFFFFF', 
+                        border: '1px solid #E2E8F0', borderRadius: '6px', color: '#0F172A',
+                        fontSize: '0.85rem'
                       }}
                     />
                   </td>

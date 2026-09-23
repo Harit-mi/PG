@@ -1,42 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  width: 100%;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.85rem;
+  font-weight: 750;
   color: var(--foreground);
-  margin-bottom: 0.5rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.025em;
 }
 
 .subtitle {
   color: var(--text-muted);
+  font-size: 0.88rem;
+  margin: 0;
 }
 
 .filterBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: transparent;
+  background-color: #FFFFFF;
   color: var(--foreground);
   border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
+  padding: 0.55rem 1rem;
   border-radius: 8px;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  font-size: 0.83rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .filterBtn:hover {
-  background-color: var(--surface);
+  background-color: #F8FAFC;
+  border-color: #CBD5E1;
 }
 
 .kanbanBoard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 @media (max-width: 900px) {
@@ -46,10 +61,13 @@
 }
 
 .column {
-  padding: 1.5rem;
-  border-radius: 16px;
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--cst-shadow);
   height: 100%;
 }
 
@@ -57,7 +75,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
 }
 
 .columnTitle {
@@ -67,42 +87,46 @@
 }
 
 .columnTitle h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin: 0;
 }
 
-.iconOpen { color: var(--danger); }
-.iconProgress { color: var(--warning); }
-.iconResolved { color: var(--success); }
+.iconOpen { color: #E11D48; }
+.iconProgress { color: #D97706; }
+.iconResolved { color: #059669; }
 
 .countBadge {
-  background-color: var(--border);
-  color: var(--foreground);
-  font-size: 0.75rem;
+  background-color: var(--surface-muted);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.25rem 0.5rem;
+  padding: 2px 7px;
   border-radius: 9999px;
 }
 
 .ticketList {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .ticketCard {
-  background-color: var(--surface);
+  background-color: #F8FAFC;
   border: 1px solid var(--border);
   padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  transition: transform 0.2s;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: all 0.15s ease;
   cursor: pointer;
 }
 
 .ticketCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
 }
 
 .ticketHeader {
@@ -116,50 +140,55 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .priorityBadge {
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 0.15rem 0.5rem;
+  padding: 2px 6px;
   border-radius: 4px;
   text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.High { background-color: #fee2e2; color: #991b1b; }
-.Medium { background-color: #fef9c3; color: #854d0e; }
-.Low { background-color: #e0e7ff; color: #4f46e5; }
+.High { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+.Medium { background-color: #FEF3C7; color: #D97706; border: 1px solid #FDE68A; }
+.Low { background-color: #EFF6FF; color: #2563EB; border: 1px solid #BFDBFE; }
 
 .ticketIssue {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  margin-bottom: 0.35rem;
   color: var(--foreground);
 }
 
 .ticketTenant {
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .ticketFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border);
-  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.65rem;
 }
 
 .ticketCategory {
-  font-size: 0.75rem;
-  background-color: var(--border);
-  padding: 0.25rem 0.5rem;
+  font-size: 0.72rem;
+  background-color: #FFFFFF;
+  border: 1px solid var(--border);
+  padding: 2px 6px;
   border-radius: 4px;
   color: var(--text-muted);
+  font-weight: 500;
 }
 
 .ticketDate {
   font-size: 0.75rem;
   color: var(--text-muted);
+  font-family: var(--font-mono);
 }

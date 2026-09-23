@@ -163,7 +163,7 @@
 
 .searchInput:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(30, 72, 119, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 /* --------------------------------------------------------------------------
@@ -232,7 +232,7 @@
 
 .roomCard:focus-visible {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(30, 72, 119, 0.15);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .roomCardHeader {
