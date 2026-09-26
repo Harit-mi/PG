@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" alt="Next.js Logo" width="80" />
+  <h1>HostBoard (PG Owner App)</h1>
+  <p><strong>The Ultimate Operating System for PG & Hostel Management</strong></p>
 
-## Getting Started
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-16+-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React" />
+    <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
+    <img src="https://img.shields.io/badge/Architecture-B2B_SaaS-purple?style=for-the-badge" alt="SaaS" />
+  </p>
+</div>
 
-First, run the development server:
+---
 
+## 📖 Overview
+
+**HostBoard** is a premium, high-density B2B SaaS platform designed to eliminate the chaos of paper registers, messy Excel sheets, and endless WhatsApp groups for PG (Paying Guest) and Hostel owners. 
+
+Built with a sleek, Apple-inspired frosted-glass UI, HostBoard acts as a centralized command center. It empowers owners to remotely monitor real-time bed occupancies, track financial dues, store digital KYC documents, and resolve tenant complaints across multiple properties instantly.
+
+---
+
+## ✨ Core Features
+
+- 🏨 **Visual Room Board:** A drag-and-drop interactive pegboard mimicking a physical hotel key rack. View bed-level occupancies (`Vacant`, `Occupied`, `Notice`) instantly.
+- 💰 **Automated Financial Ledger:** Track monthly rent collections, generate invoices, and flag pending dues without manual reconciliation.
+- 🗂️ **Digital Tenant Directory:** Securely store tenant KYC documents, lease agreements, and emergency contacts in the cloud.
+- 🎫 **Ticketing & Complaints:** A self-service portal for tenants to raise maintenance issues (plumbing, electrical) directly to the Warden.
+- 🍲 **Kitchen Board:** Digital daily food menus and mess schedules.
+- 🤖 **AI Copilot (Powered by Gemini):** Built-in intelligent assistant to help owners analyze occupancy rates and resolve queries.
+
+---
+
+## 👥 Multi-Tier SaaS Architecture
+
+The platform is designed with a strict Row-Level Security (RLS) multi-tenant architecture to support scaling to thousands of independent businesses:
+
+1. **👑 Superadmin (Platform Owner):** Manages SaaS subscriptions and global feature toggles.
+2. **🏢 PG Owner (Client):** Owns multiple buildings; views aggregate revenue and assigns Managers.
+3. **🛡️ Manager (Warden):** Assigned to a specific property for day-to-day operations (rent collection, complaints).
+4. **👤 Tenant (Resident):** Views rent dues, food menus, and raises maintenance tickets.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Styling:** CSS Modules with Global CSS Variables (Glassmorphism Design System)
+- **Database & Auth:** Supabase (PostgreSQL, SSR Auth, RLS Policies)
+- **AI Integration:** Google Gemini SDK
+- **Testing:** Puppeteer (Automated End-to-End UI Testing)
+
+---
+
+## 🚀 Quick Start (Local Development)
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-org/pg-owner-app.git
+cd pg-owner-app
 ```
 
+### 2. Install Dependencies
+*Note: Use `--legacy-peer-deps` due to testing library configurations.*
+```bash
+npm install --legacy-peer-deps
+```
+
+### 3. Configure Environment Variables
+Create a `.env.local` file in the root directory and add your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://[YOUR_PROJECT_REF].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+### 4. Run the Development Server
+```bash
+npm run dev
+```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔒 Security & Compliance
+- **DPDP Act 2023 Compliant:** Built-in tenant data consent and erasure controls for Indian data privacy laws.
+- **Data Sanitization:** Strict input sanitization and rate-limiting middleware to prevent injection and spam attacks.
 
-## Learn More
+<br/>
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<div align="center">
+  <i>Designed for Scale. Built for Owners.</i>
+</div>
