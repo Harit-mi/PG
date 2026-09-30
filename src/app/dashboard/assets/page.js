@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import AssetsClient from "./AssetsClient";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import { AlertTriangle, Terminal } from "lucide-react";
 
 export const revalidate = 0;
@@ -36,9 +37,12 @@ export default async function AssetsPage() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--foreground)', marginBottom: '0.25rem' }}>Room Assets & Inventory</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Track furniture, appliances, electronics, and physical assets across PG rooms.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--foreground)', marginBottom: '0.25rem' }}>Room Assets & Inventory</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Track furniture, appliances, electronics, and physical assets across PG rooms.</p>
+        </div>
+        <VideoGuideButton section="Assets" />
       </div>
 
       {isTableMissing ? (

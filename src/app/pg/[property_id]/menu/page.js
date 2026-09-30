@@ -17,11 +17,33 @@ export default async function PublicMenuPage({ params }) {
   
   const currentWeekStart = getMonday(new Date());
 
-  const { data: menuItems, error } = await supabase
+  let { data: menuItems } = await supabase
     .from('food_menus')
     .select('*')
     .eq('property_id', propertyId)
     .eq('week_start_date', currentWeekStart);
+
+  if (!menuItems || menuItems.length === 0) {
+    const { data: latestMenu } = await supabase
+      .from('food_menus')
+      .select('*')
+      .eq('property_id', propertyId)
+      .order('week_start_date', { ascending: false });
+
+    if (latestMenu && latestMenu.length > 0) {
+      const latestDate = latestMenu[0].week_start_date;
+      menuItems = latestMenu.filter(m => m.week_start_date === latestDate);
+    }
+  }
+
+  if (!menuItems || menuItems.length === 0) {
+    const { data: fallbackAny } = await supabase
+      .from('food_menus')
+      .select('*')
+      .or(`property_id.eq.${propertyId},property_id.is.null`)
+      .limit(7);
+    menuItems = fallbackAny || [];
+  }
 
   const items = menuItems || [];
 

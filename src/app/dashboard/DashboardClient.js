@@ -23,6 +23,7 @@ import {
   Activity
 } from "lucide-react";
 import styles from "./page.module.css";
+import VideoGuideButton from "@/components/VideoGuideButton";
 
 export default function DashboardClient({
   properties = [],
@@ -321,6 +322,7 @@ export default function DashboardClient({
           </div>
 
           {/* Quick Action Triggers */}
+          <VideoGuideButton section="Dashboard" />
           <Link href="/dashboard/tenants" className={styles.actionBtnPrimary}>
             <Plus size={15} />
             <span>Add Resident</span>

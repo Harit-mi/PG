@@ -25,7 +25,7 @@ export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className={buttonClass}>
+      <button onClick={() => setIsOpen(true)} className={buttonClass || styles.primaryTriggerBtn}>
         <UserPlus size={20} /> Add Tenant
       </button>
 
@@ -48,7 +48,16 @@ export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
                 
                 <div className={styles.formGroup}>
                   <label>Phone Number</label>
-                  <input name="phone" required placeholder="+91 98765 43210" className={styles.input} />
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    required 
+                    placeholder="e.g. 9876543210" 
+                    className={styles.input} 
+                    inputMode="numeric"
+                    maxLength={15}
+                    onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+                  />
                 </div>
 
                 <div className={styles.formGroup}>
@@ -65,7 +74,17 @@ export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
 
                 <div className={styles.formGroup}>
                   <label>Blood Group</label>
-                  <input name="blood_group" placeholder="e.g. O+" className={styles.input} />
+                  <select name="blood_group" className={styles.input}>
+                    <option value="">-- Select Blood Group --</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
                 </div>
               </div>
 
@@ -82,7 +101,15 @@ export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
 
                 <div className={styles.formGroup}>
                   <label>Parent Contact Number</label>
-                  <input name="parent_contact_number" placeholder="Emergency Contact" className={styles.input} />
+                  <input 
+                    type="tel" 
+                    name="parent_contact_number" 
+                    placeholder="Emergency Contact" 
+                    className={styles.input} 
+                    inputMode="numeric"
+                    maxLength={15}
+                    onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+                  />
                 </div>
               </div>
 

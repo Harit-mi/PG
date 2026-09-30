@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import VisitorsClient from "./VisitorsClient";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import { AlertTriangle, Terminal } from "lucide-react";
 
 export const revalidate = 0;
@@ -37,9 +38,12 @@ export default async function VisitorsPage() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--foreground)', marginBottom: '0.25rem' }}>Visitor & Gate-Pass Log</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Real-time entry/exit logs for guests, contractors, and delivery personnel.</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--foreground)', marginBottom: '0.25rem' }}>Visitor & Gate-Pass Log</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Real-time entry/exit logs for guests, contractors, and delivery personnel.</p>
+        </div>
+        <VideoGuideButton section="Visitors" />
       </div>
 
       {isTableMissing ? (

@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { User } from "lucide-react";
 import AddRoomModal from "@/components/AddRoomModal";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import { getRoomTypes } from "@/app/actions";
 
 import { cookies } from "next/headers";
@@ -36,7 +37,10 @@ export default async function RoomsPage() {
           <h1 className={styles.title}>Room Management</h1>
           <p className={styles.subtitle}>Manage your PG rooms and occupancy.</p>
         </div>
-        <AddRoomModal buttonClass={styles.addButton} roomTypes={roomTypes || []} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <VideoGuideButton section="Rooms" />
+          <AddRoomModal buttonClass={styles.addButton} roomTypes={roomTypes || []} />
+        </div>
       </div>
 
       <div className={styles.grid}>

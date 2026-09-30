@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import { Search, Phone, MoreVertical } from "lucide-react";
 import AddTenantModal from "@/components/AddTenantModal";
 import UploadKycModal from "@/components/UploadKycModal";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import TenantProfileButton from "@/components/TenantProfileButton";
 import TenantActionMenu from "@/components/TenantActionMenu";
 import { cookies } from "next/headers";
@@ -52,7 +53,10 @@ export default async function TenantsPage() {
           <h1 className={styles.title}>Tenant Directory</h1>
           <p className={styles.subtitle}>Manage resident details, leases, and contacts.</p>
         </div>
-        <AddTenantModal availableRooms={availableRooms} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <VideoGuideButton section="Tenants" />
+          <AddTenantModal availableRooms={availableRooms} />
+        </div>
       </div>
 
       {/* Tenant Search Bar */}

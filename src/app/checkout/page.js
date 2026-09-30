@@ -10,16 +10,19 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [plan, setPlan] = useState("Professional");
-  const [price, setPrice] = useState("₹4,999");
+  const [plan, setPlan] = useState("Monthly");
+  const [price, setPrice] = useState("₹499");
 
   useEffect(() => {
     const savedPlan = typeof window !== 'undefined' ? localStorage.getItem("pg_selected_plan") : null;
     if (savedPlan) {
       Promise.resolve().then(() => {
         setPlan(savedPlan);
-        if (savedPlan === "Starter") setPrice("₹1,999");
-        if (savedPlan === "Enterprise") setPrice("₹14,999");
+        if (savedPlan === "Yearly") {
+          setPrice("₹4,499");
+        } else {
+          setPrice("₹499");
+        }
       });
     }
   }, []);
@@ -151,7 +154,9 @@ export default function CheckoutPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '1rem' }}>
               <div>
                 <h3 style={{ fontWeight: 600, fontSize: '1.125rem' }}>PG App - {plan} Plan</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Billed monthly</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                  {plan === "Yearly" ? "Billed annually for entire year" : "Billed monthly"}
+                </p>
               </div>
               <div style={{ fontSize: '1.25rem', fontWeight: 700 }} className="ledger-mono">{price}</div>
             </div>

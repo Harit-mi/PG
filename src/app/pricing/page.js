@@ -6,26 +6,35 @@ import styles from "../page.module.css";
 
 const PLANS = [
   {
-    id: "Starter",
-    name: "Starter",
-    price: "₹1,999",
-    desc: "Perfect for single property owners.",
-    features: ["Up to 50 Beds", "Tenant Management", "Basic Rent Collection"],
+    id: "Monthly",
+    name: "Monthly Plan",
+    price: "₹499",
+    period: "/mo",
+    desc: "Complete PG management suite with month-to-month flexibility.",
+    features: [
+      "All Features Included",
+      "Unlimited Rooms & Tenants",
+      "Automated WhatsApp Rent Reminders",
+      "Resident Self-Service Portal",
+      "Kitchen Meal & Leaves Tracker",
+      "Visitor Passes & Maintenance Desk"
+    ],
   },
   {
-    id: "Pro",
-    name: "Professional",
-    price: "₹4,999",
-    desc: "For growing PG businesses with multiple properties.",
-    features: ["Up to 200 Beds", "Automated Rent Reminders", "Complaint Ticketing", "Expense Tracking"],
+    id: "Yearly",
+    name: "Yearly Plan (Entire Year)",
+    price: "₹4,499",
+    period: "/year",
+    desc: "Best value package — get 12 months access and save ~25% off monthly pricing.",
+    features: [
+      "Everything in Monthly Plan",
+      "Full 12 Months Access (~₹375/mo)",
+      "Multi-Outlet PG Management",
+      "Priority WhatsApp & Phone Support",
+      "Free Data Import & Setup Help",
+      "Free Future Updates & Features"
+    ],
     isPopular: true,
-  },
-  {
-    id: "Enterprise",
-    name: "Enterprise",
-    price: "₹14,999",
-    desc: "For large operators scaling across cities.",
-    features: ["Unlimited Beds", "Multiple Staff Accounts", "Custom Branding", "Priority Support"],
   },
 ];
 
@@ -53,7 +62,7 @@ export default function PricingPage() {
               {plan.isPopular && <div className={styles.pricingBadge}>MOST POPULAR</div>}
               <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--primary)', margin: '0 0 0.5rem 0' }}>{plan.name}</h3>
               <div className="ledger-mono" style={{ fontSize: '2.5rem', fontWeight: 700, margin: '1rem 0', color: 'var(--foreground)' }}>
-                {plan.price}<span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 400 }}>/mo</span>
+                {plan.price}<span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 400 }}>{plan.period}</span>
               </div>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem' }}>{plan.desc}</p>
               

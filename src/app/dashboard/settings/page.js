@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { Check, CreditCard, Shield, User, ExternalLink, Building2, ArrowRight } from "lucide-react";
 import CheckoutButton from "@/components/CheckoutButton";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import PaymentMethodsManager from "@/components/PaymentMethodsManager";
 import RoomTypesManager from "@/components/RoomTypesManager";
 import CopyablePortalLink from "@/components/CopyablePortalLink";
@@ -33,9 +34,12 @@ export default async function SettingsPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Settings & Billing</h1>
-        <p className={styles.subtitle}>Manage your account and subscription plan.</p>
+      <div className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 className={styles.title}>Settings & Billing</h1>
+          <p className={styles.subtitle}>Manage your account and subscription plan.</p>
+        </div>
+        <VideoGuideButton section="Settings" />
       </div>
 
       <div className={styles.content}>
@@ -121,59 +125,52 @@ export default async function SettingsPage() {
             <Shield size={20} className={styles.icon} />
             <h2>Subscription Plans</h2>
           </div>
-          <p className={styles.planDesc}>You are currently on the <strong>Free Trial</strong>. Upgrade to manage more PG properties and tenants.</p>
+          <p className={styles.planDesc}>Upgrade your PG management subscription. Choose between monthly flexibility or annual savings.</p>
           
-          <div className={styles.pricingGrid}>
-            {/* Starter Plan */}
+          <div className={styles.pricingGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+            {/* Monthly Plan */}
             <div className={styles.pricingCard}>
-              <h3 className={styles.planName}>Starter</h3>
+              <h3 className={styles.planName}>Monthly Plan</h3>
               <div className={styles.price}>
                 <span className={styles.currency}>₹</span>
-                <span className={styles.amount}>299</span>
-                <span className={styles.period}>/mo</span>
+                <span className={styles.amount}>499</span>
+                <span className={styles.period}>/month</span>
               </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                Full access billed month-to-month. Cancel anytime.
+              </p>
               <ul className={styles.features}>
-                <li><Check size={16} className={styles.check} /> 1 PG Property</li>
-                <li><Check size={16} className={styles.check} /> Up to 20 Tenants</li>
-                <li><Check size={16} className={styles.check} /> Basic Reporting</li>
-                <li><Check size={16} className={styles.check} /> Email Support</li>
+                <li><Check size={16} className={styles.check} /> Unlimited Rooms & Tenants</li>
+                <li><Check size={16} className={styles.check} /> Kitchen & Leave Tracker</li>
+                <li><Check size={16} className={styles.check} /> 1-Click WhatsApp Dues Alerts</li>
+                <li><Check size={16} className={styles.check} /> Resident Self-Service Portal</li>
+                <li><Check size={16} className={styles.check} /> Visitor Passes & Complaints Desk</li>
+                <li><Check size={16} className={styles.check} /> Standard Email & Chat Support</li>
               </ul>
-              <button className={`${styles.planBtn} ${styles.btnPrimary}`}>Upgrade to Starter</button>
+              <CheckoutButton planName="Monthly Plan" price={499} buttonClass={`${styles.planBtn} ${styles.btnPrimary}`} />
             </div>
 
-            {/* Growth Plan */}
+            {/* Annual Plan (Entire Year) */}
             <div className={`${styles.pricingCard} ${styles.popular}`}>
-              <div className={styles.popularBadge}>Most Popular</div>
-              <h3 className={styles.planName}>Growth</h3>
+              <div className={styles.popularBadge}>Best Value • Save 25%</div>
+              <h3 className={styles.planName}>Yearly Plan</h3>
               <div className={styles.price}>
                 <span className={styles.currency}>₹</span>
-                <span className={styles.amount}>699</span>
-                <span className={styles.period}>/mo</span>
+                <span className={styles.amount}>4,499</span>
+                <span className={styles.period}>/entire year</span>
               </div>
+              <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.85rem', marginBottom: '1rem' }}>
+                Just ~₹375/month • Pay once for all 12 months
+              </p>
               <ul className={styles.features}>
-                <li><Check size={16} className={styles.check} /> Up to 3 PG Properties</li>
-                <li><Check size={16} className={styles.check} /> Up to 60 Tenants</li>
-                <li><Check size={16} className={styles.check} /> WhatsApp Reminders</li>
-                <li><Check size={16} className={styles.check} /> Priority Support</li>
+                <li><Check size={16} className={styles.check} /> <strong>Everything in Monthly Plan</strong></li>
+                <li><Check size={16} className={styles.check} /> Full 12 Months Continuous Access</li>
+                <li><Check size={16} className={styles.check} /> Multi-Outlet Support</li>
+                <li><Check size={16} className={styles.check} /> Priority WhatsApp & Call Support</li>
+                <li><Check size={16} className={styles.check} /> Free Data Import & Onboarding Assist</li>
+                <li><Check size={16} className={styles.check} /> Free Access to Upcoming Updates</li>
               </ul>
-              <CheckoutButton planName="Growth" price={699} buttonClass={`${styles.planBtn} ${styles.btnPrimary}`} />
-            </div>
-
-            {/* Pro Plan */}
-            <div className={styles.pricingCard}>
-              <h3 className={styles.planName}>Pro</h3>
-              <div className={styles.price}>
-                <span className={styles.currency}>₹</span>
-                <span className={styles.amount}>1,499</span>
-                <span className={styles.period}>/mo</span>
-              </div>
-              <ul className={styles.features}>
-                <li><Check size={16} className={styles.check} /> Unlimited Properties</li>
-                <li><Check size={16} className={styles.check} /> Unlimited Tenants</li>
-                <li><Check size={16} className={styles.check} /> Automated Billing</li>
-                <li><Check size={16} className={styles.check} /> 24/7 Phone Support</li>
-              </ul>
-              <CheckoutButton planName="Pro" price={1499} buttonClass={`${styles.planBtn} ${styles.btnOutline}`} />
+              <CheckoutButton planName="Yearly Plan" price={4499} buttonClass={`${styles.planBtn} ${styles.btnPrimary}`} />
             </div>
           </div>
         </section>

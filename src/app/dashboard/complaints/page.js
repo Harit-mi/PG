@@ -6,6 +6,8 @@ import AddComplaintModal from "@/components/AddComplaintModal";
 import TicketCard from "@/components/TicketCard";
 import ExportComplaintsExcel from "@/components/ExportComplaintsExcel";
 
+import VideoGuideButton from "@/components/VideoGuideButton";
+
 export const revalidate = 0;
 
 export default async function ComplaintsPage() {
@@ -39,7 +41,8 @@ export default async function ComplaintsPage() {
           <h1 className={styles.title}>Maintenance & Complaints</h1>
           <p className={styles.subtitle}>Track resident tickets, repairs, and service requests.</p>
         </div>
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <VideoGuideButton section="Complaints" />
           <ExportComplaintsExcel complaints={displayComplaints} />
           <AddComplaintModal tenants={displayTenants} propertyId={propertyId} />
         </div>

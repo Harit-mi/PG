@@ -2,6 +2,7 @@ import styles from "../page.module.css";
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import RoomBoard from "@/components/RoomBoard";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import FAIcon from "@/components/FAIcon";
 
 export const revalidate = 0;
@@ -51,7 +52,7 @@ export default async function RoomBoardPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.topBar}>
+      <div className={styles.topBar} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div className={styles.titleArea}>
           <div className={styles.breadcrumbs}>
             <span>Dashboard</span>
@@ -65,6 +66,7 @@ export default async function RoomBoardPage() {
             Interactive floor plan and bed availability matrix. Monitor live occupancy and assign residents.
           </p>
         </div>
+        <VideoGuideButton section="Room Board" />
       </div>
 
       {/* Hero Interactive Room Board */}

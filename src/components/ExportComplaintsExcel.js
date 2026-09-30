@@ -39,10 +39,27 @@ export default function ExportComplaintsExcel({ complaints }) {
     <button 
       onClick={exportToCsv}
       style={{
-        display: 'flex', alignItems: 'center', gap: '0.5rem',
-        padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)',
-        background: 'var(--card-bg)', color: 'var(--foreground)', cursor: 'pointer',
-        fontSize: '0.85rem'
+        display: 'inline-flex', 
+        alignItems: 'center', 
+        gap: '0.5rem',
+        padding: '0.65rem 1.15rem', 
+        borderRadius: '10px', 
+        border: '1px solid var(--border, #e2e8f0)',
+        background: '#ffffff', 
+        color: 'var(--foreground, #1e293b)', 
+        cursor: 'pointer',
+        fontSize: '0.875rem',
+        fontWeight: 600,
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+        transition: 'all 0.2s ease'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = '#f8fafc';
+        e.currentTarget.style.borderColor = '#cbd5e1';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = '#ffffff';
+        e.currentTarget.style.borderColor = 'var(--border, #e2e8f0)';
       }}
     >
       <Download size={16} /> Export CSV

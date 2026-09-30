@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import MenuGrid from "@/components/MenuGrid";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import { Utensils } from "lucide-react";
 
 export const revalidate = 0;
@@ -41,6 +42,7 @@ export default async function MenuPage() {
             Configure daily meal items for breakfast, lunch, and dinner.
           </p>
         </div>
+        <VideoGuideButton section="Menu" />
       </div>
 
       <MenuGrid initialMenus={menuItems || []} propertyId={propertyId} weekStartDate={currentWeekStart} />

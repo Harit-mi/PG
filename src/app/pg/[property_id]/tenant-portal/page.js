@@ -30,14 +30,37 @@ export default async function TenantPortalPage({ params }) {
     .eq('id', property_id)
     .single();
 
-  // 2. Fetch food menu for the entire week
-  const { data: weeklyMenu } = await supabase
+  // 2. Fetch food menu for the week (with fallback to latest published menu)
+  let { data: weeklyMenu } = await supabase
     .from('food_menus')
     .select('*')
     .eq('property_id', property_id)
     .eq('week_start_date', currentWeekStart);
 
-  const menuData = weeklyMenu?.find(m => m.day_of_week === today);
+  if (!weeklyMenu || weeklyMenu.length === 0) {
+    const { data: latestMenu } = await supabase
+      .from('food_menus')
+      .select('*')
+      .eq('property_id', property_id)
+      .order('week_start_date', { ascending: false });
+
+    if (latestMenu && latestMenu.length > 0) {
+      const latestDate = latestMenu[0].week_start_date;
+      weeklyMenu = latestMenu.filter(m => m.week_start_date === latestDate);
+    }
+  }
+
+  // If still empty, check for any menu items for this property or general
+  if (!weeklyMenu || weeklyMenu.length === 0) {
+    const { data: fallbackAny } = await supabase
+      .from('food_menus')
+      .select('*')
+      .or(`property_id.eq.${property_id},property_id.is.null`)
+      .limit(7);
+    weeklyMenu = fallbackAny || [];
+  }
+
+  const menuData = weeklyMenu?.find(m => m.day_of_week === today) || weeklyMenu?.[0];
 
   // 3. Fetch payment methods for UPI/bank details
   const { data: paymentMethods } = await supabase
@@ -46,13 +69,22 @@ export default async function TenantPortalPage({ params }) {
     .eq('property_id', property_id)
     .eq('is_active', true);
 
+  // 4. Fetch notices
+  const { data: notices } = await supabase
+    .from('notices')
+    .select('*')
+    .eq('property_id', property_id)
+    .order('created_at', { ascending: false });
+
   return (
     <TenantPortalClient
       property={property}
       propertyId={property_id}
+      propertyName={property?.name || "Hostel PG"}
       todayMenu={menuData}
       weeklyMenu={weeklyMenu || []}
       paymentMethods={paymentMethods || []}
+      notices={notices || []}
     />
   );
 }

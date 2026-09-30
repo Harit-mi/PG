@@ -1024,6 +1024,64 @@ export async function updateVisitorStatus(visitorId, status) {
   return { success: true };
 }
 
+export async function addVisitor(formData) {
+  const supabase = await createServerSupabaseClient();
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
+  const property_id = (await cookies()).get('activePropertyId')?.value;
+  const subCheck = await checkSubscription(property_id);
+  if (!subCheck.success) return subCheck;
+
+  const tenant_id = formData.get("tenant_id") || null;
+  const name = formData.get("name")?.trim();
+  const phone = formData.get("phone")?.trim();
+  const relationship = formData.get("relationship")?.trim() || "Visitor";
+  const visit_date = formData.get("visit_date") || new Date().toISOString().split('T')[0];
+  const purpose = formData.get("purpose")?.trim() || "Personal Visit";
+  const status = formData.get("status") || "Checked In";
+
+  if (!name || !phone) {
+    return { success: false, error: "Visitor name and phone are required." };
+  }
+
+  const { error } = await supabase.from("visitors").insert([{
+    property_id,
+    tenant_id: tenant_id && tenant_id !== "" ? tenant_id : null,
+    name,
+    phone,
+    relationship,
+    visit_date,
+    purpose,
+    status
+  }]);
+
+  if (error) {
+    console.error("Error adding visitor:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/visitors");
+  return { success: true };
+}
+
+export async function deleteVisitor(visitorId) {
+  const supabase = await createServerSupabaseClient();
+  const user = await getAuthenticatedUser();
+  if (!user) return { success: false, error: "Unauthorized access." };
+
+  if (!visitorId) return { success: false, error: "Visitor ID is required." };
+
+  const { error } = await supabase.from("visitors").delete().eq("id", visitorId);
+  if (error) {
+    console.error("Error deleting visitor:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/dashboard/visitors");
+  return { success: true };
+}
+
 export async function addRoomAsset(propertyId, roomId, name, serialNumber, status) {
   const supabase = await createServerSupabaseClient();
   if (!propertyId || !roomId || !name) {

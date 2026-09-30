@@ -3,6 +3,7 @@ import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import AddTransactionModal from "@/components/AddTransactionModal";
 import ExportPdfButton from "@/components/ExportPdfButton";
 import ExportExcelButton from "@/components/ExportExcelButton";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import FinancesClient from "./FinancesClient";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
@@ -40,7 +41,8 @@ export default async function FinancesPage() {
           <h1 className={styles.title}>Financial Ledger</h1>
           <p className={styles.subtitle}>Track incoming rent, operational expenses, and profit/loss.</p>
         </div>
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <VideoGuideButton section="Finances" />
           <ExportExcelButton transactions={displayTx} />
           <ExportPdfButton transactions={displayTx} />
           <AddTransactionModal tenants={displayTenants} employees={displayEmployees} propertyId={propertyId} />

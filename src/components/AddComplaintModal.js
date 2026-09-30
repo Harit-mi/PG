@@ -25,7 +25,7 @@ export default function AddComplaintModal({ buttonClass, tenants }) {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className={buttonClass}>
+      <button onClick={() => setIsOpen(true)} className={buttonClass || styles.primaryTriggerBtn}>
         <Plus size={18} /> New Ticket
       </button>
 

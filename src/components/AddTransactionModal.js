@@ -30,7 +30,7 @@ export default function AddTransactionModal({ buttonClass, tenants, employees })
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className={buttonClass}>
+      <button onClick={() => setIsOpen(true)} className={buttonClass || styles.primaryTriggerBtn}>
         <Plus size={20} /> Add Transaction
       </button>
 

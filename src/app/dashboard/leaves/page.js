@@ -4,6 +4,7 @@ import LeavesClient from "./LeavesClient";
 import Link from "next/link";
 import { AlertTriangle, Terminal } from "lucide-react";
 import AddLeaveModal from "@/components/AddLeaveModal";
+import VideoGuideButton from "@/components/VideoGuideButton";
 
 export const revalidate = 0;
 
@@ -44,9 +45,12 @@ export default async function LeavesPage() {
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--foreground)', marginBottom: '0.25rem' }}>Tenant Leave Tracker</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Log upcoming tenant absences and calculate meal reductions.</p>
         </div>
-        {!isTableMissing && (
-          <AddLeaveModal tenants={tenants || []} propertyId={propertyId} />
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <VideoGuideButton section="Leaves" />
+          {!isTableMissing && (
+            <AddLeaveModal tenants={tenants || []} propertyId={propertyId} />
+          )}
+        </div>
       </div>
 
       {isTableMissing ? (

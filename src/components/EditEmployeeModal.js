@@ -44,7 +44,16 @@ export default function EditEmployeeModal({ employee, onClose }) {
           <div className={styles.row}>
             <div className={styles.formGroup}>
               <label>Phone Number</label>
-              <input type="tel" name="phone" defaultValue={employee.phone} required className={styles.input} />
+              <input 
+                type="tel" 
+                name="phone" 
+                defaultValue={employee.phone} 
+                required 
+                className={styles.input} 
+                inputMode="numeric"
+                maxLength={15}
+                onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+              />
             </div>
             
             <div className={styles.formGroup}>

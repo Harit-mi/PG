@@ -119,6 +119,67 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
 
       </div>
 
+      {/* Rent Collection Master Guide (Kab, Kitne & Kaise Lene Hai) */}
+      <div style={{ background: '#FFFFFF', border: '1.5px solid #E2E8F0', borderRadius: '16px', padding: '1.25rem 1.5rem', boxShadow: 'var(--cst-shadow)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1.25rem' }}>💡</span>
+            <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: 'var(--primary, #1e4877)' }}>
+              Rent Collection Guide: Kab, Kitne Aur Kaise Lene Hai
+            </h3>
+          </div>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, background: '#EFF6FF', color: 'var(--primary, #1e4877)', padding: '3px 10px', borderRadius: '99px', border: '1px solid #BFDBFE' }}>
+            Standard PG Billing Workflow
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+          
+          {/* 1. KAB LENE HAI */}
+          <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', borderLeft: '4px solid #3B82F6' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+              <span style={{ fontSize: '1.1rem' }}>📅</span>
+              <strong style={{ fontSize: '0.85rem', color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>1. Kab Lene Hai (Billing Cycle)</strong>
+            </div>
+            <p style={{ margin: '0 0 6px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.4 }}>
+              Har mahine ki <strong>1st se 5th tareekh</strong> tak rent collect karne ka ideal window hota hai.
+            </p>
+            <div style={{ fontSize: '0.75rem', color: '#64748B', background: '#FFFFFF', padding: '6px 8px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
+              🚨 <strong>Overdue Rule:</strong> 5th ke baad table automatically status ko <span style={{ color: '#DC2626', fontWeight: 700 }}>Overdue</span> mark karti hai with exact Days Overdue.
+            </div>
+          </div>
+
+          {/* 2. KITNE LENE HAI */}
+          <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', borderLeft: '4px solid #F59E0B' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+              <span style={{ fontSize: '1.1rem' }}>💰</span>
+              <strong style={{ fontSize: '0.85rem', color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>2. Kitne Lene Hai (Rent Rate)</strong>
+            </div>
+            <p style={{ margin: '0 0 6px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.4 }}>
+              Har tenant ka monthly rent unke allocated <strong>Room Type</strong> ke hisaab se table me exact amount column me dikhta hai.
+            </p>
+            <div style={{ fontSize: '0.75rem', color: '#64748B', background: '#FFFFFF', padding: '6px 8px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
+              📊 <strong>Total Outstanding:</strong> ₹{totalPendingSum.toLocaleString()} baaki hai. Row me amount directly pre-filled hoti hai.
+            </div>
+          </div>
+
+          {/* 3. KAISE LENE HAI */}
+          <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', borderLeft: '4px solid #10B981' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+              <span style={{ fontSize: '1.1rem' }}>📱</span>
+              <strong style={{ fontSize: '0.85rem', color: '#1E293B', textTransform: 'uppercase', letterSpacing: '0.5px' }}>3. Kaise Lene Hai (Payment Modes)</strong>
+            </div>
+            <p style={{ margin: '0 0 6px', fontSize: '0.82rem', color: '#475569', lineHeight: 1.4 }}>
+              <strong>WhatsApp 1-Click:</strong> Row me green WhatsApp button dabayein pre-filled UPI reminder bhejne ke liye.
+            </p>
+            <div style={{ fontSize: '0.75rem', color: '#64748B', background: '#FFFFFF', padding: '6px 8px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
+              🧾 <strong>Mark as Paid:</strong> Cash/UPI aane par &quot;Mark Paid&quot; dabayein. Official printable PDF receipt turant generate ho jayegi!
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       {/* Tab Switcher: Dues Register vs Financial Category Breakdown */}
       <div className={styles.tabNav}>
         <button 

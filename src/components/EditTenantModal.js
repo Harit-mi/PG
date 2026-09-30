@@ -82,7 +82,16 @@ export default function EditTenantModal({ tenant, onClose }) {
 
             <div className={styles.formGroup}>
               <label>Phone Number</label>
-              <input type="text" name="phone" defaultValue={tenant.phone} required className={styles.input} />
+              <input 
+                type="tel" 
+                name="phone" 
+                defaultValue={tenant.phone} 
+                required 
+                className={styles.input} 
+                inputMode="numeric"
+                maxLength={15}
+                onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+              />
             </div>
 
             <div className={styles.formGroup}>
@@ -99,7 +108,17 @@ export default function EditTenantModal({ tenant, onClose }) {
 
             <div className={styles.formGroup}>
               <label>Blood Group</label>
-              <input type="text" name="blood_group" defaultValue={tenant.blood_group || ""} placeholder="e.g. O+" className={styles.input} />
+              <select name="blood_group" defaultValue={tenant.blood_group || ""} className={styles.input}>
+                <option value="">-- Select Blood Group --</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
             </div>
 
             <div className={styles.formGroup}>
@@ -130,7 +149,16 @@ export default function EditTenantModal({ tenant, onClose }) {
 
             <div className={styles.formGroup}>
               <label>Parent Contact Number</label>
-              <input type="text" name="parent_contact_number" defaultValue={tenant.parent_contact_number || ""} placeholder="Emergency Contact" className={styles.input} />
+              <input 
+                type="tel" 
+                name="parent_contact_number" 
+                defaultValue={tenant.parent_contact_number || ""} 
+                placeholder="Emergency Contact" 
+                className={styles.input} 
+                inputMode="numeric"
+                maxLength={15}
+                onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+              />
             </div>
           </div>
 

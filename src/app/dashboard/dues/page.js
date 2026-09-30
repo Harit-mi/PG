@@ -5,6 +5,8 @@ import { getUserPropertyIds } from "@/app/actions";
 import DuesClient from "./DuesClient";
 import { Suspense } from "react";
 
+import VideoGuideButton from "@/components/VideoGuideButton";
+
 export const revalidate = 0;
 
 export default async function DuesPage() {
@@ -41,6 +43,7 @@ export default async function DuesPage() {
           <h1 className={styles.title}>Pending Dues & Payments</h1>
           <p className={styles.subtitle}>Collect outstanding payments and track rent history.</p>
         </div>
+        <VideoGuideButton section="Dues" />
       </div>
       
       <Suspense fallback={<div style={{ color: "var(--text-muted)", padding: "2rem" }}>Loading Ledger...</div>}>

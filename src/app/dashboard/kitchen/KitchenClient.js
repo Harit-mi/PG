@@ -3,7 +3,16 @@
 import { useState } from "react";
 import { Utensils, Award, ShieldAlert, CheckCircle, Clock } from "lucide-react";
 
-export default function KitchenClient({ initialTenants = [], initialLeaves = [] }) {
+export default function KitchenClient({ 
+  tenants = [], 
+  leaves = [], 
+  initialTenants, 
+  initialLeaves,
+  propertyId 
+}) {
+  const activeTenants = initialTenants && initialTenants.length > 0 ? initialTenants : tenants;
+  const activeLeaves = initialLeaves && initialLeaves.length > 0 ? initialLeaves : leaves;
+
   const todayStr = new Date().toISOString().split('T')[0];
   
   // Local date formatter
@@ -18,15 +27,15 @@ export default function KitchenClient({ initialTenants = [], initialLeaves = [] 
   };
 
   // Calculations for today's counts
-  const totalTenantsCount = initialTenants.length;
+  const totalTenantsCount = activeTenants.length;
   
   let leaveBF = 0;
   let leaveLN = 0;
   let leaveDN = 0;
   
-  initialTenants.forEach(tenant => {
+  activeTenants.forEach(tenant => {
     // Find approved leaves today
-    const leavesToday = initialLeaves.filter(l => 
+    const leavesToday = activeLeaves.filter(l => 
       l.tenant_id === tenant.id && 
       l.status === 'Approved' && 
       todayStr >= l.start_date && 
@@ -45,7 +54,7 @@ export default function KitchenClient({ initialTenants = [], initialLeaves = [] 
   const presentDN = Math.max(totalTenantsCount - leaveDN, 0);
 
   // Sorting tenants by room number
-  const sortedTenants = [...initialTenants].sort((a,b) => {
+  const sortedTenants = [...activeTenants].sort((a,b) => {
     return String(a.room_number || "").localeCompare(String(b.room_number || ""));
   });
 
@@ -124,7 +133,7 @@ export default function KitchenClient({ initialTenants = [], initialLeaves = [] 
             </thead>
             <tbody>
               {sortedTenants.map(t => {
-                const tenantLeaves = initialLeaves.filter(l => 
+                const tenantLeaves = activeLeaves.filter(l => 
                   l.tenant_id === t.id && 
                   l.status === 'Approved' && 
                   todayStr >= l.start_date && 

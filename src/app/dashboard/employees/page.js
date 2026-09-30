@@ -1,6 +1,7 @@
 import styles from "../tenants/page.module.css";
 import { Search, Phone, MoreVertical, Briefcase } from "lucide-react";
 import AddEmployeeModal from "@/components/AddEmployeeModal";
+import VideoGuideButton from "@/components/VideoGuideButton";
 import EmployeeActionMenu from "@/components/EmployeeActionMenu";
 import Link from "next/link";
 import { cookies } from "next/headers";
@@ -34,7 +35,10 @@ export default async function EmployeesPage() {
           <h1 className={styles.title}>Employee Management</h1>
           <p className={styles.subtitle}>Manage staff, salaries, and assignments.</p>
         </div>
-        <AddEmployeeModal propertyId={propertyId} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <VideoGuideButton section="Employees" />
+          <AddEmployeeModal propertyId={propertyId} />
+        </div>
       </div>
 
       <EmployeesClient initialEmployees={displayEmployees} propertyId={propertyId} />

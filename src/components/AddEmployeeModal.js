@@ -49,7 +49,15 @@ export default function AddEmployeeModal({ buttonClass }) {
                 
                 <div className={styles.formGroup}>
                   <label>Mobile Number *</label>
-                  <input name="phone" required placeholder="+91 9876543210" />
+                  <input 
+                    type="tel"
+                    name="phone" 
+                    required 
+                    placeholder="9876543210" 
+                    inputMode="numeric"
+                    maxLength={15}
+                    onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
+                  />
                 </div>
                 
                 <div className={styles.formGroup}>

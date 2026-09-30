@@ -82,7 +82,7 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
 
   return (
     <>
-      <button onClick={() => handleOpenChange(true)} className={buttonClass}>
+      <button onClick={() => handleOpenChange(true)} className={buttonClass || styles.primaryTriggerBtn}>
         <Plus size={20} /> Add Room
       </button>
 

@@ -4,8 +4,17 @@ import { useState } from "react";
 import FAIcon from "@/components/FAIcon";
 import { updateLeaveRequestStatus, deleteLeaveRequest } from "@/app/actions";
 
-export default function LeavesClient({ propertyId, initialTenants = [], initialLeaves = [] }) {
-  const [leaves, setLeaves] = useState(initialLeaves);
+export default function LeavesClient({ 
+  propertyId, 
+  tenants = [], 
+  leaves: initialLeavesProp = [], 
+  initialTenants, 
+  initialLeaves 
+}) {
+  const allTenants = initialTenants && initialTenants.length > 0 ? initialTenants : tenants;
+  const allLeaves = initialLeaves && initialLeaves.length > 0 ? initialLeaves : initialLeavesProp;
+
+  const [leaves, setLeaves] = useState(allLeaves);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("");
@@ -13,8 +22,8 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
 
   // Helper to lookup tenant info
   const getTenantInfo = (tenantId) => {
-    const tenant = initialTenants.find(t => t.id === tenantId);
-    return tenant ? { name: tenant.name, room: tenant.room_number || "N/A" } : { name: "Unknown Resident", room: "N/A" };
+    const tenant = allTenants.find(t => t.id === tenantId);
+    return tenant ? { name: tenant.name, room: tenant.room_number || "N/A" } : { name: "Resident", room: "N/A" };
   };
 
   const handleStatusUpdate = async (leaveId, newStatus) => {
@@ -69,7 +78,7 @@ export default function LeavesClient({ propertyId, initialTenants = [], initialL
   // Calculate who is currently on leave today (approved leaves overlapping today)
   const activeLeavesToday = leaves.filter(l => l.status === 'Approved' && todayStr >= l.start_date && todayStr <= l.end_date);
   const onLeaveTodayCount = new Set(activeLeavesToday.map(l => l.tenant_id)).size;
-  const totalTenantsCount = initialTenants.length;
+  const totalTenantsCount = allTenants.length;
   const presentTodayCount = Math.max(totalTenantsCount - onLeaveTodayCount, 0);
 
   const pendingLeaves = filteredLeaves.filter(l => l.status === "Pending");
