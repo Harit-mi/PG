@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import PropertySelector from "./PropertySelector";
 import styles from "@/app/dashboard/layout.module.css";
+import ThemeToggle from "./ThemeToggle";
 
 const navGroups = [
   {
@@ -126,6 +127,7 @@ export default function SidebarNav() {
             <ExternalLink size={12} />
           </Link>
           <span style={{ fontSize: "0.7rem", color: "#64748B" }}>v2.4</span>
+          <ThemeToggle />
         </div>
       </aside>
     </>

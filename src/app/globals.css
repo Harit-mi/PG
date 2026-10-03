@@ -207,3 +207,38 @@ tr:hover td {
     transition-duration: 0.01ms !important;
   }
 }
+
+[data-theme="dark"] {
+  --background: #000000;
+  --foreground: #f4f4f5;
+  --primary: #52525b; /* Zinc 600 (Grey) */
+  --primary-hover: #71717a; /* Zinc 500 */
+  --surface: #121212; /* Very dark grey for cards */
+  --border: #27272a; /* Zinc 800 */
+  --border-light: #18181b;
+  --text-muted: #a1a1aa; /* Zinc 400 */
+  --card-bg: #121212;
+  
+  --sidebar-bg: #09090b; /* Zinc 950 */
+  --sidebar-border: #27272a;
+  --sidebar-text: #a1a1aa;
+  --sidebar-text-active: #ffffff;
+  --sidebar-item-hover: #18181b;
+  --sidebar-item-active: #27272a;
+  --surface-muted: #18181b;
+  --surface-elevated: #27272a;
+
+  /* Keep semantic colors but slightly muted for dark mode if needed, 
+     but the user asked for black and grey combo. We'll leave badges semantic for status indicators. */
+  --badge-emerald-bg: rgba(16, 185, 129, 0.15);
+  --badge-emerald-text: #34d399;
+  --badge-amber-bg: rgba(245, 158, 11, 0.15);
+  --badge-amber-text: #fbbf24;
+  --badge-rose-bg: rgba(225, 29, 72, 0.15);
+  --badge-rose-text: #fb7185;
+  --badge-blue-bg: rgba(82, 82, 91, 0.25); /* Muted grey for blue badges */
+  --badge-blue-text: #d4d4d8;
+  
+  --cst-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+  --cst-shadow-hover: 0 4px 16px rgba(0, 0, 0, 1);
+}

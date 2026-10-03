@@ -341,7 +341,7 @@ export default function DashboardClient({
         <div className={styles.metricCard}>
           <div className={styles.metricHeader}>
             <span className={styles.metricLabel}>
-              <DoorOpen size={15} style={{ color: "#2563EB" }} />
+              <DoorOpen size={15} style={{ color: "var(--primary)" }} />
               Bed Occupancy
             </span>
             <span className={`${styles.badge} ${occupancyRate >= 80 ? styles.badgeEmerald : styles.badgeAmber}`}>
@@ -366,7 +366,7 @@ export default function DashboardClient({
                 cy="23"
                 r={radialRadius}
                 fill="transparent"
-                stroke="#E2E8F0"
+                stroke="var(--border)"
                 strokeWidth="4"
               />
               <circle
@@ -386,7 +386,7 @@ export default function DashboardClient({
 
           <div className={styles.metricFooter}>
             <span>{vacantBeds} vacant beds ready</span>
-            <Link href="/dashboard/room-board" style={{ color: "#2563EB", display: "inline-flex", alignItems: "center", gap: "2px", fontWeight: 600 }}>
+            <Link href="/dashboard/room-board" style={{ color: "var(--primary)", display: "inline-flex", alignItems: "center", gap: "2px", fontWeight: 600 }}>
               Room Board <ArrowUpRight size={13} />
             </Link>
           </div>
@@ -418,14 +418,14 @@ export default function DashboardClient({
             <svg className={styles.sparklineSvg} viewBox="0 0 85 36" aria-hidden="true">
               <defs>
                 <linearGradient id="sparklineGradLight" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#2563EB" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
               <path
                 d="M 5 30 Q 25 25, 45 15 T 80 8"
                 fill="none"
-                stroke="#2563EB"
+                stroke="var(--primary)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
               />
@@ -433,7 +433,7 @@ export default function DashboardClient({
                 d="M 5 30 Q 25 25, 45 15 T 80 8 L 80 34 L 5 34 Z"
                 fill="url(#sparklineGradLight)"
               />
-              <circle cx="80" cy="8" r="3" fill="#2563EB" />
+              <circle cx="80" cy="8" r="3" fill="var(--primary)" />
             </svg>
           </div>
 
@@ -459,7 +459,7 @@ export default function DashboardClient({
 
           <div className={styles.metricValueRow}>
             <div className={styles.metricValueCol}>
-              <span className={`${styles.metricValue} tabular-nums`} style={{ color: pendingDues > 0 ? "#D97706" : "#0F172A" }} suppressHydrationWarning>
+              <span className={`${styles.metricValue} tabular-nums`} style={{ color: pendingDues > 0 ? "#D97706" : "var(--foreground)" }} suppressHydrationWarning>
                 ₹{pendingDues.toLocaleString("en-IN")}
               </span>
               <span className={styles.metricSubDelta}>
@@ -503,7 +503,7 @@ export default function DashboardClient({
 
           <div className={styles.metricValueRow}>
             <div className={styles.metricValueCol}>
-              <span className={`${styles.metricValue} tabular-nums`} style={{ color: openComplaints.length > 0 ? "#E11D48" : "#0F172A" }}>
+              <span className={`${styles.metricValue} tabular-nums`} style={{ color: openComplaints.length > 0 ? "#E11D48" : "var(--foreground)" }}>
                 {openComplaints.length === 0 ? "0" : openComplaints.length}
               </span>
               <span className={styles.metricSubDelta}>
@@ -542,7 +542,7 @@ export default function DashboardClient({
         <div className={styles.cleanCard}>
           <div className={styles.cardHeader}>
             <div className={styles.cardTitle}>
-              <TrendingUp size={18} style={{ color: "#2563EB" }} />
+              <TrendingUp size={18} style={{ color: "var(--primary)" }} />
               <span>Collections Velocity &amp; Cashflow</span>
             </div>
 
@@ -565,22 +565,22 @@ export default function DashboardClient({
             <svg className={styles.trajectorySvg} viewBox="0 0 600 210" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="areaGlowLight" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#2563EB" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.14" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
 
               {/* Horizontal Guide Grid Lines */}
-              <line x1="40" y1="50" x2="560" y2="50" stroke="#F1F5F9" strokeDasharray="3 3" />
-              <line x1="40" y1="100" x2="560" y2="100" stroke="#F1F5F9" strokeDasharray="3 3" />
-              <line x1="40" y1="150" x2="560" y2="150" stroke="#F1F5F9" strokeDasharray="3 3" />
-              <line x1="40" y1="190" x2="560" y2="190" stroke="#E2E8F0" />
+              <line x1="40" y1="50" x2="560" y2="50" stroke="var(--surface-muted)" strokeDasharray="3 3" />
+              <line x1="40" y1="100" x2="560" y2="100" stroke="var(--surface-muted)" strokeDasharray="3 3" />
+              <line x1="40" y1="150" x2="560" y2="150" stroke="var(--surface-muted)" strokeDasharray="3 3" />
+              <line x1="40" y1="190" x2="560" y2="190" stroke="var(--border)" />
 
               {/* Area Gradient Fill */}
               <path d={collectedAreaD} fill="url(#areaGlowLight)" />
 
               {/* Trajectory Stroke Line */}
-              <path d={collectedPathD} fill="none" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round" />
+              <path d={collectedPathD} fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" />
 
               {/* Chart Data Nodes */}
               {chartPoints.map((pt, idx) => (
@@ -589,8 +589,8 @@ export default function DashboardClient({
                     cx={pt.x}
                     cy={pt.yCollected}
                     r="4.5"
-                    fill="#FFFFFF"
-                    stroke="#2563EB"
+                    fill="var(--surface)"
+                    stroke="var(--primary)"
                     strokeWidth="2.5"
                     style={{ cursor: "pointer", transition: "transform 0.15s ease" }}
                   />
@@ -599,7 +599,7 @@ export default function DashboardClient({
                     x={pt.x}
                     y="205"
                     textAnchor="middle"
-                    fill="#64748B"
+                    fill="var(--text-muted)"
                     fontSize="11"
                     fontFamily="var(--font-ui)"
                   >
@@ -616,12 +616,12 @@ export default function DashboardClient({
                 top: `${hoveredChartPoint.yCollected - 45}px`,
                 left: `${(hoveredChartPoint.x / 600) * 100}%`,
                 transform: "translateX(-50%)",
-                background: "#0F172A",
+                background: "var(--foreground)",
                 boxShadow: "0 6px 18px rgba(0, 0, 0, 0.15)",
                 padding: "5px 10px",
                 borderRadius: "6px",
                 fontSize: "0.78rem",
-                color: "#FFFFFF",
+                color: "var(--surface)",
                 pointerEvents: "none",
                 whiteSpace: "nowrap",
                 zIndex: 10
@@ -633,7 +633,7 @@ export default function DashboardClient({
 
           <div className={styles.chartLegend}>
             <div className={styles.legendItem}>
-              <div className={styles.legendColor} style={{ background: "#2563EB" }} />
+              <div className={styles.legendColor} style={{ background: "var(--primary)" }} />
               <span>Collections Realized</span>
             </div>
             <div className={styles.legendItem}>
@@ -653,7 +653,7 @@ export default function DashboardClient({
               <Layers size={18} style={{ color: "#059669" }} />
               <span>Room &amp; Bed Capacity</span>
             </div>
-            <span className={styles.badge} style={{ background: "#F1F5F9", color: "#475569" }}>
+            <span className={styles.badge} style={{ background: "var(--surface-muted)", color: "var(--text-muted)" }}>
               {totalBeds} Total Beds
             </span>
           </div>
@@ -662,7 +662,7 @@ export default function DashboardClient({
             {/* Central Concentric Ring Visualizer */}
             <div className={styles.spatialCenterMeter}>
               <svg width="116" height="116" viewBox="0 0 116 116">
-                <circle cx="58" cy="58" r="48" fill="none" stroke="#F1F5F9" strokeWidth="8" />
+                <circle cx="58" cy="58" r="48" fill="none" stroke="var(--surface-muted)" strokeWidth="8" />
                 <circle
                   cx="58"
                   cy="58"
@@ -676,13 +676,13 @@ export default function DashboardClient({
                   transform="rotate(-90 58 58)"
                   style={{ transition: "stroke-dashoffset 0.6s ease" }}
                 />
-                <circle cx="58" cy="58" r="36" fill="none" stroke="#F8FAFC" strokeWidth="6" />
+                <circle cx="58" cy="58" r="36" fill="none" stroke="var(--background)" strokeWidth="6" />
                 <circle
                   cx="58"
                   cy="58"
                   r="36"
                   fill="none"
-                  stroke="#2563EB"
+                  stroke="var(--primary)"
                   strokeWidth="6"
                   strokeDasharray={2 * Math.PI * 36}
                   strokeDashoffset={(2 * Math.PI * 36) * (1 - (collectedPct / 100))}
@@ -701,7 +701,7 @@ export default function DashboardClient({
             <div className={styles.roomBreakdownList}>
               <div className={styles.roomBreakdownRow}>
                 <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#2563EB" }} />
+                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--primary)" }} />
                   <span>Single Rooms</span>
                 </div>
                 <span className={styles.breakdownRight}>{singleBeds} Beds ({singleRooms.length} Rms)</span>
@@ -753,9 +753,9 @@ export default function DashboardClient({
             </div>
 
             {actionItems.length === 0 ? (
-              <div style={{ padding: "2.5rem 1rem", textAlign: "center", color: "#64748B" }}>
+              <div style={{ padding: "2.5rem 1rem", textAlign: "center", color: "var(--text-muted)" }}>
                 <CheckCircle2 size={36} style={{ color: "#10B981", margin: "0 auto 0.75rem", display: "block" }} />
-                <strong style={{ color: "#0F172A", display: "block", fontSize: "0.95rem", marginBottom: "0.25rem" }}>
+                <strong style={{ color: "var(--foreground)", display: "block", fontSize: "0.95rem", marginBottom: "0.25rem" }}>
                   All Accounts &amp; Tasks Clear
                 </strong>
                 <span style={{ fontSize: "0.85rem" }}>
@@ -771,7 +771,7 @@ export default function DashboardClient({
                         className={styles.triageIconPip}
                         style={{
                           background: item.type === "due" ? "#FEE2E2" : item.type === "complaint" ? "#FEF3C7" : "#EFF6FF",
-                          color: item.type === "due" ? "#DC2626" : item.type === "complaint" ? "#D97706" : "#2563EB",
+                          color: item.type === "due" ? "#DC2626" : item.type === "complaint" ? "#D97706" : "var(--primary)",
                         }}
                       >
                         {item.type === "due" ? <Receipt size={16} /> : item.type === "complaint" ? <Wrench size={16} /> : <CalendarRange size={16} />}
@@ -800,10 +800,10 @@ export default function DashboardClient({
             <div className={styles.cleanCard}>
               <div className={styles.cardHeader}>
                 <div className={styles.cardTitle}>
-                  <Building2 size={18} style={{ color: "#2563EB" }} />
+                  <Building2 size={18} style={{ color: "var(--primary)" }} />
                   <span>Outlets Performance Matrix</span>
                 </div>
-                <span style={{ fontSize: "0.78rem", color: "#64748B" }}>
+                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
                   {properties.length} Active Branches
                 </span>
               </div>
@@ -829,7 +829,7 @@ export default function DashboardClient({
                             style={{ 
                               background: "none", 
                               border: "none", 
-                              color: p.id === selectedPropertyId ? "#2563EB" : "#0F172A", 
+                              color: p.id === selectedPropertyId ? "var(--primary)" : "var(--foreground)", 
                               fontWeight: "inherit", 
                               cursor: "pointer", 
                               padding: 0, 
@@ -840,7 +840,7 @@ export default function DashboardClient({
                             }}
                           >
                             {p.name}
-                            {p.id === selectedPropertyId && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#2563EB" }} />}
+                            {p.id === selectedPropertyId && <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--primary)" }} />}
                           </button>
                         </td>
                         <td style={{ textAlign: "right" }} className="tabular-nums">
@@ -858,7 +858,7 @@ export default function DashboardClient({
                         <td style={{ textAlign: "right", fontWeight: 600, color: "#059669" }} className="tabular-nums" suppressHydrationWarning>
                           ₹{p.pColl.toLocaleString("en-IN")}
                         </td>
-                        <td style={{ textAlign: "right", color: p.pDues > 0 ? "#D97706" : "#64748B" }} className="tabular-nums" suppressHydrationWarning>
+                        <td style={{ textAlign: "right", color: p.pDues > 0 ? "#D97706" : "var(--text-muted)" }} className="tabular-nums" suppressHydrationWarning>
                           ₹{p.pDues.toLocaleString("en-IN")}
                         </td>
                         <td style={{ textAlign: "right" }} className="tabular-nums">
@@ -884,7 +884,7 @@ export default function DashboardClient({
           <div className={styles.cleanCard}>
             <div className={styles.cardHeader}>
               <div className={styles.cardTitle}>
-                <Clock size={18} style={{ color: "#2563EB" }} />
+                <Clock size={18} style={{ color: "var(--primary)" }} />
                 <span>Today&apos;s Activity</span>
               </div>
               <span className={styles.badge} style={{ background: "#ECFDF5", color: "#059669" }}>
@@ -914,45 +914,45 @@ export default function DashboardClient({
           <div className={styles.cleanCard}>
             <div className={styles.cardHeader}>
               <div className={styles.cardTitle}>
-                <IndianRupee size={18} style={{ color: "#2563EB" }} />
+                <IndianRupee size={18} style={{ color: "var(--primary)" }} />
                 <span>Financial Cashflow</span>
               </div>
-              <Link href="/dashboard/finances" style={{ fontSize: "0.78rem", color: "#2563EB", fontWeight: 600 }}>
+              <Link href="/dashboard/finances" style={{ fontSize: "0.78rem", color: "var(--primary)", fontWeight: 600 }}>
                 Full Ledger →
               </Link>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
-                <span style={{ color: "#64748B" }}>Expected Gross Rent</span>
-                <span className="tabular-nums" style={{ fontWeight: 600, color: "#0F172A" }} suppressHydrationWarning>
+                <span style={{ color: "var(--text-muted)" }}>Expected Gross Rent</span>
+                <span className="tabular-nums" style={{ fontWeight: 600, color: "var(--foreground)" }} suppressHydrationWarning>
                   ₹{expectedRent.toLocaleString("en-IN")}
                 </span>
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
-                <span style={{ color: "#64748B" }}>Collections Realized</span>
+                <span style={{ color: "var(--text-muted)" }}>Collections Realized</span>
                 <span className="tabular-nums" style={{ fontWeight: 600, color: "#059669" }} suppressHydrationWarning>
                   +₹{rentCollected.toLocaleString("en-IN")}
                 </span>
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem" }}>
-                <span style={{ color: "#64748B" }}>Operating Expenses</span>
+                <span style={{ color: "var(--text-muted)" }}>Operating Expenses</span>
                 <span className="tabular-nums" style={{ fontWeight: 600, color: "#E11D48" }} suppressHydrationWarning>
                   -₹{monthlyExpenses.toLocaleString("en-IN")}
                 </span>
               </div>
 
-              <div style={{ height: "1px", background: "#F1F5F9", margin: "0.25rem 0" }} />
+              <div style={{ height: "1px", background: "var(--surface-muted)", margin: "0.25rem 0" }} />
 
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.95rem" }}>
-                <span style={{ fontWeight: 700, color: "#0F172A" }}>Net Operating Cashflow</span>
+                <span style={{ fontWeight: 700, color: "var(--foreground)" }}>Net Operating Cashflow</span>
                 <span 
                   className="tabular-nums" 
                   style={{ 
                     fontWeight: 750, 
-                    color: netIncome >= 0 ? "#2563EB" : "#E11D48", 
+                    color: netIncome >= 0 ? "var(--primary)" : "#E11D48", 
                     fontSize: "1.2rem"
                   }} 
                   suppressHydrationWarning
@@ -967,8 +967,8 @@ export default function DashboardClient({
           {subscription && (
             <div style={{ 
               padding: "0.9rem 1.15rem", 
-              background: "#FFFFFF", 
-              border: "1px solid #E2E8F0", 
+              background: "var(--surface)", 
+              border: "1px solid var(--border)", 
               borderRadius: "12px", 
               display: "flex", 
               alignItems: "center", 
@@ -977,10 +977,10 @@ export default function DashboardClient({
               boxShadow: "0 1px 2px rgba(15, 23, 42, 0.03)"
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.55rem" }}>
-                <Sparkles size={16} style={{ color: "#2563EB" }} />
-                <span>Subscription Plan: <strong style={{ color: "#0F172A" }}>{subscription.plan_name || "Pro"}</strong></span>
+                <Sparkles size={16} style={{ color: "var(--primary)" }} />
+                <span>Subscription Plan: <strong style={{ color: "var(--foreground)" }}>{subscription.plan_name || "Pro"}</strong></span>
               </div>
-              <span style={{ color: "#64748B", fontSize: "0.75rem" }}>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
                 Active
               </span>
             </div>
