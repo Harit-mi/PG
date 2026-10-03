@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function GlobalError({ error, reset }) {
   useEffect(() => {
-    console.error("[OUR-PG Fatal Global Error]", error);
+    console.error("[StayOS Fatal Global Error]", error);
   }, [error]);
 
   return (

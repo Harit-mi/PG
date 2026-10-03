@@ -285,12 +285,12 @@ export default function LandingPage() {
 
   const faqData = [
     {
-      q: "Do I need special hardware or biometric devices to run OUR-PG?",
-      a: "Zero hardware required. OUR-PG operates entirely on web protocols from any smartphone, tablet, or PC with instant real-time synchronization."
+      q: "Do I need special hardware or biometric devices to run StayOS?",
+      a: "Zero hardware required. StayOS operates entirely on web protocols from any smartphone, tablet, or PC with instant real-time synchronization."
     },
     {
       q: "How does 1-Click WhatsApp rent collection work in practice?",
-      a: "OUR-PG auto-generates branded WhatsApp payment invoices with individual tenant due breakdowns and embedded UPI payment links. Tenants click, pay with PhonePe/GPay, and their digital receipt is logged instantly."
+      a: "StayOS auto-generates branded WhatsApp payment invoices with individual tenant due breakdowns and embedded UPI payment links. Tenants click, pay with PhonePe/GPay, and their digital receipt is logged instantly."
     },
     {
       q: "Can you help me import data from my existing paper register or Excel?",
@@ -324,7 +324,7 @@ export default function LandingPage() {
             <div className={styles.logoIconBadge}>
               <Cpu size={16} />
             </div>
-            <span className={styles.brandName}>OUR-PG</span>
+            <span className={styles.brandName}>StayOS</span>
             <span className={styles.versionTag}>v3.5</span>
           </Link>
 
@@ -452,7 +452,7 @@ export default function LandingPage() {
             </div>
             <div className={styles.windowTitle}>
               <Lock size={11} />
-              <span>app.ourpg.com/command-center/koramangala-hub</span>
+              <span>app.stayos.com/command-center/koramangala-hub</span>
             </div>
             <div className={styles.windowStatus}>
               <span className={styles.livePulse} />
@@ -608,7 +608,7 @@ export default function LandingPage() {
                     <div className={styles.phoneAvatar}>RS</div>
                     <div>
                       <h5 className={styles.phoneName}>Rahul Sharma (Rm 101)</h5>
-                      <p className={styles.phoneSub}>OUR-PG AUTOMATION BOT // ENCRYPTED</p>
+                      <p className={styles.phoneSub}>StayOS AUTOMATION BOT // ENCRYPTED</p>
                     </div>
                   </div>
 
@@ -962,7 +962,7 @@ export default function LandingPage() {
       <footer className={styles.footerSection}>
         <div className={styles.footerContent}>
           <div className={styles.footerCopy}>
-            © {new Date().getFullYear()} OUR-PG PROTOCOL. Built for Indian Hostel Operators.
+            © {new Date().getFullYear()} StayOS PROTOCOL. Built for Indian Hostel Operators.
           </div>
           <div className={styles.footerLinks}>
             <Link href="/privacy" className={styles.footerLink}>PRIVACY</Link>

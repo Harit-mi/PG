@@ -19,7 +19,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Prompt exceeds maximum allowed length (2000 characters)." }, { status: 400 });
     }
 
-    let systemInstruction = "You are OUR-PG Copilot, an expert AI assistant specialized in Indian PG (Paying Guest) and Hostel operations, tenant relations, and property management.";
+    let systemInstruction = "You are StayOS Copilot, an expert AI assistant specialized in Indian PG (Paying Guest) and Hostel operations, tenant relations, and property management.";
 
     if (type === "whatsapp_reminder") {
       systemInstruction += " Generate concise, professional, and courteous WhatsApp rent reminder messages. Offer English and polite Hinglish variations.";

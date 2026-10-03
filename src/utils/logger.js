@@ -5,7 +5,7 @@
 
 export function logError(error, context = {}) {
   const timestamp = new Date().toISOString();
-  console.error(`[OUR-PG Error ${timestamp}]`, error, context);
+  console.error(`[StayOS Error ${timestamp}]`, error, context);
 
   // If Sentry DSN is present, send report
   if (typeof window !== 'undefined' && window.Sentry) {
@@ -39,6 +39,6 @@ export function logError(error, context = {}) {
 
 export function logInfo(message, meta = {}) {
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`[OUR-PG Info] ${message}`, meta);
+    console.log(`[StayOS Info] ${message}`, meta);
   }
 }

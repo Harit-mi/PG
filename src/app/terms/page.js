@@ -2,8 +2,8 @@ import Link from "next/link";
 import FAIcon from "@/components/FAIcon";
 
 export const metadata = {
-  title: "Terms of Service | OUR-PG Hostel Management SaaS",
-  description: "Terms of Service and legal agreement for PG owners using OUR-PG hostel management platform."
+  title: "Terms of Service | StayOS Hostel Management SaaS",
+  description: "Terms of Service and legal agreement for PG owners using StayOS hostel management platform."
 };
 
 export default function TermsPage() {
@@ -25,7 +25,7 @@ export default function TermsPage() {
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>1. Agreement to Terms</h2>
           <p style={{ margin: 0, fontSize: '0.95rem' }}>
-            By accessing or using <strong>OUR-PG</strong> (&quot;Platform&quot;, &quot;We&quot;, &quot;Us&quot;), provided as a hostel and PG management software platform, you (&quot;Customer&quot;, &quot;PG Owner&quot;, &quot;Operator&quot;) agree to be bound by these Terms of Service. If you are registering an account on behalf of an organization or PG business, you represent that you have authority to bind that entity.
+            By accessing or using <strong>StayOS</strong> (&quot;Platform&quot;, &quot;We&quot;, &quot;Us&quot;), provided as a hostel and PG management software platform, you (&quot;Customer&quot;, &quot;PG Owner&quot;, &quot;Operator&quot;) agree to be bound by these Terms of Service. If you are registering an account on behalf of an organization or PG business, you represent that you have authority to bind that entity.
           </p>
         </section>
 
@@ -36,7 +36,7 @@ export default function TermsPage() {
           </p>
           <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.95rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <li><strong>PG Owner as Data Controller:</strong> You control the personal data of your residents, tenants, employees, and visitors (such as Aadhaar numbers, phone numbers, rent ledgers, and workplace details). You are responsible for obtaining valid consent from your tenants.</li>
-            <li><strong>OUR-PG as Data Processor:</strong> We process resident data solely on your instructions to deliver cloud hostel management services, occupancy tracking, payment accounting, and notification workflows.</li>
+            <li><strong>StayOS as Data Processor:</strong> We process resident data solely on your instructions to deliver cloud hostel management services, occupancy tracking, payment accounting, and notification workflows.</li>
           </ul>
         </section>
 
@@ -57,7 +57,7 @@ export default function TermsPage() {
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>5. Limitation of Liability</h2>
           <p style={{ margin: 0, fontSize: '0.95rem' }}>
-            To the maximum extent permitted by law, OUR-PG shall not be liable for indirect, incidental, or consequential damages resulting from loss of tenant records, payment gateway downtime, or unverified rent collections recorded manually by operators.
+            To the maximum extent permitted by law, StayOS shall not be liable for indirect, incidental, or consequential damages resulting from loss of tenant records, payment gateway downtime, or unverified rent collections recorded manually by operators.
           </p>
         </section>
 
@@ -71,7 +71,7 @@ export default function TermsPage() {
       </div>
 
       <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-        © {new Date().getFullYear()} OUR-PG Software. All rights reserved. • <Link href="/privacy" style={{ color: 'var(--primary)' }}>Privacy Policy</Link>
+        © {new Date().getFullYear()} StayOS Software. All rights reserved. • <Link href="/privacy" style={{ color: 'var(--primary)' }}>Privacy Policy</Link>
       </div>
 
     </div>

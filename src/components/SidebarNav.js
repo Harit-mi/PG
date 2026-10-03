@@ -65,7 +65,7 @@ export default function SidebarNav({ propertyId }) {
       <header className={styles.mobileHeader}>
         <div className={styles.mobileLogo}>
           <Building2 size={20} />
-          <span>OUR-PG</span>
+          <span>StayOS</span>
         </div>
         <Link href="/dashboard/settings" style={{ color: "#94A3B8" }} aria-label="Settings">
           <Settings size={20} />
@@ -80,7 +80,7 @@ export default function SidebarNav({ propertyId }) {
             <div className={styles.brandIcon}>
               <Building2 size={18} />
             </div>
-            <span className={styles.brandText}>OUR-PG</span>
+            <span className={styles.brandText}>StayOS</span>
           </Link>
           <span className={styles.brandBadge}>PRO</span>
         </div>
