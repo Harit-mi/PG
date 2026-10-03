@@ -74,42 +74,42 @@ export default function KitchenClient({
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
         
         {/* Breakfast */}
-        <div style={{ background: '#FFFFFF', border: '1px solid var(--border)', borderTop: '4px solid #F59E0B', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderTop: '4px solid var(--warning)', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
           <div style={{ fontSize: '2.25rem', marginBottom: '0.4rem' }}>🍳</div>
-          <h3 style={{ fontSize: '0.95rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Breakfast Count</h3>
-          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', border: '6px solid rgba(245, 158, 11, 0.25)', borderTopColor: '#F59E0B' }}>
-            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{presentBF}</span>
-            <span style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
+          <h3 style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Breakfast Count</h3>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', border: '6px solid rgba(245, 158, 11, 0.25)', borderTopColor: 'var(--warning)' }}>
+            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--foreground)', lineHeight: 1 }}>{presentBF}</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: '#64748B' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
             <span>🔴 On Leave: <strong>{leaveBF}</strong></span>
             <span>🟢 Present: <strong>{presentBF}</strong></span>
           </div>
         </div>
 
         {/* Lunch */}
-        <div style={{ background: '#FFFFFF', border: '1px solid var(--border)', borderTop: '4px solid #2563EB', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderTop: '4px solid var(--primary)', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
           <div style={{ fontSize: '2.25rem', marginBottom: '0.4rem' }}>🍱</div>
-          <h3 style={{ fontSize: '0.95rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Lunch Count</h3>
-          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', border: '6px solid rgba(37, 99, 235, 0.25)', borderTopColor: '#2563EB' }}>
-            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{presentLN}</span>
-            <span style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
+          <h3 style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Lunch Count</h3>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', border: '6px solid rgba(37, 99, 235, 0.25)', borderTopColor: 'var(--primary)' }}>
+            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--foreground)', lineHeight: 1 }}>{presentLN}</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: '#64748B' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
             <span>🔴 On Leave: <strong>{leaveLN}</strong></span>
             <span>🟢 Present: <strong>{presentLN}</strong></span>
           </div>
         </div>
 
         {/* Dinner */}
-        <div style={{ background: '#FFFFFF', border: '1px solid var(--border)', borderTop: '4px solid #10B981', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderTop: '4px solid var(--success)', borderRadius: '14px', padding: '1.75rem 1.25rem', textAlign: 'center', position: 'relative', boxShadow: 'var(--cst-shadow)' }}>
           <div style={{ fontSize: '2.25rem', marginBottom: '0.4rem' }}>🥗</div>
-          <h3 style={{ fontSize: '0.95rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Dinner Count</h3>
-          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', border: '6px solid rgba(16, 185, 129, 0.25)', borderTopColor: '#10B981' }}>
-            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: '#0F172A', lineHeight: 1 }}>{presentDN}</span>
-            <span style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
+          <h3 style={{ fontSize: '0.95rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '1.25rem', marginTop: 0, fontWeight: 700 }}>Dinner Count</h3>
+          <div style={{ width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 1.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', border: '6px solid rgba(16, 185, 129, 0.25)', borderTopColor: 'var(--success)' }}>
+            <span style={{ fontSize: '2.6rem', fontWeight: 800, color: 'var(--foreground)', lineHeight: 1 }}>{presentDN}</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '2px', fontWeight: 600 }}>Portions</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: '#64748B' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
             <span>🔴 On Leave: <strong>{leaveDN}</strong></span>
             <span>🟢 Present: <strong>{presentDN}</strong></span>
           </div>
@@ -118,12 +118,12 @@ export default function KitchenClient({
       </div>
 
       {/* Occupant meal schedule status grid */}
-      <div style={{ background: '#FFFFFF', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.5rem', boxShadow: 'var(--cst-shadow)' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', padding: '1.5rem', boxShadow: 'var(--cst-shadow)' }}>
         <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem', marginTop: 0, color: 'var(--foreground)', fontWeight: 750 }}>📋 Today&apos;s Occupant Meal Schedule</h3>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
             <thead>
-              <tr style={{ background: '#F8FAFC', borderBottom: '1px solid var(--border)' }}>
+              <tr style={{ background: 'var(--background)', borderBottom: '1px solid var(--border)' }}>
                 <th style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Room</th>
                 <th style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Tenant Name</th>
                 <th style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)', fontWeight: 650, fontSize: '0.72rem', textTransform: 'uppercase' }}>Breakfast</th>

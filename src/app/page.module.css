@@ -22,7 +22,7 @@
   --text-muted: #555D6E;
   
   /* Accents */
-  --accent: #F59E0B; /* Electric Amber */
+  --accent: var(--warning); /* Electric Amber */
   --accent-neon: #00F59B; /* Cyber Emerald */
   --accent-bg: rgba(245, 158, 11, 0.12);
   --accent-hover: #FBBF24;
@@ -73,7 +73,7 @@
   --accent-bg: rgba(217, 119, 6, 0.1);
   --accent-hover: #B45309;
   --accent-glow: rgba(217, 119, 6, 0.25);
-  --accent-text: #FFFFFF;
+  --accent-text: var(--surface);
 
   --card-bg: rgba(255, 255, 255, 0.88);
   --card-border: #DDE2EB;
@@ -91,7 +91,7 @@
 
   --phone-bg: #EAE6DF;
   --phone-header: #075E54;
-  --chat-recv: #FFFFFF;
+  --chat-recv: var(--surface);
   --chat-sent: #DCF8C6;
   --grid-line: rgba(15, 23, 42, 0.04);
 }
@@ -284,8 +284,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 6px #10B981;
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
 }
 
 .themeToggleBtn {
@@ -384,8 +384,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
   animation: pulseAnim 2s ease-in-out infinite;
   flex-shrink: 0;
 }
@@ -516,16 +516,16 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 6px #10B981;
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
 }
 
 .telemetryDotAmber {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #F59E0B;
-  box-shadow: 0 0 6px #F59E0B;
+  background: var(--warning);
+  box-shadow: 0 0 6px var(--warning);
 }
 
 .telemetryLabel {
@@ -617,15 +617,15 @@
   font-family: var(--font-mono-stack);
   font-size: 0.72rem;
   font-weight: 700;
-  color: #10B981;
+  color: var(--success);
 }
 
 .livePulse {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 6px #10B981;
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
   animation: pulseAnim 2s infinite;
 }
 
@@ -703,7 +703,7 @@
 }
 
 .kpiSuccess {
-  color: #10B981;
+  color: var(--success);
 }
 
 /* Showcase Mode Tabs */
@@ -879,7 +879,7 @@
 
 .bedVacant {
   background: rgba(16, 185, 129, 0.14);
-  color: #10B981;
+  color: var(--success);
   border-color: rgba(16, 185, 129, 0.4);
   font-weight: 800;
   box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
@@ -988,7 +988,7 @@
 }
 
 .upiPayBtn {
-  background: #10B981;
+  background: var(--success);
   color: #FFFFFF;
   border: none;
   padding: 0.65rem 1rem;
@@ -1456,7 +1456,7 @@
   font-family: var(--font-mono-stack);
   font-size: 2rem;
   font-weight: 800;
-  color: #10B981;
+  color: var(--success);
 }
 
 .calcResultValueMuted {
@@ -1792,7 +1792,7 @@
 .errorBanner {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #EF4444;
+  color: var(--danger);
   padding: 0.65rem 0.85rem;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -1802,7 +1802,7 @@
 .successBanner {
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #10B981;
+  color: var(--success);
   padding: 0.65rem 0.85rem;
   border-radius: 8px;
   font-size: 0.8rem;

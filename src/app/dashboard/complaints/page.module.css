@@ -31,7 +31,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--surface);
+  background-color: #FFFFFF;
   color: var(--foreground);
   border: 1px solid var(--border);
   padding: 0.55rem 1rem;
@@ -44,7 +44,7 @@
 }
 
 .filterBtn:hover {
-  background-color: var(--background);
+  background-color: #FFFFFF;
   border-color: #CBD5E1;
 }
 
@@ -114,7 +114,7 @@
 }
 
 .ticketCard {
-  background-color: var(--background);
+  background-color: #FFFFFF;
   border: 1px solid var(--border);
   padding: 1rem;
   border-radius: 10px;
@@ -179,7 +179,7 @@
 
 .ticketCategory {
   font-size: 0.72rem;
-  background-color: var(--surface);
+  background-color: #FFFFFF;
   border: 1px solid var(--border);
   padding: 2px 6px;
   border-radius: 4px;

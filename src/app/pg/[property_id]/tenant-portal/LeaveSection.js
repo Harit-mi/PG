@@ -112,9 +112,9 @@ export default function LeaveSection({ propertyId, tenants = [], leaves = [] }) 
               required
               style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
             >
-              <option value="" disabled style={{ background: '#1e293b' }}>Choose your name...</option>
+              <option value="" disabled style={{ background: 'var(--foreground)' }}>Choose your name...</option>
               {tenants.map(t => (
-                <option key={t.id} value={t.id} style={{ background: '#1e293b' }}>
+                <option key={t.id} value={t.id} style={{ background: 'var(--foreground)' }}>
                   {t.name} (Room {t.room_number || 'N/A'})
                 </option>
               ))}

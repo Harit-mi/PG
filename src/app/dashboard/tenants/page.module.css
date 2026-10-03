@@ -51,7 +51,7 @@
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: var(--surface);
+  background-color: #FFFFFF;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem 0.85rem;
@@ -100,7 +100,7 @@
 }
 
 .table th {
-  background-color: var(--background);
+  background-color: #FFFFFF;
   padding: 0.85rem 1rem;
   font-weight: 650;
   color: var(--text-muted);
@@ -122,7 +122,7 @@
 }
 
 .table tr:hover td {
-  background-color: var(--background);
+  background-color: #FFFFFF;
 }
 
 .tenantInfo {
@@ -191,7 +191,7 @@
 }
 
 .actionBtn:hover {
-  background-color: #F1F5F9;
+  background-color: var(--surface-muted);
   color: var(--foreground);
   border-color: var(--border);
 }

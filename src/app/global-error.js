@@ -12,7 +12,7 @@ export default function GlobalError({ error, reset }) {
       <body style={{
         fontFamily: 'sans-serif',
         background: '#0a1716',
-        color: '#ffffff',
+        color: '#FFFFFF',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -35,7 +35,7 @@ export default function GlobalError({ error, reset }) {
             onClick={() => reset()}
             style={{
               background: '#1E4877',
-              color: '#ffffff',
+              color: '#FFFFFF',
               border: 'none',
               padding: '0.65rem 1.5rem',
               borderRadius: '99px',

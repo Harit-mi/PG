@@ -126,7 +126,7 @@ export default function SidebarNav() {
             <span>Tenant Portal</span>
             <ExternalLink size={12} />
           </Link>
-          <span style={{ fontSize: "0.7rem", color: "#64748B" }}>v2.4</span>
+          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>v2.4</span>
           <ThemeToggle />
         </div>
       </aside>

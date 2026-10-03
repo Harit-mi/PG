@@ -194,7 +194,7 @@ export default function RoomBoard({
           href="/dashboard/rooms" 
           style={{
             background: "var(--primary)",
-            color: "#FFFFFF",
+            color: "var(--surface)",
             padding: "0.65rem 1.4rem",
             borderRadius: "8px",
             fontWeight: 650,
@@ -576,7 +576,7 @@ export default function RoomBoard({
                                   }}
                                   style={{
                                     background: "var(--primary)",
-                                    color: "#FFFFFF",
+                                    color: "var(--surface)",
                                     border: "none",
                                     padding: "4px 10px",
                                     borderRadius: "6px",

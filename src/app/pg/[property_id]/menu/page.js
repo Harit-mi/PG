@@ -71,7 +71,7 @@ export default async function PublicMenuPage({ params }) {
 
               <div className={styles.mealSection}>
                 <div className={styles.mealHeader}>
-                  <Sunrise size={16} style={{ color: "#F59E0B" }} />
+                  <Sunrise size={16} style={{ color: "var(--warning)" }} />
                   <span>Breakfast</span>
                 </div>
                 <div className={styles.mealText}>{dayMenu.breakfast || "Not specified"}</div>
@@ -79,7 +79,7 @@ export default async function PublicMenuPage({ params }) {
 
               <div className={styles.mealSection}>
                 <div className={styles.mealHeader}>
-                  <Sunset size={16} style={{ color: "#EF4444" }} />
+                  <Sunset size={16} style={{ color: "var(--danger)" }} />
                   <span>Lunch</span>
                 </div>
                 <div className={styles.mealText}>{dayMenu.lunch || "Not specified"}</div>

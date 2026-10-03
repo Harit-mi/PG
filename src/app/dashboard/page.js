@@ -75,12 +75,12 @@ export default async function DashboardPage() {
     <div className={styles.container}>
       {activeProperties.length === 0 ? (
         <div style={{ 
-          background: '#FFFFFF', 
+          background: 'var(--surface)', 
           padding: '4rem 2rem', 
           borderRadius: '16px', 
-          border: '1px solid #E2E8F0', 
+          border: '1px solid var(--border)', 
           textAlign: 'center', 
-          color: '#64748B',
+          color: 'var(--text-muted)',
           maxWidth: '540px',
           margin: '3rem auto',
           boxShadow: '0 4px 20px -2px rgba(15, 23, 42, 0.05)'
@@ -95,11 +95,11 @@ export default async function DashboardPage() {
             alignItems: 'center', 
             justifyContent: 'center', 
             margin: '0 auto 1.5rem',
-            color: '#2563EB' 
+            color: 'var(--primary)' 
           }}>
             <Building2 size={24} />
           </div>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 750, color: '#0F172A', margin: '0 0 0.5rem', letterSpacing: '-0.02em' }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 750, color: 'var(--foreground)', margin: '0 0 0.5rem', letterSpacing: '-0.02em' }}>
             No Outlets Provisioned Yet
           </h3>
           <p style={{ margin: '0 0 1.5rem', fontSize: '0.9rem', lineHeight: 1.5 }}>

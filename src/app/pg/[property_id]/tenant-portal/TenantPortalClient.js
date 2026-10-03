@@ -390,7 +390,7 @@ export default function TenantPortalClient({
           </div>
           <button 
             onClick={() => { setActiveTab("payments"); setFormMsg({ type: "", text: "" }); }}
-            style={{ width: '100%', background: 'white', color: '#B91C1C', border: 'none', padding: '0.7rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer' }}
+            style={{ width: '100%', background: 'var(--surface)', color: '#B91C1C', border: 'none', padding: '0.7rem', borderRadius: '10px', fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer' }}
           >
             Pay Now / Submit Payment Reference →
           </button>
@@ -880,7 +880,7 @@ export default function TenantPortalClient({
                     statusColor = '#dc2626';
                     statusBg = 'rgba(220, 38, 38, 0.1)';
                   } else if (v.status === 'Checked Out') {
-                    statusColor = '#64748b';
+                    statusColor = 'var(--text-muted)';
                     statusBg = 'rgba(100, 116, 139, 0.1)';
                   }
 
@@ -918,7 +918,7 @@ export default function TenantPortalClient({
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {paymentMethods.map(pm => (
-                  <div key={pm.id} style={{ fontSize: '0.85rem', background: 'white', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                  <div key={pm.id} style={{ fontSize: '0.85rem', background: 'var(--surface)', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
                     <strong style={{ color: 'var(--primary, #1e4877)' }}>{pm.type}: </strong> {pm.details}
                   </div>
                 ))}

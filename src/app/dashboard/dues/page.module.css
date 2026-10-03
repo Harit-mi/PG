@@ -67,12 +67,12 @@
 
 /* Row Urgency Variants */
 .rowSeverelyOverdue {
-  border-left: 3px solid #EF4444 !important;
+  border-left: 3px solid var(--danger) !important;
   background-color: #FEF2F2;
 }
 
 .rowModeratelyOverdue {
-  border-left: 3px solid #F59E0B !important;
+  border-left: 3px solid var(--warning) !important;
   background-color: #FFFBEB;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .rowPaid {
-  border-left: 3px solid #10B981 !important;
+  border-left: 3px solid var(--success) !important;
 }
 
 /* Badges */
@@ -141,7 +141,7 @@
 .tabNav {
   display: flex;
   gap: 0.4rem;
-  background: #F1F5F9;
+  background: var(--surface-muted);
   padding: 3px;
   border-radius: 9px;
   width: fit-content;

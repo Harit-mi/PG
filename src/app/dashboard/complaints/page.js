@@ -50,7 +50,7 @@ export default async function ComplaintsPage() {
 
       {displayComplaints.length === 0 ? (
         <div className="glass" style={{ textAlign: "center", padding: "3.5rem 2rem", borderRadius: "16px" }}>
-          <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(16, 185, 129, 0.1)", color: "#10b981", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
+          <div style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(16, 185, 129, 0.1)", color: "var(--success)", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: "1rem" }}>
             <CheckCircle2 size={32} />
           </div>
           <h3 style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>No Tickets Found</h3>

@@ -115,7 +115,7 @@ export default async function EmployeeProfilePage({ params }) {
                     <td>{tx.date}</td>
                     <td>{tx.category}</td>
                     <td>{tx.payment_method || "Bank Transfer"}</td>
-                    <td style={{ fontWeight: "700", color: "#EF4444" }}>₹{tx.amount}</td>
+                    <td style={{ fontWeight: "700", color: "var(--danger)" }}>₹{tx.amount}</td>
                     <td>
                       <span className={`${styles.statusPill} ${styles.active}`}>Paid</span>
                     </td>

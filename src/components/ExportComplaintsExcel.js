@@ -45,7 +45,7 @@ export default function ExportComplaintsExcel({ complaints }) {
         padding: '0.65rem 1.15rem', 
         borderRadius: '10px', 
         border: '1px solid var(--border, #e2e8f0)',
-        background: '#ffffff', 
+        background: 'var(--surface)', 
         color: 'var(--foreground, #1e293b)', 
         cursor: 'pointer',
         fontSize: '0.875rem',
@@ -54,11 +54,11 @@ export default function ExportComplaintsExcel({ complaints }) {
         transition: 'all 0.2s ease'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = '#f8fafc';
+        e.currentTarget.style.backgroundColor = 'var(--background)';
         e.currentTarget.style.borderColor = '#cbd5e1';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = '#ffffff';
+        e.currentTarget.style.backgroundColor = 'var(--surface)';
         e.currentTarget.style.borderColor = 'var(--border, #e2e8f0)';
       }}
     >

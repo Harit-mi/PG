@@ -1,30 +1,26 @@
 :root {
-  --background: var(--background); /* Crisp, serene off-white canvas */
-  --foreground: #0F172A; /* High-contrast slate charcoal */
-  --primary: #2563EB; /* Vibrant Royal Blue */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --primary: #2563EB;
   --primary-hover: #1D4ED8;
   --surface: #FFFFFF;
-  --border: #E2E8F0; /* Hairline clean border */
+  --border: #E2E8F0;
   --border-light: #F1F5F9;
   --text-muted: #64748B;
   
-  /* Semantic state colors */
   --success: #10B981;
   --danger: #EF4444;
   --warning: #F59E0B;
   --accent: #2563EB;
   --card-bg: #FFFFFF;
 
-  /* Legacy color aliases for existing component compatibility */
   --brass: #D97706;
   --rust: #E11D48;
   --slate-teal: #059669;
 
-  /* Layout shadows */
   --cst-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
   --cst-shadow-hover: 0 4px 16px -2px rgba(15, 23, 42, 0.06);
   
-  /* Dashboard & Minimalist Surface Tokens */
   --sidebar-bg: #FFFFFF;
   --sidebar-border: #E2E8F0;
   --sidebar-text: #475569;
@@ -34,7 +30,6 @@
   --surface-muted: #F8FAFC;
   --surface-elevated: #FFFFFF;
 
-  /* Badges */
   --badge-emerald-bg: #ECFDF5;
   --badge-emerald-text: #059669;
   --badge-amber-bg: #FFFBEB;
@@ -49,7 +44,6 @@
   --font-display: "Cabinet Grotesk", var(--font-space), "General Sans", sans-serif;
   --font-mono-stack: var(--font-mono), "JetBrains Mono", monospace;
 }
-
 .tabular-nums {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
@@ -67,7 +61,7 @@ textarea {
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: var(--background);
+  background-color: #FFFFFF;
   color: var(--foreground);
   margin: 0;
   padding: 0;
@@ -222,7 +216,7 @@ tr:hover td {
   --sidebar-bg: #09090b; /* Zinc 950 */
   --sidebar-border: #27272a;
   --sidebar-text: #a1a1aa;
-  --sidebar-text-active: #ffffff;
+  --sidebar-text-active: var(--surface);
   --sidebar-item-hover: #18181b;
   --sidebar-item-active: #27272a;
   --surface-muted: #18181b;

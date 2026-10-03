@@ -374,7 +374,7 @@ export default function DashboardClient({
                 cy="23"
                 r={radialRadius}
                 fill="transparent"
-                stroke={occupancyRate >= 80 ? "#10B981" : "#F59E0B"}
+                stroke={occupancyRate >= 80 ? "var(--success)" : "var(--warning)"}
                 strokeWidth="4"
                 strokeDasharray={radialCircumference}
                 strokeDashoffset={radialOffset}
@@ -668,7 +668,7 @@ export default function DashboardClient({
                   cy="58"
                   r="48"
                   fill="none"
-                  stroke="#10B981"
+                  stroke="var(--success)"
                   strokeWidth="8"
                   strokeDasharray={2 * Math.PI * 48}
                   strokeDashoffset={(2 * Math.PI * 48) * (1 - (occupancyRate / 100))}
@@ -709,7 +709,7 @@ export default function DashboardClient({
 
               <div className={styles.roomBreakdownRow}>
                 <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10B981" }} />
+                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--success)" }} />
                   <span>Double Sharing</span>
                 </div>
                 <span className={styles.breakdownRight}>{doubleBeds} Beds ({doubleRooms.length} Rms)</span>
@@ -717,7 +717,7 @@ export default function DashboardClient({
 
               <div className={styles.roomBreakdownRow}>
                 <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#F59E0B" }} />
+                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--warning)" }} />
                   <span>Triple+ Sharing</span>
                 </div>
                 <span className={styles.breakdownRight}>{multiBeds} Beds ({multiRooms.length} Rms)</span>
@@ -754,7 +754,7 @@ export default function DashboardClient({
 
             {actionItems.length === 0 ? (
               <div style={{ padding: "2.5rem 1rem", textAlign: "center", color: "var(--text-muted)" }}>
-                <CheckCircle2 size={36} style={{ color: "#10B981", margin: "0 auto 0.75rem", display: "block" }} />
+                <CheckCircle2 size={36} style={{ color: "var(--success)", margin: "0 auto 0.75rem", display: "block" }} />
                 <strong style={{ color: "var(--foreground)", display: "block", fontSize: "0.95rem", marginBottom: "0.25rem" }}>
                   All Accounts &amp; Tasks Clear
                 </strong>
@@ -850,7 +850,7 @@ export default function DashboardClient({
                               className={styles.tableProgressFill}
                               style={{ 
                                 width: `${p.pOcc}%`, 
-                                backgroundColor: p.pOcc >= 80 ? "#10B981" : "#F59E0B" 
+                                backgroundColor: p.pOcc >= 80 ? "var(--success)" : "var(--warning)" 
                               }} 
                             />
                           </div>
@@ -865,7 +865,7 @@ export default function DashboardClient({
                           {p.pCompl > 0 ? (
                             <span className={`${styles.badge} ${styles.badgeRose}`}>{p.pCompl} Open</span>
                           ) : (
-                            <span style={{ color: "#10B981" }}>0</span>
+                            <span style={{ color: "var(--success)" }}>0</span>
                           )}
                         </td>
                       </tr>

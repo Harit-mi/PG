@@ -182,7 +182,7 @@ export default function VideoGuideButton({ section = "Rooms", customUrl, customT
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = 'var(--primary, #1e4877)';
-          e.currentTarget.style.color = '#ffffff';
+          e.currentTarget.style.color = 'var(--surface)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.background = 'rgba(30, 72, 119, 0.08)';
@@ -194,7 +194,7 @@ export default function VideoGuideButton({ section = "Rooms", customUrl, customT
           height: '18px', 
           borderRadius: '50%', 
           background: 'currentColor', 
-          color: '#ffffff', 
+          color: '#FFFFFF', 
           display: 'inline-flex', 
           alignItems: 'center', 
           justifyContent: 'center',
@@ -272,7 +272,7 @@ export default function VideoGuideButton({ section = "Rooms", customUrl, customT
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  background: '#FFFFFF',
+                  background: 'var(--surface)',
                   color: '#1E4877',
                   padding: '0.65rem 1.25rem',
                   borderRadius: '10px',
@@ -288,11 +288,11 @@ export default function VideoGuideButton({ section = "Rooms", customUrl, customT
 
             {/* Key Tips */}
             {guide.tips && guide.tips.length > 0 && (
-              <div style={{ background: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0', marginBottom: '1.25rem' }}>
-                <strong style={{ display: 'block', fontSize: '0.8rem', color: '#1E293B', textTransform: 'uppercase', marginBottom: '6px', fontWeight: 800 }}>
+              <div style={{ background: 'var(--background)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '1.25rem' }}>
+                <strong style={{ display: 'block', fontSize: '0.8rem', color: 'var(--foreground)', textTransform: 'uppercase', marginBottom: '6px', fontWeight: 800 }}>
                   💡 Quick Tips:
                 </strong>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.82rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.82rem', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   {guide.tips.map((t, i) => (
                     <li key={i}>{t}</li>
                   ))}

@@ -423,13 +423,13 @@ export default function LandingPage() {
           </div>
           <span className={styles.telemetryDivider}>|</span>
           <div className={styles.telemetryItem}>
-            <Activity size={13} color="#10B981" />
+            <Activity size={13} color="var(--success)" />
             <span className={styles.telemetryLabel}>REVENUE LEAKS:</span>
             <span className={styles.telemetryVal}>0 DETECTED</span>
           </div>
           <span className={styles.telemetryDivider}>|</span>
           <div className={styles.telemetryItem}>
-            <Radio size={13} color="#F59E0B" />
+            <Radio size={13} color="var(--warning)" />
             <span className={styles.telemetryLabel}>GEMINI 3.5 AI:</span>
             <span className={styles.telemetryVal}>ONLINE</span>
           </div>
@@ -482,7 +482,7 @@ export default function LandingPage() {
               </div>
               <div className={styles.kpiItem}>
                 <span className={styles.kpiLabel}>VACANT READY</span>
-                <span className={styles.kpiValue} style={{ color: "#10B981" }}>3 SLOTS OPEN</span>
+                <span className={styles.kpiValue} style={{ color: "var(--success)" }}>3 SLOTS OPEN</span>
               </div>
             </div>
           </div>
@@ -583,7 +583,7 @@ export default function LandingPage() {
                         {inspectedBed.room} • {inspectedBed.label} // {inspectedBed.roomType}
                       </div>
                       <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginTop: "3px" }}>
-                        STATUS: <strong style={{ color: inspectedBed.status === "vacant" ? "#10B981" : "var(--accent)" }}>{inspectedBed.status.toUpperCase()}</strong> • RENT: ₹{inspectedBed.rent.toLocaleString("en-IN")}/mo
+                        STATUS: <strong style={{ color: inspectedBed.status === "vacant" ? "var(--success)" : "var(--accent)" }}>{inspectedBed.status.toUpperCase()}</strong> • RENT: ₹{inspectedBed.rent.toLocaleString("en-IN")}/mo
                         {inspectedBed.occupant && ` • RESIDENT: ${inspectedBed.occupant}`}
                       </div>
                     </div>
@@ -644,11 +644,11 @@ export default function LandingPage() {
                   </p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.86rem", color: "var(--text-primary)" }}>
-                      <CheckCircle2 size={16} color="#10B981" />
+                      <CheckCircle2 size={16} color="var(--success)" />
                       <span>Direct bank settlements via PhonePe &amp; Razorpay</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "0.86rem", color: "var(--text-primary)" }}>
-                      <CheckCircle2 size={16} color="#10B981" />
+                      <CheckCircle2 size={16} color="var(--success)" />
                       <span>Automated GST invoice generated with police registry audit</span>
                     </div>
                   </div>
@@ -966,7 +966,7 @@ export default function LandingPage() {
           <div className={styles.footerLinks}>
             <Link href="/privacy" className={styles.footerLink}>PRIVACY</Link>
             <Link href="/terms" className={styles.footerLink}>TERMS</Link>
-            <span style={{ fontSize: "0.78rem", color: "#10B981", display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--font-mono-stack)" }}>
+            <span style={{ fontSize: "0.78rem", color: "var(--success)", display: "flex", alignItems: "center", gap: "6px", fontFamily: "var(--font-mono-stack)" }}>
               <span className={styles.livePulse} /> ALL SYSTEMS OPERATIONAL
             </span>
           </div>

@@ -117,7 +117,7 @@ export default function ComplaintSection({ propertyId }) {
         </form>
 
         {statusResult && (
-          <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '6px', borderLeft: `4px solid ${statusResult.status === 'Resolved' ? '#25D366' : statusResult.status === 'In Progress' ? '#f59e0b' : '#ef4444'}` }}>
+          <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '6px', borderLeft: `4px solid ${statusResult.status === 'Resolved' ? '#25D366' : statusResult.status === 'In Progress' ? 'var(--warning)' : 'var(--danger)'}` }}>
             <p style={{ margin: '0 0 0.25rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Status: <strong style={{ color: 'white' }}>{statusResult.status}</strong></p>
             <p style={{ margin: 0, fontSize: '0.95rem' }}>{statusResult.category} - {statusResult.issue}</p>
           </div>
