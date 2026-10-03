@@ -1,0 +1,18 @@
+{
+  "errors": [
+    "[mobile] Dashboard - Crash: Navigation timeout of 30000 ms exceeded",
+    "[mobile] Room_Board - Crash: Navigation timeout of 30000 ms exceeded",
+    "[mobile] Tenants - Crash: Navigation timeout of 30000 ms exceeded",
+    "[mobile] Finances - Crash: Navigation timeout of 30000 ms exceeded",
+    "[tablet] Dashboard - Crash: Navigation timeout of 30000 ms exceeded",
+    "[tablet] Room_Board - Crash: Navigation timeout of 30000 ms exceeded",
+    "[tablet] Tenants - Crash: Navigation timeout of 30000 ms exceeded",
+    "[tablet] Finances - Crash: Navigation timeout of 30000 ms exceeded",
+    "[desktop] Dashboard - Crash: Navigation timeout of 30000 ms exceeded",
+    "[desktop] Room_Board - Crash: Navigation timeout of 30000 ms exceeded",
+    "[desktop] Tenants - Crash: Navigation timeout of 30000 ms exceeded",
+    "[desktop] Finances - Crash: Navigation timeout of 30000 ms exceeded"
+  ],
+  "passes": 0,
+  "failures": 12
+}

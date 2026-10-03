@@ -1,5 +1,5 @@
 :root {
-  --background: #F8FAFC; /* Crisp, serene off-white canvas */
+  --background: var(--background); /* Crisp, serene off-white canvas */
   --foreground: #0F172A; /* High-contrast slate charcoal */
   --primary: #2563EB; /* Vibrant Royal Blue */
   --primary-hover: #1D4ED8;
@@ -121,7 +121,7 @@ button {
 
 /* Clean Form inputs */
 input, select, textarea {
-  background: #FFFFFF;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--foreground);
@@ -135,7 +135,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-  background: #FFFFFF;
+  background: var(--surface);
 }
 
 /* Focus States for Keyboard Accessibility */
@@ -163,7 +163,7 @@ th {
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   padding: 0.85rem 1rem;
-  background: #F8FAFC;
+  background: var(--background);
 }
 
 td {
@@ -175,7 +175,7 @@ td {
 }
 
 tr:hover td {
-  background: #F8FAFC;
+  background: var(--background);
 }
 
 /* Monospace Class specifically for Numbers, Dates, Overdue lists */

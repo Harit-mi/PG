@@ -37,11 +37,11 @@
   gap: 0.45rem;
   font-size: 0.76rem;
   font-weight: 600;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .breadcrumbs span.active {
-  color: #2563EB;
+  color: var(--primary);
 }
 
 .breadcrumbs span.divider {
@@ -52,7 +52,7 @@
   font-family: var(--font-ui), sans-serif;
   font-size: 1.85rem;
   font-weight: 750;
-  color: #0F172A;
+  color: var(--foreground);
   margin: 0;
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -83,7 +83,7 @@
 
 .pageSubtitle {
   font-size: 0.88rem;
-  color: #64748B;
+  color: var(--text-muted);
   margin: 0;
   font-weight: 450;
 }
@@ -98,8 +98,8 @@
 /* Segmented Date Range Filter */
 .dateFilterGroup {
   display: flex;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 3px;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
@@ -111,7 +111,7 @@
   padding: 0.45rem 0.85rem;
   font-size: 0.78rem;
   font-weight: 550;
-  color: #64748B;
+  color: var(--text-muted);
   border-radius: 7px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -119,11 +119,11 @@
 }
 
 .dateFilterBtn:hover {
-  color: #0F172A;
+  color: var(--foreground);
 }
 
 .dateFilterBtnActive {
-  background: #2563EB !important;
+  background: var(--primary) !important;
   color: #FFFFFF !important;
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
@@ -135,7 +135,7 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.55rem 1.15rem;
-  background: #2563EB;
+  background: var(--primary);
   color: #FFFFFF;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -157,9 +157,9 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.55rem 1rem;
-  background: #FFFFFF;
-  color: #0F172A;
-  border: 1px solid #E2E8F0;
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1px solid var(--border);
   border-radius: 10px;
   font-size: 0.83rem;
   font-weight: 600;
@@ -170,7 +170,7 @@
 }
 
 .actionBtnSecondary:hover {
-  background: #F8FAFC;
+  background: var(--background);
   border-color: #CBD5E1;
   transform: translateY(-1px);
 }
@@ -197,8 +197,8 @@
 }
 
 .metricCard {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1.35rem;
   display: flex;
@@ -224,7 +224,7 @@
 .metricLabel {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #64748B;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 0.45rem;
@@ -249,13 +249,13 @@
   font-size: 1.85rem;
   font-weight: 750;
   letter-spacing: -0.025em;
-  color: #0F172A;
+  color: var(--foreground);
   line-height: 1;
 }
 
 .metricSubDelta {
   font-size: 0.78rem;
-  color: #64748B;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -274,7 +274,7 @@
 
 .metricFooter {
   font-size: 0.78rem;
-  color: #64748B;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -330,7 +330,7 @@
 
 .badgeBlue {
   background: #EFF6FF;
-  color: #2563EB;
+  color: var(--primary);
   border: 1px solid #BFDBFE;
 }
 
@@ -350,8 +350,8 @@
 }
 
 .cleanCard {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
@@ -372,7 +372,7 @@
 .cardTitle {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0F172A;
+  color: var(--foreground);
   margin: 0;
   display: flex;
   align-items: center;
@@ -382,8 +382,8 @@
 
 .timeSegmentPills {
   display: flex;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 2px;
 }
@@ -394,19 +394,19 @@
   padding: 0.3rem 0.65rem;
   font-size: 0.74rem;
   font-weight: 600;
-  color: #64748B;
+  color: var(--text-muted);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .timePill:hover {
-  color: #0F172A;
+  color: var(--foreground);
 }
 
 .timePillActive {
-  background: #FFFFFF;
-  color: #2563EB !important;
+  background: var(--surface);
+  color: var(--primary) !important;
   font-weight: 700;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
@@ -439,7 +439,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.78rem;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .legendColor {
@@ -477,7 +477,7 @@
   font-family: var(--font-ui), sans-serif;
   font-size: 1.75rem;
   font-weight: 800;
-  color: #0F172A;
+  color: var(--foreground);
   line-height: 1;
 }
 
@@ -485,7 +485,7 @@
   font-size: 0.68rem;
   font-weight: 650;
   letter-spacing: 0.05em;
-  color: #64748B;
+  color: var(--text-muted);
   text-transform: uppercase;
   margin-top: 0.25rem;
 }
@@ -503,7 +503,7 @@
   font-size: 0.83rem;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  background: #F8FAFC;
+  background: var(--background);
   border: 1px solid #F1F5F9;
 }
 
@@ -511,14 +511,14 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #0F172A;
+  color: var(--foreground);
   font-weight: 550;
 }
 
 .breakdownRight {
   font-family: var(--font-mono), monospace;
   font-weight: 600;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 /* --------------------------------------------------------------------------
@@ -549,15 +549,15 @@
   justify-content: space-between;
   padding: 0.85rem 1rem;
   border-radius: 10px;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--background);
+  border: 1px solid var(--border);
   gap: 1rem;
   flex-wrap: wrap;
   transition: all 0.15s ease;
 }
 
 .triageRow:hover {
-  background: #F1F5F9;
+  background: var(--surface-muted);
   border-color: #CBD5E1;
   transform: translateX(2px);
 }
@@ -587,20 +587,20 @@
 
 .triageTitle {
   font-size: 0.86rem;
-  color: #0F172A;
+  color: var(--foreground);
   font-weight: 600;
 }
 
 .triageSub {
   font-size: 0.77rem;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .triageBtn {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #2563EB;
-  background: #FFFFFF;
+  color: var(--primary);
+  background: var(--surface);
   border: 1px solid #CBD5E1;
   padding: 0.4rem 0.85rem;
   border-radius: 8px;
@@ -613,9 +613,9 @@
 }
 
 .triageBtn:hover {
-  background: #2563EB;
+  background: var(--primary);
   color: #FFFFFF;
-  border-color: #2563EB;
+  border-color: var(--primary);
 }
 
 /* Today's Operational Velocity Strip */
@@ -626,8 +626,8 @@
 }
 
 .velocityItem {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.9rem;
   display: flex;
@@ -640,14 +640,14 @@
   font-weight: 650;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #64748B;
+  color: var(--text-muted);
 }
 
 .velocityVal {
   font-family: var(--font-ui), sans-serif;
   font-size: 1.35rem;
   font-weight: 750;
-  color: #0F172A;
+  color: var(--foreground);
 }
 
 /* Multi-Outlet Comparison Matrix */
@@ -667,10 +667,10 @@
   padding: 0.75rem 0.95rem;
   font-size: 0.72rem;
   font-weight: 650;
-  color: #64748B;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  border-bottom: 1px solid #E2E8F0;
+  border-bottom: 1px solid var(--border);
   background: transparent;
   cursor: pointer;
   user-select: none;
@@ -678,13 +678,13 @@
 }
 
 .minimalTable th:hover {
-  color: #0F172A;
+  color: var(--foreground);
 }
 
 .minimalTable td {
   padding: 0.85rem 0.95rem;
   border-bottom: 1px solid #F1F5F9;
-  color: #0F172A;
+  color: var(--foreground);
 }
 
 .minimalTable tr:last-child td {
@@ -692,7 +692,7 @@
 }
 
 .minimalTable tr:hover td {
-  background: #F8FAFC;
+  background: var(--background);
 }
 
 .tableProgressTrack {

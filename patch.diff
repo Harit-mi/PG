@@ -1,0 +1,20 @@
+--- src/app/page.js
++++ src/app/page.js
+@@ -107,6 +107,17 @@
+                 </>
+               )}
+             </button>
++
++            {process.env.NODE_ENV === 'development' && (
++              <button 
++                type="button" 
++                onClick={() => router.push("/dashboard")}
++                className={styles.loginBtn}
++                style={{ background: 'transparent', border: '1px dashed var(--primary)', color: 'var(--primary)', marginTop: '0.5rem' }}
++              >
++                Bypass Login (Local Dev) <FAIcon icon="code" />
++              </button>
++            )}
+           </form>
+           
+           <div className={styles.footerNote}>

@@ -51,7 +51,7 @@
 .searchBar {
   display: flex;
   align-items: center;
-  background-color: #FFFFFF;
+  background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem 0.85rem;
@@ -84,7 +84,7 @@
 }
 
 .tableCard {
-  background: #FFFFFF;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
@@ -100,7 +100,7 @@
 }
 
 .table th {
-  background-color: #F8FAFC;
+  background-color: var(--background);
   padding: 0.85rem 1rem;
   font-weight: 650;
   color: var(--text-muted);
@@ -122,7 +122,7 @@
 }
 
 .table tr:hover td {
-  background-color: #F8FAFC;
+  background-color: var(--background);
 }
 
 .tenantInfo {

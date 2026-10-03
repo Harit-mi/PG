@@ -57,7 +57,7 @@
 .card {
   padding: 1.35rem;
   border-radius: 14px;
-  background: #FFFFFF;
+  background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--cst-shadow);
   transition: all 0.2s ease;
@@ -101,7 +101,7 @@
 
 .Vacant {
   background-color: #EFF6FF;
-  color: #2563EB;
+  color: var(--primary);
   border: 1px solid #BFDBFE;
 }
 
