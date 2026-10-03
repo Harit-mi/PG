@@ -15,41 +15,41 @@
   --font-body: "General Sans", var(--font-sora), system-ui, -apple-system, sans-serif;
   --font-mono-stack: var(--font-mono), "JetBrains Mono", monospace;
 
-  /* Theme Tokens: Default Dark Cyber-Obsidian */
-  --bg-page: #06070A;
-  --text-primary: #F4F6FB;
-  --text-secondary: #8E96A8;
-  --text-muted: #555D6E;
+  /* Theme Tokens mapped to Global Theme */
+  --bg-page: var(--background);
+  --text-primary: var(--foreground);
+  --text-secondary: var(--text-muted);
+  --text-muted: var(--text-muted);
   
   /* Accents */
-  --accent: var(--warning); /* Electric Amber */
-  --accent-neon: #00F59B; /* Cyber Emerald */
-  --accent-bg: rgba(245, 158, 11, 0.12);
-  --accent-hover: #FBBF24;
-  --accent-glow: rgba(245, 158, 11, 0.4);
-  --accent-text: #06070A;
+  --accent: var(--primary); 
+  --accent-neon: var(--success); 
+  --accent-bg: var(--badge-blue-bg, rgba(37, 99, 235, 0.1));
+  --accent-hover: var(--primary-hover);
+  --accent-glow: transparent;
+  --accent-text: #FFFFFF;
 
   /* HUD Surfaces */
-  --card-bg: rgba(13, 16, 26, 0.75);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-glow: rgba(245, 158, 11, 0.35);
-  --card-subtle: rgba(18, 22, 36, 0.6);
-  --card-hover-border: rgba(255, 255, 255, 0.2);
+  --card-bg: var(--surface);
+  --card-border: var(--border);
+  --card-border-glow: var(--primary);
+  --card-subtle: var(--surface-muted, var(--border-light));
+  --card-hover-border: var(--primary);
 
-  --pill-bg: rgba(13, 16, 26, 0.85);
-  --pill-border: rgba(255, 255, 255, 0.1);
+  --pill-bg: var(--surface);
+  --pill-border: var(--border);
   
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
-  --shadow-md: 0 8px 30px -4px rgba(0, 0, 0, 0.7);
-  --shadow-lg: 0 24px 70px -12px rgba(0, 0, 0, 0.85);
-  --shadow-window: 0 35px 100px -20px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.05);
+  --shadow-window: 0 20px 25px rgba(0,0,0,0.05);
 
-  --phone-bg: #0C1217;
-  --phone-header: #131E24;
-  --chat-recv: #19232A;
-  --chat-sent: #064E3B;
-  --grid-line: rgba(255, 255, 255, 0.03);
-
+  --phone-bg: var(--background);
+  --phone-header: var(--surface);
+  --chat-recv: var(--surface);
+  --chat-sent: var(--primary);
+  --grid-line: var(--border);
+  
   min-height: 100vh;
   width: 100%;
   background-color: var(--bg-page);
@@ -63,39 +63,6 @@
 }
 
 /* Light Mode Overrides (Tactical Titanium White) */
-.landingWrapper[data-theme="light"] {
-  --bg-page: #F3F5F9;
-  --text-primary: #090B10;
-  --text-secondary: #4B5565;
-  --text-muted: #8893A7;
-  --accent: #D97706;
-  --accent-neon: #059669;
-  --accent-bg: rgba(217, 119, 6, 0.1);
-  --accent-hover: #B45309;
-  --accent-glow: rgba(217, 119, 6, 0.25);
-  --accent-text: var(--surface);
-
-  --card-bg: rgba(255, 255, 255, 0.88);
-  --card-border: #DDE2EB;
-  --card-border-glow: rgba(217, 119, 6, 0.35);
-  --card-subtle: #EBEFF5;
-  --card-hover-border: #CBD5E1;
-
-  --pill-bg: rgba(255, 255, 255, 0.92);
-  --pill-border: rgba(15, 23, 42, 0.1);
-
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 6px 20px -2px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 20px 45px -10px rgba(15, 23, 42, 0.12);
-  --shadow-window: 0 30px 80px -15px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-
-  --phone-bg: #EAE6DF;
-  --phone-header: #075E54;
-  --chat-recv: var(--surface);
-  --chat-sent: #DCF8C6;
-  --grid-line: rgba(15, 23, 42, 0.04);
-}
-
 /* --------------------------------------------------------------------------
    2. ATMOSPHERIC LIGHT FLARES & GRID
    -------------------------------------------------------------------------- */

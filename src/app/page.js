@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { 
@@ -38,13 +39,14 @@ export default function LandingPage() {
   const router = useRouter();
 
   // Dark / Light Theme State (Default Dark for Cyber-Architectural aesthetic)
-  const [theme, setTheme] = useState("dark");
+  const { resolvedTheme, setTheme } = useTheme();
+  const theme = resolvedTheme || "dark";
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("ourpg_theme");
-    if (saved === "dark" || saved === "light") {
-      setTheme(saved);
+    //
+    if (false) {
+      
     }
 
     // Live Bangalore IST Clock
@@ -64,10 +66,9 @@ export default function LandingPage() {
     return () => clearInterval(interval);
   }, []);
 
+  
   const toggleTheme = () => {
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-    localStorage.setItem("ourpg_theme", nextTheme);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   // Modal Auth State
@@ -308,7 +309,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className={styles.landingWrapper} data-theme={theme}>
+    <div className={styles.landingWrapper}>
       {/* Background Cyber-Architectural Grid & Light Flares */}
       <div className={styles.gridPattern} />
       <div className={styles.flareEmerald} />
