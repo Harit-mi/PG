@@ -535,205 +535,80 @@ export default function DashboardClient({
 
       </section>
 
-      {/* 3. INTERACTIVE REVENUE & CAPACITY DECK */}
+            {/* 3. INTERACTIVE REVENUE & CAPACITY DECK */}
       <section className={styles.visualizerDeck}>
-        
-        {/* Left Chart: Cashflow & Collections Velocity */}
-        <div className={styles.cleanCard}>
-          <div className={styles.cardHeader}>
-            <div className={styles.cardTitle}>
-              <TrendingUp size={18} style={{ color: "var(--primary)" }} />
-              <span>Collections Velocity &amp; Cashflow</span>
-            </div>
-
-            <div className={styles.timeSegmentPills}>
-              {["7D", "30D", "90D", "YTD"].map((range) => (
-                <button
-                  key={range}
-                  type="button"
-                  onClick={() => setChartRange(range)}
-                  className={`${styles.timePill} ${chartRange === range ? styles.timePillActive : ""}`}
-                >
-                  {range}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* SVG Visualizer Chart */}
-          <div className={styles.chartContainer}>
-            <svg className={styles.trajectorySvg} viewBox="0 0 600 210" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="areaGlowLight" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.14" />
-                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-
-              {/* Horizontal Guide Grid Lines */}
-              <line x1="40" y1="50" x2="560" y2="50" stroke="var(--surface-muted)" strokeDasharray="3 3" />
-              <line x1="40" y1="100" x2="560" y2="100" stroke="var(--surface-muted)" strokeDasharray="3 3" />
-              <line x1="40" y1="150" x2="560" y2="150" stroke="var(--surface-muted)" strokeDasharray="3 3" />
-              <line x1="40" y1="190" x2="560" y2="190" stroke="var(--border)" />
-
-              {/* Area Gradient Fill */}
-              <path d={collectedAreaD} fill="url(#areaGlowLight)" />
-
-              {/* Trajectory Stroke Line */}
-              <path d={collectedPathD} fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" />
-
-              {/* Chart Data Nodes */}
-              {chartPoints.map((pt, idx) => (
-                <g key={idx} onMouseEnter={() => setHoveredChartPoint(pt)} onMouseLeave={() => setHoveredChartPoint(null)}>
-                  <circle
-                    cx={pt.x}
-                    cy={pt.yCollected}
-                    r="4.5"
-                    fill="var(--surface)"
-                    stroke="var(--primary)"
-                    strokeWidth="2.5"
-                    style={{ cursor: "pointer", transition: "transform 0.15s ease" }}
-                  />
-                  {/* X-axis labels */}
-                  <text
-                    x={pt.x}
-                    y="205"
-                    textAnchor="middle"
-                    fill="var(--text-muted)"
-                    fontSize="11"
-                    fontFamily="var(--font-ui)"
-                  >
-                    {pt.label}
-                  </text>
-                </g>
-              ))}
-            </svg>
-
-            {/* Tooltip Overlay */}
-            {hoveredChartPoint && (
-              <div style={{
-                position: "absolute",
-                top: `${hoveredChartPoint.yCollected - 45}px`,
-                left: `${(hoveredChartPoint.x / 600) * 100}%`,
-                transform: "translateX(-50%)",
-                background: "var(--foreground)",
-                boxShadow: "0 6px 18px rgba(0, 0, 0, 0.15)",
-                padding: "5px 10px",
-                borderRadius: "6px",
-                fontSize: "0.78rem",
-                color: "var(--surface)",
-                pointerEvents: "none",
-                whiteSpace: "nowrap",
-                zIndex: 10
-              }}>
-                <span style={{ color: "#38BDF8", fontWeight: 700 }}>₹{hoveredChartPoint.collected.toLocaleString("en-IN")}</span> collected
+        {/* Simplified Clean Metrics Section */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem', width: '100%' }}>
+          
+          {/* Occupancy Card */}
+          <div className={styles.cleanCard} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <Building2 size={18} style={{ color: "var(--primary)" }} />
+                <span>Occupancy Overview</span>
               </div>
-            )}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', padding: '1rem 0', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: '120px', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="120" height="120" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" strokeWidth="12" />
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" strokeWidth="12" strokeDasharray={2 * Math.PI * 50} strokeDashoffset={(2 * Math.PI * 50) * (1 - (occupancyRate / 100))} style={{ transition: 'stroke-dashoffset 1s ease' }} />
+                </svg>
+                <div style={{ position: 'absolute', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--foreground)' }}>{occupancyRate.toFixed(0)}%</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Filled</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, maxWidth: '150px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Total Beds</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--foreground)' }}>{totalBeds}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Occupied</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary)' }}>{occupiedBeds}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Vacant</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--success)' }}>{totalBeds - occupiedBeds}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className={styles.chartLegend}>
-            <div className={styles.legendItem}>
-              <div className={styles.legendColor} style={{ background: "var(--primary)" }} />
-              <span>Collections Realized</span>
+          {/* Collection Card */}
+          <div className={styles.cleanCard} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+            <div className={styles.cardHeader}>
+              <div className={styles.cardTitle}>
+                <IndianRupee size={18} style={{ color: "var(--success)" }} />
+                <span>Rent Collections</span>
+              </div>
+              <Link href="/dashboard/dues" style={{ fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Ledger ↗</Link>
             </div>
-            <div className={styles.legendItem}>
-              <div className={styles.legendColor} style={{ background: "#CBD5E1" }} />
-              <span>Target Baseline</span>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--foreground)', letterSpacing: '-0.03em' }}>
+                ₹{rentCollected.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                of ₹{totalRentBase.toLocaleString('en-IN')} expected this month
+              </div>
             </div>
-            <div className={styles.legendItem} style={{ marginLeft: "auto", fontSize: "0.78rem" }}>
-              <span>Collection Pace: <strong>{collectedPct}%</strong></span>
+
+            <div style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Collection Progress</span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--success)' }}>
+                  {totalRentBase > 0 ? Math.round((rentCollected / totalRentBase) * 100) : 0}%
+                </span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${totalRentBase > 0 ? Math.round((rentCollected / totalRentBase) * 100) : 0}%`, background: 'var(--success)', borderRadius: '4px' }} />
+              </div>
             </div>
           </div>
+
         </div>
-
-        {/* Right Radar: Bed Spatial Distribution & Inventory Breakdown */}
-        <div className={styles.cleanCard}>
-          <div className={styles.cardHeader}>
-            <div className={styles.cardTitle}>
-              <Layers size={18} style={{ color: "#059669" }} />
-              <span>Room &amp; Bed Capacity</span>
-            </div>
-            <span className={styles.badge} style={{ background: "var(--surface-muted)", color: "var(--text-muted)" }}>
-              {totalBeds} Total Beds
-            </span>
-          </div>
-
-          <div className={styles.spatialGaugeWrap}>
-            {/* Central Concentric Ring Visualizer */}
-            <div className={styles.spatialCenterMeter}>
-              <svg width="116" height="116" viewBox="0 0 116 116">
-                <circle cx="58" cy="58" r="48" fill="none" stroke="var(--surface-muted)" strokeWidth="8" />
-                <circle
-                  cx="58"
-                  cy="58"
-                  r="48"
-                  fill="none"
-                  stroke="var(--success)"
-                  strokeWidth="8"
-                  strokeDasharray={2 * Math.PI * 48}
-                  strokeDashoffset={(2 * Math.PI * 48) * (1 - (occupancyRate / 100))}
-                  strokeLinecap="round"
-                  transform="rotate(-90 58 58)"
-                  style={{ transition: "stroke-dashoffset 0.6s ease" }}
-                />
-                <circle cx="58" cy="58" r="36" fill="none" stroke="var(--background)" strokeWidth="6" />
-                <circle
-                  cx="58"
-                  cy="58"
-                  r="36"
-                  fill="none"
-                  stroke="var(--primary)"
-                  strokeWidth="6"
-                  strokeDasharray={2 * Math.PI * 36}
-                  strokeDashoffset={(2 * Math.PI * 36) * (1 - (collectedPct / 100))}
-                  strokeLinecap="round"
-                  transform="rotate(-90 58 58)"
-                  style={{ transition: "stroke-dashoffset 0.6s ease" }}
-                />
-              </svg>
-              <div className={styles.spatialCenterText}>
-                <span className={styles.spatialCenterNum}>{occupancyRate}%</span>
-                <span className={styles.spatialCenterLabel}>Occupied</span>
-              </div>
-            </div>
-
-            {/* Inventory Breakdown Tiers */}
-            <div className={styles.roomBreakdownList}>
-              <div className={styles.roomBreakdownRow}>
-                <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--primary)" }} />
-                  <span>Single Rooms</span>
-                </div>
-                <span className={styles.breakdownRight}>{singleBeds} Beds ({singleRooms.length} Rms)</span>
-              </div>
-
-              <div className={styles.roomBreakdownRow}>
-                <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--success)" }} />
-                  <span>Double Sharing</span>
-                </div>
-                <span className={styles.breakdownRight}>{doubleBeds} Beds ({doubleRooms.length} Rms)</span>
-              </div>
-
-              <div className={styles.roomBreakdownRow}>
-                <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--warning)" }} />
-                  <span>Triple+ Sharing</span>
-                </div>
-                <span className={styles.breakdownRight}>{multiBeds} Beds ({multiRooms.length} Rms)</span>
-              </div>
-
-              <div className={styles.roomBreakdownRow} style={{ borderColor: "#A7F3D0", background: "#ECFDF5" }}>
-                <div className={styles.breakdownLeft}>
-                  <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#059669" }} />
-                  <span style={{ color: "#059669", fontWeight: 600 }}>Vacant Beds</span>
-                </div>
-                <span className={styles.breakdownRight} style={{ color: "#059669" }}>{vacantBeds} Available</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </section>
 
       {/* 4. TWO-COLUMN OPERATIONAL CENTER */}

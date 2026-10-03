@@ -47,7 +47,7 @@ export default function EditComplaintModal({ ticket, onClose }) {
           <div className={styles.row}>
             <div className={styles.formGroup}>
               <label>Category</label>
-              <select name="category" defaultValue={ticket.category} className={styles.input}>
+              <select name="category" defaultValue={ticket.category} className={styles.input} disabled={ticket.status === 'Resolved'}>
                 <option value="Maintenance">Maintenance</option>
                 <option value="Electrical">Electrical</option>
                 <option value="Plumbing">Plumbing</option>
@@ -59,7 +59,7 @@ export default function EditComplaintModal({ ticket, onClose }) {
             
             <div className={styles.formGroup}>
               <label>Priority</label>
-              <select name="priority" defaultValue={ticket.priority} className={styles.input}>
+              <select name="priority" defaultValue={ticket.priority} className={styles.input} disabled={ticket.status === 'Resolved'}>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
@@ -70,7 +70,7 @@ export default function EditComplaintModal({ ticket, onClose }) {
           
           <div className={styles.formGroup}>
             <label>Status</label>
-            <select name="status" defaultValue={ticket.status} className={styles.input}>
+            <select name="status" defaultValue={ticket.status} className={styles.input} disabled={ticket.status === 'Resolved'}>
               <option value="Open">Open</option>
               <option value="In Progress">In Progress</option>
               <option value="Resolved">Resolved</option>

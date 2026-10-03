@@ -56,7 +56,7 @@ const navGroups = [
   }
 ];
 
-export default function SidebarNav() {
+export default function SidebarNav({ propertyId }) {
   const pathname = usePathname();
 
   return (
@@ -118,7 +118,7 @@ export default function SidebarNav() {
         {/* Footer Quick Link */}
         <div className={styles.sidebarFooter}>
           <Link 
-            href="/pg/demo-123/tenant-portal" 
+            href={`/pg/${propertyId || "demo-123"}/tenant-portal`} 
             target="_blank" 
             className={styles.footerTenantLink}
             title="Preview public tenant portal"

@@ -201,7 +201,7 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
           {/* Ledger Filter Bar */}
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ position: 'relative', flex: 1, minWidth: '260px' }}>
-              <FAIcon icon="magnifying-glass" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
+              <FAIcon icon="magnifying-glass" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#FFFFFF' }} />
               <input 
                 type="text" 
                 placeholder="Search tenant name or room number..." 
@@ -274,7 +274,7 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
                       <tr key={due.id} className={rowClass}>
                         
                         {/* Tenant Name */}
-                        <td style={{ fontWeight: 750, color: 'var(--primary)' }}>
+                        <td style={{ fontWeight: 750, color: '#FFFFFF' }}>
                           {tenant.name || 'Unknown Resident'}
                           {tenant.phone && (
                             <span className="tabular-nums" style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500 }}>
@@ -285,7 +285,7 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
 
                         {/* Room */}
                         <td>
-                          <span className="tabular-nums" style={{ background: 'rgba(30,72,119,0.08)', color: 'var(--primary)', padding: '3px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 750 }}>
+                          <span className="tabular-nums" style={{ background: '#25D366', color: '#FFFFFF', padding: '3px 8px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 750 }}>
                             R-{tenant.room_number || 'N/A'}
                           </span>
                         </td>
@@ -339,8 +339,8 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
                                     target="_blank" 
                                     rel="noopener noreferrer" 
                                     style={{ 
-                                      background: 'rgba(30,72,119,0.08)', 
-                                      color: 'var(--primary)', 
+                                      background: '#25D366', 
+                                      color: '#FFFFFF', 
                                       padding: '6px 12px', 
                                       borderRadius: '99px', 
                                       fontSize: '0.78rem', 
@@ -372,7 +372,7 @@ export default function DuesClient({ initialDues = [], propertyId, paymentMethod
       ) : (
         /* Secondary Financial Breakdown */
         <div className="glass" style={{ padding: '2rem', background: 'var(--card-bg)', borderRadius: '16px', border: '1px solid var(--border)' }}>
-          <h3 style={{ fontSize: '1.1rem', margin: '0 0 1rem', fontWeight: 750, color: 'var(--primary)' }}>
+          <h3 style={{ fontSize: '1.1rem', margin: '0 0 1rem', fontWeight: 750, color: '#FFFFFF' }}>
             📊 Income & Expense Ledger Breakdown
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>

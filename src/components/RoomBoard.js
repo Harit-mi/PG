@@ -651,6 +651,12 @@ export default function RoomBoard({
                                     </div>
                                   )}
                                 </div>
+                                
+                                <div style={{ marginTop: '0.75rem', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+                                  <Link href="/dashboard/tenants" style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 650, textDecoration: 'none' }}>
+                                    + Create New Tenant Profile ↗
+                                  </Link>
+                                </div>
                               </div>
                             )}
                           </div>

@@ -37,7 +37,7 @@ export default function TicketCard({ ticket }) {
         <select 
           value={ticket.status} 
           onChange={handleStatusChange}
-          disabled={loading}
+          disabled={loading || ticket.status === 'Resolved'}
           style={{ 
             fontSize: '0.75rem', 
             padding: '2px 4px', 

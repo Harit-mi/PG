@@ -129,7 +129,6 @@ export async function verifyTenantPhone(propertyId, phone) {
 }
 
 export async function submitLeaveRequest(prop1, prop2, prop3) {
-  // Support both submitLeaveRequest({ propertyId, tenantId, ... }) and submitLeaveRequest(propertyId, tenantId, leaveData)
   let propertyId, tenantId, leaveData;
   if (typeof prop1 === 'object' && prop1 !== null) {
     propertyId = prop1.propertyId;
@@ -139,6 +138,11 @@ export async function submitLeaveRequest(prop1, prop2, prop3) {
     propertyId = prop1;
     tenantId = prop2;
     leaveData = prop3 || {};
+  }
+
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(propertyId)) {
+    return { success: false, error: "Invalid Property ID. This is a demo view." };
   }
 
   if (!propertyId || !tenantId) {
@@ -328,6 +332,11 @@ export async function requestVisitorPass(prop1, prop2, prop3) {
     visitorData = prop3 || {};
   }
 
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(propertyId)) {
+    return { success: false, error: "Invalid Property ID. This is a demo view." };
+  }
+
   if (!propertyId || !tenantId) {
     return { success: false, error: "Resident identification missing. Please re-verify your phone." };
   }
@@ -379,6 +388,10 @@ export async function requestVisitorPass(prop1, prop2, prop3) {
 export async function submitPublicVisitor(property_id, formData) {
   if (!property_id || !formData) {
     return { success: false, error: "Missing required visitor parameters." };
+  }
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(property_id)) {
+    return { success: false, error: "Invalid Property ID. This is a demo view." };
   }
 
   const name = sanitizeInput(formData.get("visitor_name")?.trim() || formData.get("name")?.trim());

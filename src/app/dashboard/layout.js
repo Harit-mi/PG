@@ -39,7 +39,7 @@ export default async function DashboardLayout({ children }) {
       )}
       
       {/* Sidebar Navigation */}
-      <SidebarNav />
+      <SidebarNav propertyId={propertyId} />
 
       {/* Main Content Area */}
       <div className={styles.mainContent} style={{ paddingTop: isExpired ? '3rem' : '1.5rem' }}>

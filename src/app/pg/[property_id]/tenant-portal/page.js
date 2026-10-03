@@ -23,6 +23,11 @@ export default async function TenantPortalPage({ params }) {
   const today = getTodayString();
   const currentWeekStart = getMondayOfCurrentWeek();
 
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(property_id)) {
+    return <TenantPortalClient propertyId={property_id} propertyName="Demo PG" todayMenu={null} weeklyMenu={[]} paymentMethods={[]} notices={[]} />;
+  }
+
   // 1. Fetch property info
   const { data: property } = await supabase
     .from('properties')
