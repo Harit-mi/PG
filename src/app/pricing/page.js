@@ -1,110 +1,140 @@
+"use client";
+
+import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import styles from "@/app/page.module.css";
 import MarketingNavbar from "@/components/MarketingNavbar";
 
-export const metadata = {
-  title: "Pricing | StayOS",
-  description: "Simple, transparent pricing for PG owners of all sizes.",
-};
-
 export default function PricingPage() {
-  const plans = [
-    {
-      name: "Starter",
-      price: "₹999",
-      period: "/month",
-      description: "Perfect for a single PG with up to 50 beds.",
-      features: [
-        "Up to 50 active beds",
-        "WhatsApp rent reminders",
-        "Visual floor plan",
-        "Expense tracking",
-        "1 Manager account"
-      ]
-    },
-    {
-      name: "Growth",
-      price: "₹2,499",
-      period: "/month",
-      description: "For scaling operators with multiple properties.",
-      popular: true,
-      features: [
-        "Up to 250 active beds",
-        "Automated UPI reconciliation",
-        "Multi-branch dashboard",
-        "Digital KYC onboarding",
-        "Up to 3 Manager accounts",
-        "Email support"
-      ]
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      period: "",
-      description: "For large operators running 250+ beds.",
-      features: [
-        "Unlimited active beds",
-        "Unlimited Manager accounts",
-        "Copilot AI (Unlimited queries)",
-        "API access & webhooks",
-        "Custom branding",
-        "Dedicated account manager"
-      ]
-    }
+  const [isYearly, setIsYearly] = useState(true);
+
+  const features = [
+    "Unlimited active beds",
+    "Multi-branch dashboard",
+    "WhatsApp rent reminders",
+    "Automated UPI reconciliation",
+    "Visual floor plan & drag-and-drop",
+    "Digital KYC onboarding",
+    "Unlimited Manager accounts",
+    "Expense tracking & P&L reports",
+    "Tenant Copilot AI"
   ];
+
+  const monthlyPrice = 499;
+  const yearlyPrice = 4499;
 
   return (
     <div className={styles.container}>
       <MarketingNavbar />
       
-      <main className={styles.hero} style={{ paddingBottom: '3rem' }}>
+      <main className={styles.hero} style={{ paddingBottom: '2rem' }}>
         <div className={styles.badge}>Fair & Transparent</div>
         <h1 className={styles.title} style={{ fontSize: '3rem' }}>
-          Pricing that scales with you.
+          One simple plan. Unlimited access.
         </h1>
         <p className={styles.subtitle}>
-          No hidden setup fees. Cancel anytime. Pay only for the beds you actively manage.
+          No complex tiers. No hidden fees. Get access to all features to manage your entire PG operation seamlessly.
         </p>
+
+        {/* Billing Toggle */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+          background: 'var(--surface)',
+          padding: '0.5rem',
+          borderRadius: '99px',
+          border: '1px solid var(--border)',
+          marginTop: '1rem'
+        }}>
+          <button 
+            onClick={() => setIsYearly(false)}
+            style={{
+              padding: '0.5rem 1.5rem',
+              borderRadius: '99px',
+              border: 'none',
+              background: !isYearly ? 'var(--foreground)' : 'transparent',
+              color: !isYearly ? 'var(--background)' : 'var(--text-muted)',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            Monthly
+          </button>
+          <button 
+            onClick={() => setIsYearly(true)}
+            style={{
+              padding: '0.5rem 1.5rem',
+              borderRadius: '99px',
+              border: 'none',
+              background: isYearly ? 'var(--foreground)' : 'transparent',
+              color: isYearly ? 'var(--background)' : 'var(--text-muted)',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            Yearly
+            <span style={{
+              background: isYearly ? 'var(--background)' : 'var(--surface-muted)',
+              color: isYearly ? 'var(--foreground)' : 'var(--text-muted)',
+              fontSize: '0.7rem',
+              padding: '0.2rem 0.5rem',
+              borderRadius: '99px',
+              fontWeight: '600'
+            }}>SAVE 25%</span>
+          </button>
+        </div>
       </main>
 
-      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 8rem', display: 'flex', gap: '2rem', justifyContent: 'center', alignItems: 'stretch' }}>
-        {plans.map((plan, i) => (
-          <div key={i} style={{ 
-            background: 'var(--surface)', 
-            padding: '2.5rem 2rem', 
-            borderRadius: '16px', 
-            border: plan.popular ? '2px solid var(--primary)' : '1px solid var(--border)',
-            flex: 1,
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
-            {plan.popular && (
-              <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: 'var(--primary)', color: 'var(--background)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '600' }}>
-                Most Popular
+      <section style={{ maxWidth: '600px', margin: '0 auto', padding: '0 2rem 8rem', width: '100%' }}>
+        <div style={{ 
+          background: 'var(--surface)', 
+          padding: '3rem 2.5rem', 
+          borderRadius: '24px', 
+          border: '2px solid var(--border)',
+          boxShadow: 'var(--cst-shadow-hover)',
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>StayOS Pro</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Everything you need to run your business</p>
+          </div>
+
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <span style={{ fontSize: '3.5rem', fontWeight: '700', fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>
+              ₹{isYearly ? yearlyPrice.toLocaleString() : monthlyPrice}
+            </span>
+            <span style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
+              {isYearly ? '/year' : '/month'}
+            </span>
+            {isYearly && (
+              <div style={{ color: 'var(--success)', fontSize: '0.9rem', fontWeight: '500', marginTop: '0.5rem' }}>
+                (Equivalent to ₹{Math.round(yearlyPrice / 12)}/month)
               </div>
             )}
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>{plan.name}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '40px' }}>{plan.description}</p>
-            <div style={{ marginBottom: '2rem' }}>
-              <span style={{ fontSize: '2.5rem', fontWeight: '700', fontFamily: 'var(--font-display)' }}>{plan.price}</span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{plan.period}</span>
-            </div>
-            
-            <button className={plan.popular ? styles.btnPrimary : styles.btnSecondary} style={{ width: '100%', marginBottom: '2rem', border: plan.popular ? 'none' : '1px solid var(--border)' }}>
-              {plan.price === "Custom" ? "Contact Sales" : "Start Free Trial"}
-            </button>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
-              {plan.features.map((f, j) => (
-                <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                  <CheckCircle2 size={18} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>{f}</span>
-                </div>
-              ))}
-            </div>
           </div>
-        ))}
+          
+          <button className={styles.btnPrimary} style={{ width: '100%', marginBottom: '3rem', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px' }}>
+            Start your free 14-day trial
+          </button>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.25rem' }}>
+            {features.map((f, j) => (
+              <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <CheckCircle2 size={20} color="var(--primary)" style={{ flexShrink: 0 }} />
+                <span style={{ fontSize: '1rem', color: 'var(--foreground)' }}>{f}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );
