@@ -17,6 +17,7 @@ export default function ThemeToggle() {
   }
 
   const isDark = resolvedTheme === "dark";
+  console.log("ThemeToggle rendered, isDark:", isDark);
 
   return (
     <button 
