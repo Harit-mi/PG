@@ -38,18 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${sora.variable} ${jetbrains.variable}`}>
       <head>
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link
-          href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@700,800,900&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap"
-          rel="stylesheet"
-        />
-        <link 
+                        <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
           crossOrigin="anonymous" 

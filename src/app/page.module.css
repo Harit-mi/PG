@@ -10,10 +10,10 @@
    -------------------------------------------------------------------------- */
 .landingWrapper {
   /* Fonts */
-  --font-wide: "Syncopate", sans-serif;
-  --font-display: var(--font-space), "Cabinet Grotesk", sans-serif;
-  --font-body: "General Sans", var(--font-sora), system-ui, -apple-system, sans-serif;
-  --font-mono-stack: var(--font-mono), "JetBrains Mono", monospace;
+  --font-wide: var(--font-space), sans-serif;
+  --font-display: var(--font-space), sans-serif;
+  --font-body: var(--font-sora), system-ui, -apple-system, sans-serif;
+  --font-mono-stack: var(--font-mono), monospace;
 
   /* Theme Tokens mapped to Global Theme */
   --bg-page: var(--background);
