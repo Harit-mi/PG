@@ -48,6 +48,17 @@ export default function DashboardClient({
   const todayStr = useMemo(() => new Date().toISOString().split("T")[0], []);
   const now = useMemo(() => new Date(), []);
 
+  // Tenant historical occupancy helper
+  const isTenantOccupyingInPeriod = (dateStr) => {
+    if (!dateStr) return true;
+    const date = new Date(dateStr);
+    if (dateFilter === "Last Month") {
+      const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      return date < startOfThisMonth;
+    }
+    return true; // For Today, This Month, and All, an Active tenant is always occupying
+  };
+
   // Date filtering helper
   const isDateInRange = (dateStr) => {
     if (!dateStr) return false;
@@ -73,9 +84,9 @@ export default function DashboardClient({
 
   // Filtered operational datasets
   const filteredRooms = useMemo(() => rooms.filter(r => activePropertyIds.includes(r.property_id)), [rooms, activePropertyIds]);
-  const filteredTenants = useMemo(() => tenants.filter(t => activePropertyIds.includes(t.property_id) && t.status === "Active"), [tenants, activePropertyIds]);
+  const filteredTenants = useMemo(() => tenants.filter(t => activePropertyIds.includes(t.property_id) && t.status === "Active" && isTenantOccupyingInPeriod(t.move_in_date || t.created_at)), [tenants, activePropertyIds, dateFilter, now]);
   const filteredTx = useMemo(() => transactions.filter(t => activePropertyIds.includes(t.property_id) && isDateInRange(t.date)), [transactions, activePropertyIds, dateFilter]);
-  const filteredComplaints = useMemo(() => complaints.filter(c => activePropertyIds.includes(c.property_id)), [complaints, activePropertyIds]);
+  const filteredComplaints = useMemo(() => complaints.filter(c => activePropertyIds.includes(c.property_id) && isTenantOccupyingInPeriod(c.created_at)), [complaints, activePropertyIds, dateFilter, now]);
   const filteredLeaves = useMemo(() => leaves.filter(l => activePropertyIds.includes(l.property_id)), [leaves, activePropertyIds]);
   const filteredVisitors = useMemo(() => visitors.filter(v => activePropertyIds.includes(v.property_id)), [visitors, activePropertyIds]);
   const filteredAssets = useMemo(() => assets.filter(a => activePropertyIds.includes(a.property_id)), [assets, activePropertyIds]);
