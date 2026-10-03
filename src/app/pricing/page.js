@@ -1,90 +1,111 @@
-"use client";
+import { CheckCircle2 } from "lucide-react";
+import styles from "@/app/page.module.css";
+import MarketingNavbar from "@/components/MarketingNavbar";
 
-import { useRouter } from "next/navigation";
-import FAIcon from "@/components/FAIcon";
-import styles from "../page.module.css";
-
-const PLANS = [
-  {
-    id: "Monthly",
-    name: "Monthly Plan",
-    price: "₹499",
-    period: "/mo",
-    desc: "Complete PG management suite with month-to-month flexibility.",
-    features: [
-      "All Features Included",
-      "Unlimited Rooms & Tenants",
-      "Automated WhatsApp Rent Reminders",
-      "Resident Self-Service Portal",
-      "Kitchen Meal & Leaves Tracker",
-      "Visitor Passes & Maintenance Desk"
-    ],
-  },
-  {
-    id: "Yearly",
-    name: "Yearly Plan (Entire Year)",
-    price: "₹4,499",
-    period: "/year",
-    desc: "Best value package — get 12 months access and save ~25% off monthly pricing.",
-    features: [
-      "Everything in Monthly Plan",
-      "Full 12 Months Access (~₹375/mo)",
-      "Multi-Outlet PG Management",
-      "Priority WhatsApp & Phone Support",
-      "Free Data Import & Setup Help",
-      "Free Future Updates & Features"
-    ],
-    isPopular: true,
-  },
-];
+export const metadata = {
+  title: "Pricing | StayOS",
+  description: "Simple, transparent pricing for PG owners of all sizes.",
+};
 
 export default function PricingPage() {
-  const router = useRouter();
-
-  const handleSelectPlan = (plan) => {
-    localStorage.setItem("pg_selected_plan", plan);
-    router.push("/checkout");
-  };
+  const plans = [
+    {
+      name: "Starter",
+      price: "₹999",
+      period: "/month",
+      description: "Perfect for a single PG with up to 50 beds.",
+      features: [
+        "Up to 50 active beds",
+        "WhatsApp rent reminders",
+        "Visual floor plan",
+        "Expense tracking",
+        "1 Manager account"
+      ]
+    },
+    {
+      name: "Growth",
+      price: "₹2,499",
+      period: "/month",
+      description: "For scaling operators with multiple properties.",
+      popular: true,
+      features: [
+        "Up to 250 active beds",
+        "Automated UPI reconciliation",
+        "Multi-branch dashboard",
+        "Digital KYC onboarding",
+        "Up to 3 Manager accounts",
+        "Email support"
+      ]
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      period: "",
+      description: "For large operators running 250+ beds.",
+      features: [
+        "Unlimited active beds",
+        "Unlimited Manager accounts",
+        "Copilot AI (Unlimited queries)",
+        "API access & webhooks",
+        "Custom branding",
+        "Dedicated account manager"
+      ]
+    }
+  ];
 
   return (
-    <div className={styles.pricingContainer}>
-      <div style={{ maxWidth: '1000px', width: '100%' }}>
-        <h1 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '0.5rem' }}>
-          Choose your PG Plan
+    <div className={styles.container}>
+      <MarketingNavbar />
+      
+      <main className={styles.hero} style={{ paddingBottom: '3rem' }}>
+        <div className={styles.badge}>Fair & Transparent</div>
+        <h1 className={styles.title} style={{ fontSize: '3rem' }}>
+          Pricing that scales with you.
         </h1>
-        <p style={{ textAlign: 'center', marginBottom: '2.5rem', fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-          Select the perfect management plan for your Paying Guest business based on your property size.
+        <p className={styles.subtitle}>
+          No hidden setup fees. Cancel anytime. Pay only for the beds you actively manage.
         </p>
+      </main>
 
-        <div className={styles.pricingGrid}>
-          {PLANS.map((plan) => (
-            <div key={plan.id} className={`${styles.pricingCard} ${plan.isPopular ? styles.proCard : ''} glass`}>
-              {plan.isPopular && <div className={styles.pricingBadge}>MOST POPULAR</div>}
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--primary)', margin: '0 0 0.5rem 0' }}>{plan.name}</h3>
-              <div className="ledger-mono" style={{ fontSize: '2.5rem', fontWeight: 700, margin: '1rem 0', color: 'var(--foreground)' }}>
-                {plan.price}<span style={{ fontSize: '1rem', color: 'var(--text-muted)', fontWeight: 400 }}>{plan.period}</span>
+      <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 8rem', display: 'flex', gap: '2rem', justifyContent: 'center', alignItems: 'stretch' }}>
+        {plans.map((plan, i) => (
+          <div key={i} style={{ 
+            background: 'var(--surface)', 
+            padding: '2.5rem 2rem', 
+            borderRadius: '16px', 
+            border: plan.popular ? '2px solid var(--primary)' : '1px solid var(--border)',
+            flex: 1,
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {plan.popular && (
+              <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: 'var(--primary)', color: 'var(--background)', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '600' }}>
+                Most Popular
               </div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '2rem' }}>{plan.desc}</p>
-              
-              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2.5rem 0', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {plan.features.map((feat, i) => (
-                  <li key={i} style={{ display: 'flex', gap: '0.5rem', fontSize: '0.85rem', alignItems: 'center', color: 'var(--foreground)' }}>
-                    <FAIcon icon="check" style={{ color: 'var(--primary)' }} /> 
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <button 
-                className={`${styles.planButton} ${plan.isPopular ? styles.proButton : ''}`} 
-                onClick={() => handleSelectPlan(plan.id)}
-              >
-                Select {plan.name}
-              </button>
+            )}
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>{plan.name}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1.5rem', minHeight: '40px' }}>{plan.description}</p>
+            <div style={{ marginBottom: '2rem' }}>
+              <span style={{ fontSize: '2.5rem', fontWeight: '700', fontFamily: 'var(--font-display)' }}>{plan.price}</span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{plan.period}</span>
             </div>
-          ))}
-        </div>
-      </div>
+            
+            <button className={plan.popular ? styles.btnPrimary : styles.btnSecondary} style={{ width: '100%', marginBottom: '2rem', border: plan.popular ? 'none' : '1px solid var(--border)' }}>
+              {plan.price === "Custom" ? "Contact Sales" : "Start Free Trial"}
+            </button>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
+              {plan.features.map((f, j) => (
+                <div key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                  <CheckCircle2 size={18} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }
