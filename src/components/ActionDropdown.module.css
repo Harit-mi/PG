@@ -68,7 +68,7 @@
 
 .portalDropdown {
   position: fixed;
-  background: #ffffff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(30, 72, 119, 0.08);

@@ -168,7 +168,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #ffffff;
+  background-color: transparent;
   color: var(--foreground, #1e293b);
   border: 1px solid var(--border, #e2e8f0);
   padding: 0.65rem 1.15rem;
