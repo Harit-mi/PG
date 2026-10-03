@@ -1430,7 +1430,16 @@ export async function registerOwnerAccount({ name, email, phone, pgName, passwor
   const adminSupabase = createAdminClient();
 
   try {
-    // 1. Create auth user with pre-confirmed email so they can log in instantly
+    // 1. Create organization first (to satisfy Postgres foreign key triggers)
+    const { error: orgErr } = await adminSupabase.from("organizations").insert([{
+      id: newOrgId,
+      name: cleanPgName,
+      status: "Active"
+    }]);
+
+    if (orgErr) throw orgErr;
+
+    // 2. Create auth user with pre-confirmed email so they can log in instantly
     const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
       email: cleanEmail,
       password,
@@ -1444,17 +1453,10 @@ export async function registerOwnerAccount({ name, email, phone, pgName, passwor
     });
 
     if (authError) {
+      // Rollback org if user creation fails
+      await adminSupabase.from("organizations").delete().eq("id", newOrgId);
       throw new Error(authError.message);
     }
-
-    // 2. Create organization
-    const { error: orgErr } = await adminSupabase.from("organizations").insert([{
-      id: newOrgId,
-      name: cleanPgName,
-      status: "Active"
-    }]);
-
-    if (orgErr) throw orgErr;
 
     // 3. Create 30-day Free Trial Subscription
     const expiryStr = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
