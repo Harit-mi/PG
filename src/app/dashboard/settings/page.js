@@ -97,20 +97,24 @@ export default async function SettingsPage() {
                 Share these outlet-specific links with the residents of <strong>{activeProperty.name}</strong>. They can verify their identity using their registered mobile number.
               </p>
               <CopyablePortalLink 
+                label="Main Tenant Portal" 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal`} 
+              />
+              <CopyablePortalLink 
                 label="Tenant Leave Request Portal" 
-                url={`${baseUrl}/pg/${propertyId}/tenant-portal/leaves`} 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal?tab=leave`} 
               />
               <CopyablePortalLink 
                 label="Tenant Rent & Invoices Portal" 
-                url={`${baseUrl}/pg/${propertyId}/tenant-portal/rent`} 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal?tab=payments`} 
               />
               <CopyablePortalLink 
                 label="Tenant Visitor Gate-Pass Portal" 
-                url={`${baseUrl}/pg/${propertyId}/tenant-portal/visitors`} 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal?tab=visitor`} 
               />
               <CopyablePortalLink 
                 label="Tenant Complaint Portal" 
-                url={`${baseUrl}/pg/${propertyId}/tenant-portal/complaints`} 
+                url={`${baseUrl}/pg/${propertyId}/tenant-portal?tab=complaint`} 
               />
             </div>
           ) : (

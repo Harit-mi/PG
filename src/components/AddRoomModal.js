@@ -99,40 +99,27 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
             {error && <div className={styles.errorBanner}>{error}</div>}
             
             <form onSubmit={handleSubmit} className={styles.form}>
+              
               <div className={styles.formGroup}>
                 <label>Room Number</label>
-                <input name="room_number" required placeholder="e.g. 105" className={styles.input} />
+                <input name="room_number" required autoFocus placeholder="e.g. 105" className={styles.input} />
               </div>
               
               <div className={styles.formGroup}>
-                <label>Room Type</label>
-                <select name="type" className={styles.input} value={selectedType} onChange={handleTypeChange} required>
-                  <option value="" disabled>Select a room type...</option>
-                  {roomTypes.length > 0 ? (
-                    roomTypes.map(t => (
-                      <option key={t.id} value={t.name}>{t.name}</option>
-                    ))
-                  ) : (
-                    <>
-                      <option value="Single">Single</option>
-                      <option value="Double">Double</option>
-                      <option value="Triple">Triple</option>
-                    </>
-                  )}
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label>Rent Per Bed (₹)</label>
-                <input name="rent_per_bed" type="number" required placeholder="8000" className={styles.input} value={rent} onChange={(e) => setRent(e.target.value)} />
+                <label>Number of Beds</label>
+                <input name="type" type="text" required placeholder="e.g. 2" className={styles.input} />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Capacity (Persons)</label>
-                <input name="capacity" type="number" required placeholder="1" min="1" className={styles.input} value={capacity} onChange={(e) => setCapacity(e.target.value)} />
+                <input name="capacity" type="number" required placeholder="2" min="1" className={styles.input} value={capacity} onChange={(e) => setCapacity(e.target.value)} />
               </div>
 
-              <div className={styles.actions}>
+              <div className={styles.formGroup}>
+                <label>Rent Per Person / Head (₹)</label>
+                <input name="rent_per_bed" type="number" required placeholder="8000" className={styles.input} value={rent} onChange={(e) => setRent(e.target.value)} />
+              </div>
+<div className={styles.actions}>
                 <button type="button" onClick={() => setIsOpen(false)} className={styles.cancelBtn}>
                   Cancel
                 </button>

@@ -21,15 +21,15 @@ export default function ExportPdfButton({ transactions, className }) {
     let totalExpense = 0;
     
     const tableData = transactions.map(txn => {
-      if (txn.type === "Income") totalIncome += txn.amount;
-      else totalExpense += txn.amount;
+      if (txn.type === "Income") totalIncome += (txn.amount || 0);
+      else totalExpense += (txn.amount || 0);
 
       return [
         new Date(txn.date).toLocaleDateString(),
         txn.tenants ? `${txn.tenants.name} (${txn.tenants.room_number})` : txn.category,
         txn.category,
         txn.type,
-        `Rs ${txn.amount.toLocaleString()}`
+        `Rs ${(txn.amount || 0).toLocaleString()}`
       ];
     });
 
@@ -51,7 +51,7 @@ export default function ExportPdfButton({ transactions, className }) {
   };
 
   return (
-    <button onClick={handleExport} className={className}>
+    <button onClick={handleExport} className={className || "secondaryBtn"} style={{ padding: "0.5rem 1rem", border: "1px solid var(--border)", background: "transparent", color: "var(--foreground)", borderRadius: "8px", display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", fontSize: "0.9rem", fontWeight: 600 }}>
       <Download size={18} /> Export PDF
     </button>
   );

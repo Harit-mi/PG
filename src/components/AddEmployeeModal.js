@@ -26,7 +26,7 @@ export default function AddEmployeeModal({ buttonClass }) {
 
   return (
     <>
-      <button className={buttonClass} onClick={() => setIsOpen(true)}>
+      <button className={buttonClass || styles.primaryTriggerBtn} onClick={() => setIsOpen(true)}>
         <Plus size={18} /> Add Employee
       </button>
 
@@ -44,7 +44,7 @@ export default function AddEmployeeModal({ buttonClass }) {
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
                   <label>Full Name *</label>
-                  <input name="name" required placeholder="Ramesh Kumar" />
+                  <input name="name" required autoFocus placeholder="Ramesh Kumar" />
                 </div>
                 
                 <div className={styles.formGroup}>
@@ -80,13 +80,17 @@ export default function AddEmployeeModal({ buttonClass }) {
                   <label>Address</label>
                   <textarea name="address" rows="2" placeholder="Permanent address..."></textarea>
                 </div>
+              
+                <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
+                  <label>Aadhar Card (PDF or Photo)</label>
+                  <input type="file" name="aadhar_card" accept="image/*,application/pdf" className={styles.input} style={{ background: 'transparent', padding: '0.5rem 0' }} />
+                </div>
               </div>
-
               <div className={styles.modalFooter}>
                 <button type="button" onClick={() => setIsOpen(false)} className={styles.cancelBtn}>
                   Cancel
                 </button>
-                <button type="submit" className={styles.saveBtn} disabled={loading}>
+                <button type="submit" className={styles.submitBtn} disabled={loading}>
                   {loading ? "Saving..." : "Save Employee"}
                 </button>
               </div>

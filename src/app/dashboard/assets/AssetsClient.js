@@ -29,7 +29,7 @@ export default function AssetsClient({ propertyId, rooms = [], initialAssets = [
       return;
     }
 
-    const finalName = newAssetName === "Other" ? customAssetName : newAssetName;
+    const finalName = newAssetName === "Custom Category" ? customAssetName : newAssetName;
     if (!finalName.trim()) {
       alert("Please specify the asset name.");
       return;
@@ -232,11 +232,11 @@ export default function AssetsClient({ propertyId, rooms = [], initialAssets = [
                     <option value="Study Desk & Chair">Study Desk & Chair</option>
                     <option value="Single Wooden Bed">Single Wooden Bed</option>
                     <option value="Steel Wardrobe">Steel Wardrobe</option>
-                    <option value="Other">Other (Specify Name)</option>
+                    <option value="Custom Category">Custom Category</option>
                   </select>
                 </div>
 
-                {newAssetName === "Other" && (
+                {newAssetName === "Custom Category" && (
                   <div className={styles.formField}>
                     <label>Specify Name</label>
                     <input

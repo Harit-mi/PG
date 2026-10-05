@@ -41,7 +41,7 @@ export default function ExportExcelButton({ transactions, className }) {
   };
 
   return (
-    <button onClick={exportToCsv} className={className}>
+    <button onClick={exportToCsv} className={className || "secondaryBtn"} style={{ padding: "0.5rem 1rem", border: "1px solid var(--border)", background: "transparent", color: "var(--foreground)", borderRadius: "8px", display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", fontSize: "0.9rem", fontWeight: 600 }}>
       <Download size={18} /> Export CSV
     </button>
   );

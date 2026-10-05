@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import FAIcon from "@/components/FAIcon";
 import { 
   verifyTenantPhone, 
@@ -23,7 +24,9 @@ export default function TenantPortalClient({
   const [isVerified, setIsVerified] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [matchedTenant, setMatchedTenant] = useState(null);
-  const [activeTab, setActiveTab] = useState("home"); // "home", "menu", "leave", "complaint", "visitor", "payments"
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab") || "home";
+  const [activeTab, setActiveTab] = useState(initialTab); // "home", "menu", "leave", "complaint", "visitor", "payments"
 
   // Live tenant records
   const [transactionsList, setTransactionsList] = useState([]);

@@ -93,7 +93,7 @@ export default function AddLeaveModal({ buttonClass, tenants = [], propertyId })
     <>
       <button 
         onClick={() => handleOpenChange(true)} 
-        className={buttonClass} 
+        className={buttonClass || styles.primaryTriggerBtn} 
         style={buttonClass ? {} : defaultButtonStyle}
         aria-label="Add leave"
       >

@@ -524,6 +524,22 @@ export async function addEmployee(formData) {
   const role = formData.get("role");
   const salary = parseInt(formData.get("salary"));
   
+  let aadhar_url = null;
+  const aadharFile = formData.get("aadhar_card");
+  if (aadharFile && aadharFile.size > 0) {
+    const fileExt = aadharFile.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    // Using receipts bucket for now as a general storage, or try documents if it exists
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('receipts')
+      .upload(`aadhars/${fileName}`, aadharFile);
+      
+    if (!uploadError && uploadData) {
+      const { data: publicUrlData } = supabase.storage.from('receipts').getPublicUrl(uploadData.path);
+      aadhar_url = publicUrlData.publicUrl;
+    }
+  }
+  
   const { error } = await supabase.from("employees").insert([{
     name,
     phone,
@@ -531,7 +547,8 @@ export async function addEmployee(formData) {
     role,
     salary,
     status: "Active",
-    property_id
+    property_id,
+    photo_url: aadhar_url // storing in photo_url for now since it exists in schema
   }]);
 
   if (error) {

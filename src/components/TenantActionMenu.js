@@ -197,7 +197,7 @@ export default function TenantActionMenu({ tenant }) {
             </div>
             <div className={styles.actions}>
               <button type="button" onClick={() => setShowNotice(false)} className={styles.cancelBtn}>Cancel</button>
-              <button type="button" disabled={loading} onClick={handleNoticePeriod} className={styles.submitBtn}>
+              <button type="button" disabled={loading} onClick={handleNoticePeriod} className={styles.submitBtn} autoFocus>
                 {loading ? "Updating..." : "Confirm Notice"}
               </button>
             </div>
@@ -223,7 +223,7 @@ export default function TenantActionMenu({ tenant }) {
             </div>
             <div className={styles.actions}>
               <button type="button" onClick={() => setShowMoveOut(false)} className={styles.cancelBtn}>Cancel</button>
-              <button type="button" disabled={loading} onClick={handleMoveOut} className={styles.submitBtn} style={{ background: 'var(--rust)' }}>
+              <button type="button" disabled={loading} onClick={handleMoveOut} className={styles.submitBtn} style={{ background: "var(--rust)" }} autoFocus>
                 {loading ? "Updating..." : "Confirm Move Out"}
               </button>
             </div>
@@ -262,7 +262,7 @@ export default function TenantActionMenu({ tenant }) {
               </div>
               <div className={styles.actions}>
                 <button type="button" onClick={() => setShowShift(false)} className={styles.cancelBtn}>Cancel</button>
-                <button type="submit" disabled={loading} className={styles.submitBtn}>
+                <button type="submit" disabled={loading} className={styles.submitBtn} autoFocus>
                   {loading ? "Updating..." : "Shift Room"}
                 </button>
               </div>
