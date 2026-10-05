@@ -74,27 +74,12 @@ export default function AddLeaveModal({ buttonClass, tenants = [], propertyId })
     }
   }
 
-  const defaultButtonStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    padding: '0.6rem 1.25rem',
-    backgroundColor: 'var(--brass)',
-    color: 'var(--ink-navy)',
-    border: 'none',
-    borderRadius: '8px',
-    fontWeight: '700',
-    fontFamily: 'var(--font-fraunces), serif',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-  };
-
-  return (
+    return (
     <>
       <button 
         onClick={() => handleOpenChange(true)} 
         className={buttonClass || styles.primaryTriggerBtn} 
-        style={buttonClass ? {} : defaultButtonStyle}
+        
         aria-label="Add leave"
       >
         <CalendarPlus size={20} /> Add Leave

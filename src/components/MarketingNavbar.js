@@ -51,7 +51,7 @@ export default function MarketingNavbar() {
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail.trim(),
+        email: loginEmail.trim().toLowerCase(),
         password: loginPassword,
       });
 
