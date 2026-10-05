@@ -32,7 +32,7 @@ export default function AddEmployeeModal({ buttonClass }) {
 
       {isOpen && (
         <div className={styles.overlay}>
-          <div className={styles.modal}>
+          <div className={`${styles.modal} glass`}>
             <div className={styles.modalHeader}>
               <h2>Register New Employee</h2>
               <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
@@ -44,12 +44,12 @@ export default function AddEmployeeModal({ buttonClass }) {
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
                   <label>Full Name *</label>
-                  <input name="name" required autoFocus placeholder="Ramesh Kumar" />
+                  <input name="name" className={styles.input} required autoFocus placeholder="Ramesh Kumar" />
                 </div>
                 
                 <div className={styles.formGroup}>
                   <label>Mobile Number *</label>
-                  <input 
+                  <input className={styles.input}
                     type="tel"
                     name="phone" 
                     required 
@@ -62,7 +62,7 @@ export default function AddEmployeeModal({ buttonClass }) {
                 
                 <div className={styles.formGroup}>
                   <label>Role *</label>
-                  <select name="role" required>
+                  <select name="role" className={styles.input} required>
                     <option value="Manager">Manager</option>
                     <option value="Care Taker">Care Taker</option>
                     <option value="Cook">Cook</option>
@@ -73,12 +73,12 @@ export default function AddEmployeeModal({ buttonClass }) {
 
                 <div className={styles.formGroup}>
                   <label>Monthly Salary (₹) *</label>
-                  <input name="salary" type="number" required min="0" placeholder="15000" />
+                  <input name="salary" className={styles.input} type="number" required min="0" placeholder="15000" />
                 </div>
 
                 <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
                   <label>Address</label>
-                  <textarea name="address" rows="2" placeholder="Permanent address..."></textarea>
+                  <textarea name="address" className={styles.input} rows="2" placeholder="Permanent address..."></textarea>
                 </div>
               
                 <div className={styles.formGroup} style={{ gridColumn: '1 / -1' }}>
@@ -86,7 +86,7 @@ export default function AddEmployeeModal({ buttonClass }) {
                   <input type="file" name="aadhar_card" accept="image/*,application/pdf" className={styles.input} style={{ background: 'transparent', padding: '0.5rem 0' }} />
                 </div>
               </div>
-              <div className={styles.modalFooter}>
+              <div className={styles.actions}>
                 <button type="button" onClick={() => setIsOpen(false)} className={styles.cancelBtn}>
                   Cancel
                 </button>

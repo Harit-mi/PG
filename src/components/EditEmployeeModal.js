@@ -28,7 +28,7 @@ export default function EditEmployeeModal({ employee, onClose }) {
   return (
     <div className={styles.overlay}>
       <div className={`${styles.modal} glass`}>
-        <div className={styles.header}>
+        <div className={styles.modalHeader}>
           <h2>Edit Employee</h2>
           <button onClick={onClose} className={styles.closeBtn}><X size={20} /></button>
         </div>
@@ -90,7 +90,7 @@ export default function EditEmployeeModal({ employee, onClose }) {
             <textarea name="address" defaultValue={employee.address} rows="2" className={styles.input}></textarea>
           </div>
 
-          <div className={styles.footer}>
+          <div className={styles.actions}>
             <button type="button" onClick={onClose} className={styles.cancelBtn}>Cancel</button>
             <button type="submit" disabled={loading} className={styles.submitBtn}>
               {loading ? "Saving..." : <><Save size={16} /> Save Changes</>}
