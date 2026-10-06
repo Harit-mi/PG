@@ -5,7 +5,7 @@ import FAIcon from "@/components/FAIcon";
 import { addRoomAsset, updateRoomAssetStatus, deleteRoomAsset } from "@/app/actions";
 import styles from "./AssetsClient.module.css";
 
-export default function AssetsClient({ propertyId, rooms = [], initialAssets = [] }) {
+export default function AssetsClient({ propertyId, rooms = [], assets: initialAssets = [] }) {
   const [assets, setAssets] = useState(initialAssets);
   const [selectedRoomId, setSelectedRoomId] = useState("");
   
