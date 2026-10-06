@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export default function ReceiptGenerator({ transaction }) {
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ export default function ReceiptGenerator({ transaction }) {
       doc.line(20, 40, 190, 40);
 
       // Details Table
-      doc.autoTable({
+      autoTable(doc, {
         startY: 45,
         theme: "plain",
         styles: { fontSize: 11, cellPadding: 5 },
