@@ -24,7 +24,7 @@ export default function ExportExcelButton({ transactions, className }) {
         txn.amount,
         txn.status,
         description
-      ].map(field => `"${String(field).replace(/"/g, '""')}"`).join(',');
+      ].map(field => `"${String(field || "").replace(/"/g, '""')}"`).join(',');
     });
 
     const csvContent = [headers.join(','), ...rows].join('\n');

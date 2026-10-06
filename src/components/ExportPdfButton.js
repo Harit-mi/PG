@@ -2,7 +2,7 @@
 
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 export default function ExportPdfButton({ transactions, className }) {
   const handleExport = () => {
@@ -39,7 +39,7 @@ export default function ExportPdfButton({ transactions, className }) {
     doc.text(`Net Balance: Rs ${(totalIncome - totalExpense).toLocaleString()}`, 14, 52);
 
     // Add table
-    doc.autoTable({
+    autoTable(doc, {
       startY: 60,
       head: [['Date', 'Description', 'Category', 'Type', 'Amount']],
       body: tableData,
