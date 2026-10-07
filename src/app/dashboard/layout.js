@@ -12,7 +12,11 @@ export default async function DashboardLayout({ children }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    redirect("/");
+    const headersList = await require("next/headers").headers();
+    const host = headersList.get("host") || "";
+    const proto = host.includes("localhost") ? "http" : "https";
+    const rootDomain = host.replace(/^(app|owner|admin|tenant)\./, "");
+    redirect(`${proto}://${rootDomain}/`);
   }
 
   const propertyId = (await cookies()).get("activePropertyId")?.value;
