@@ -95,7 +95,8 @@ export default function ReceiptGenerator({ transaction }) {
       doc.text("This is a computer generated receipt and is valid without a physical signature.", 105, sigY + 27, { align: "center" });
 
       // Save the PDF
-      doc.save(`Receipt_${tenantName.replace(/\s+/g, '_')}_${paymentDate}.pdf`);
+      const safeDate = paymentDate.replace(/\//g, '-');
+      doc.save(`Receipt_${tenantName.replace(/\s+/g, '_')}_${safeDate}.pdf`);
     } catch (err) {
       console.error("Error generating PDF:", err);
       alert("Failed to generate receipt.");
