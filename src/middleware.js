@@ -13,7 +13,7 @@ export default function middleware(req) {
   // 1. SUPERADMIN APP (admin.domain.com)
   if (hostname.startsWith('admin.')) {
     if (!url.pathname.startsWith('/super-admin')) {
-      url.pathname = \`/super-admin\${url.pathname === '/' ? '' : url.pathname}\`;
+      url.pathname = `/super-admin${url.pathname === '/' ? '' : url.pathname}`;
       return NextResponse.rewrite(url);
     }
   } 
@@ -37,9 +37,9 @@ export default function middleware(req) {
         const propertyId = parts[0];
         // If there are subpaths (e.g. menu), we should preserve them, but the main portal is at tenant-portal
         if (parts[1] === 'menu') {
-           url.pathname = \`/pg/\${propertyId}/menu\`;
+           url.pathname = `/pg/${propertyId}/menu`;
         } else {
-           url.pathname = \`/pg/\${propertyId}/tenant-portal\`;
+           url.pathname = `/pg/${propertyId}/tenant-portal`;
         }
         return NextResponse.rewrite(url);
       }
