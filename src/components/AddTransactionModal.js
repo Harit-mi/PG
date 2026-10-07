@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import { addTransaction } from "@/app/actions";
 import styles from "./Modal.module.css";
 
 export default function AddTransactionModal({ buttonClass, tenants, employees }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState("Income");
   const [category, setCategory] = useState("Rent");
@@ -20,6 +22,7 @@ export default function AddTransactionModal({ buttonClass, tenants, employees })
     
     if (res.success) {
       setIsOpen(false);
+      router.refresh();
     } else {
       alert(res.error);
     }

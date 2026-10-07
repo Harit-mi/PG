@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X, CalendarPlus } from "lucide-react";
 import { submitLeaveRequest } from "@/app/actions";
 import styles from "./Modal.module.css";
 
 export default function AddLeaveModal({ buttonClass, tenants = [], propertyId }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   
   const [tenantId, setTenantId] = useState("");

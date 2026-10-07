@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
 import { addRoom } from "@/app/actions";
+import { useRouter } from "next/navigation";
 import styles from "./Modal.module.css";
 
 export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
@@ -12,6 +13,7 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
   const [capacity, setCapacity] = useState("");
   const [rent, setRent] = useState("");
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   const handleTypeChange = (e) => {
     const val = e.target.value;
@@ -75,6 +77,7 @@ export default function AddRoomModal({ buttonClass, roomTypes = [] }) {
     if (res.success) {
       form.reset();
       setIsOpen(false);
+      router.refresh();
     } else {
       setError(res.error || "Failed to add room");
     }

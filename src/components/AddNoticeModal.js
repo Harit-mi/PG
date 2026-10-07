@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import { addNotice } from "@/app/actions";
 import styles from "./Modal.module.css";
 
 export default function AddNoticeModal({ buttonClass }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -18,6 +20,7 @@ export default function AddNoticeModal({ buttonClass }) {
     
     if (res.success) {
       setIsOpen(false);
+      router.refresh();
     } else {
       alert(res.error);
     }

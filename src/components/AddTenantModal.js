@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { UserPlus, X } from "lucide-react";
 import { addTenant } from "@/app/actions";
 import styles from "./Modal.module.css";
 
 export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
@@ -18,6 +20,7 @@ export default function AddTenantModal({ buttonClass, availableRooms = [] }) {
     
     if (res.success) {
       setIsOpen(false);
+      router.refresh();
     } else {
       alert(res.error);
     }

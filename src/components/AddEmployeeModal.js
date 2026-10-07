@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, X } from "lucide-react";
 import { addEmployee } from "@/app/actions";
 import styles from "./Modal.module.css"; // Reuse existing modal styles
 
 export default function AddEmployeeModal({ buttonClass }) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -19,6 +21,7 @@ export default function AddEmployeeModal({ buttonClass }) {
     setLoading(false);
     if (res.success) {
       setIsOpen(false);
+      router.refresh();
     } else {
       alert("Failed to add employee: " + res.error);
     }
