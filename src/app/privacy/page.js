@@ -2,7 +2,7 @@ import Link from "next/link";
 import FAIcon from "@/components/FAIcon";
 
 export const metadata = {
-  title: "Privacy Policy | StayOS Hostel Management SaaS",
+  title: "Privacy Policy | PGPlus Hostel Management SaaS",
   description: "Privacy Policy detailing data processing practices, tenant PII protection, and multi-tenant isolation."
 };
 
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
         <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.75rem' }}>1. Overview & Data Commitment</h2>
           <p style={{ margin: 0, fontSize: '0.95rem' }}>
-            At <strong>StayOS</strong>, we respect the privacy of PG owners, hostel managers, and their residents. This Privacy Policy outlines what information is collected, how it is stored securely, and how tenant personally identifiable information (PII) is protected within our multi-tenant cloud architecture.
+            At <strong>PGPlus</strong>, we respect the privacy of PG owners, hostel managers, and their residents. This Privacy Policy outlines what information is collected, how it is stored securely, and how tenant personally identifiable information (PII) is protected within our multi-tenant cloud architecture.
           </p>
         </section>
 
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       </div>
 
       <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-        © {new Date().getFullYear()} StayOS Software. All rights reserved. • <Link href="/terms" style={{ color: 'var(--primary)' }}>Terms of Service</Link>
+        © {new Date().getFullYear()} PGPlus Software. All rights reserved. • <Link href="/terms" style={{ color: 'var(--primary)' }}>Terms of Service</Link>
       </div>
 
     </div>

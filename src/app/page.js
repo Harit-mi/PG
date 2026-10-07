@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import MarketingNavbar from "@/components/MarketingNavbar";
 
 export const metadata = {
-  title: "StayOS // Next-Gen PG Management",
+  title: "PGPlus // Next-Gen PGPlus",
   description: "Eliminate empty beds, automate WhatsApp rent collections, and manage multiple branches from a single dashboard.",
 };
 
@@ -14,7 +14,7 @@ export default function LandingPage() {
       <MarketingNavbar />
 
       <main className={styles.hero}>
-        <div className={styles.badge}>Next-Gen PG Management</div>
+        <div className={styles.badge}>Next-Gen PGPlus</div>
         <h1 className={styles.title}>
           Run your PG like a modern tech company.
         </h1>

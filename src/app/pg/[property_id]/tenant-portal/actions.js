@@ -83,7 +83,7 @@ export async function verifyTenantPhone(propertyId, phone) {
   if (!matchedTenant) {
     return { 
       success: false, 
-      error: `No active resident record found for mobile number ending in ${last10}. Please ask your PG management to register your phone number.` 
+      error: `No active resident record found for mobile number ending in ${last10}. Please ask your PGPlus to register your phone number.` 
     };
   }
 

@@ -24,13 +24,13 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "StayOS // The Cyber-Physical Operating System for Indian Living Spaces",
+  title: "PGPlus // The Cyber-Physical Operating System for Indian Living Spaces",
   description: "Eliminate empty bed revenue leaks, automate WhatsApp rent collections, and orchestrate multi-branch PGs on autopilot.",
-  keywords: "PG management software, hostel management India, rent collection app, WhatsApp rent reminder, PG owner app",
+  keywords: "PGPlus software, hostel management India, rent collection app, WhatsApp rent reminder, PG owner app",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "StayOS",
+    title: "PGPlus",
   },
 };
 

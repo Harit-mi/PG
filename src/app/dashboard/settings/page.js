@@ -129,7 +129,7 @@ export default async function SettingsPage() {
             <Shield size={20} className={styles.icon} />
             <h2>Subscription Plans</h2>
           </div>
-          <p className={styles.planDesc}>Upgrade your PG management subscription. Choose between monthly flexibility or annual savings.</p>
+          <p className={styles.planDesc}>Upgrade your PGPlus subscription. Choose between monthly flexibility or annual savings.</p>
           
           <div className={styles.pricingGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {/* Monthly Plan */}

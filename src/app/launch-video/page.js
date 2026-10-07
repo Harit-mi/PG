@@ -10,7 +10,7 @@ export default function LaunchVideo() {
     // Sequence Timeline
     const sequence = [
       { step: 1, delay: 500 },     // Chaos text
-      { step: 2, delay: 3500 },    // Meet StayOS
+      { step: 2, delay: 3500 },    // Meet PGPlus
       { step: 3, delay: 6000 },    // 3D Screenshot Drop
       { step: 4, delay: 8000 },    // Flatten & Zoom into Table
       { step: 5, delay: 10500 },   // Pan & Feature Card 1
@@ -68,7 +68,7 @@ export default function LaunchVideo() {
           </motion.div>
         )}
 
-        {/* Scene 2: Meet StayOS */}
+        {/* Scene 2: Meet PGPlus */}
         {step === 2 && (
           <motion.div
             key="meet"
@@ -78,7 +78,7 @@ export default function LaunchVideo() {
             transition={{ duration: 1.2, ease: "easeOut" }}
             style={{ fontSize: '6vw', fontWeight: 700, textAlign: 'center', letterSpacing: '-0.03em', position: 'absolute' }}
           >
-            Meet <span style={{ color: '#ffffff', textShadow: '0 0 30px rgba(255, 255, 255, 0.4)' }}>StayOS</span>
+            Meet <span style={{ color: '#ffffff', textShadow: '0 0 30px rgba(255, 255, 255, 0.4)' }}>PGPlus</span>
           </motion.div>
         )}
 
@@ -164,7 +164,7 @@ export default function LaunchVideo() {
               S
             </div>
             <div style={{ fontSize: '4.5rem', fontWeight: 700, letterSpacing: '-0.04em', color: '#ffffff' }}>
-              StayOS
+              PGPlus
             </div>
             <div style={{ fontSize: '1.2rem', color: '#a1a1aa', fontWeight: 500, letterSpacing: '-0.01em' }}>
               The Minimalist OS for PGs.

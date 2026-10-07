@@ -20,7 +20,7 @@ export default function ReceiptGenerator({ transaction }) {
         : new Date(transaction.date).toLocaleDateString();
       const paymentMethod = transaction.payment_method || "Cash";
       const transactionId = transaction.id;
-      const propertyName = transaction.properties?.name || "Premium PG Management";
+      const propertyName = transaction.properties?.name || "Premium PGPlus";
       const collectedBy = transaction.employees?.name || "Admin";
 
       // Header & Logo (Stylized text for now)

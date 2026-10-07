@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { X, Save } from "lucide-react";
 import styles from "./Modal.module.css";
 import { updateEmployee } from "@/app/actions";
 
 export default function EditEmployeeModal({ employee, onClose }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [error, setError] = useState(null);
 
   async function handleSubmit(e) {
@@ -19,6 +21,7 @@ export default function EditEmployeeModal({ employee, onClose }) {
     
     if (result.success) {
       onClose();
+      router.refresh();
     } else {
       setError(result.error || "Failed to update employee");
       setLoading(false);

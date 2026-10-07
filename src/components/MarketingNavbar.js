@@ -143,7 +143,7 @@ export default function MarketingNavbar() {
 
       setTimeout(() => {
         // Redirect to the 'app.' subdomain
-        const currentHost = window.location.host; // e.g. localhost:3000 or stayos.in
+        const currentHost = window.location.host; // e.g. localhost:3000 or pgplus.in
         const proto = window.location.protocol; // http: or https:
         // Strip any existing subdomains if they exist, to get root domain
         const rootDomain = currentHost.replace(/^(app|owner|admin|tenant)\./, '');
@@ -169,7 +169,7 @@ export default function MarketingNavbar() {
         <div className={styles.navActions} style={{ flex: 1 }}>
           <Link href="/" className={styles.brand} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Building2 size={24} />
-            StayOS
+            PGPlus
           </Link>
         </div>
         

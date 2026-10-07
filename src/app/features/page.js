@@ -3,8 +3,8 @@ import styles from "@/app/page.module.css";
 import MarketingNavbar from "@/components/MarketingNavbar";
 
 export const metadata = {
-  title: "Features | StayOS",
-  description: "Explore all the features StayOS offers for PG owners and managers.",
+  title: "Features | PGPlus",
+  description: "Explore all the features PGPlus offers for PG owners and managers.",
 };
 
 export default function FeaturesPage() {
@@ -15,7 +15,7 @@ export default function FeaturesPage() {
     },
     {
       title: "Automated UPI Reconciliation",
-      description: "Stop manually matching bank screenshots. StayOS automatically detects and marks rent payments as paid."
+      description: "Stop manually matching bank screenshots. PGPlus automatically detects and marks rent payments as paid."
     },
     {
       title: "Visual Floor Plans",
@@ -35,7 +35,7 @@ export default function FeaturesPage() {
     },
     {
       title: "Expense Tracking",
-      description: "Log daily expenses like groceries, wifi, and electricity. StayOS calculates your true net profit per bed."
+      description: "Log daily expenses like groceries, wifi, and electricity. PGPlus calculates your true net profit per bed."
     },
     {
       title: "Staff Accounts & Roles",
@@ -54,7 +54,7 @@ export default function FeaturesPage() {
         </h1>
         <p className={styles.subtitle}>
           Stop juggling WhatsApp groups, Excel sheets, and paper registers. 
-          StayOS brings your entire operation into one clean interface.
+          PGPlus brings your entire operation into one clean interface.
         </p>
       </main>
 

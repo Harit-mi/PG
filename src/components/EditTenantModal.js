@@ -8,6 +8,7 @@ import { supabase } from "@/utils/supabase";
 
 export default function EditTenantModal({ tenant, onClose }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [error, setError] = useState(null);
   const [rooms, setRooms] = useState([]);
 

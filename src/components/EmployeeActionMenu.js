@@ -16,6 +16,8 @@ export default function EmployeeActionMenu({ employee }) {
       const result = await deleteEmployee(employee.id);
       if (!result.success) {
         alert(result.error || "Failed to delete employee");
+      } else {
+        router.refresh();
       }
     }
   };

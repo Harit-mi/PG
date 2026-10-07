@@ -104,7 +104,7 @@ export default function PricingPage() {
         }}>
           
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>StayOS Pro</h3>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>PGPlus Pro</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Everything you need to run your business</p>
           </div>
 
