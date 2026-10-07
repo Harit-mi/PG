@@ -9,8 +9,16 @@ export default function AssetsClient({ propertyId, rooms = [], assets: initialAs
   const [assets, setAssets] = useState(initialAssets);
   const [selectedRoomId, setSelectedRoomId] = useState("");
   
+  const STANDARD_CATEGORIES = [
+    "AC 1.5 Ton", "Geyser 15L", "Ceiling Fan", "Study Desk & Chair", 
+    "Single Wooden Bed", "Steel Wardrobe"
+  ];
+  
+  const existingCustomCategories = Array.from(new Set(assets.map(a => a.name)))
+    .filter(name => !STANDARD_CATEGORIES.includes(name) && name !== "Custom Category");
+  
   // Add Asset Form States
-  const [newAssetName, setNewAssetName] = useState("");
+  const [newAssetName, setNewAssetName] = useState(STANDARD_CATEGORIES[0]);
   const [customAssetName, setCustomAssetName] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
   const [assetStatus, setAssetStatus] = useState("Working");
@@ -29,7 +37,7 @@ export default function AssetsClient({ propertyId, rooms = [], assets: initialAs
       return;
     }
 
-    const finalName = newAssetName;
+    const finalName = newAssetName === "Custom Category" ? customAssetName : newAssetName;
     if (!finalName.trim()) {
       alert("Please specify the asset name.");
       return;
@@ -221,23 +229,38 @@ export default function AssetsClient({ propertyId, rooms = [], assets: initialAs
               </h3>
               <form onSubmit={handleAddAsset} className={styles.formGrid}>
                 <div className={styles.formField}>
-                  <label>Asset Name / Category</label>
-                  <input
-                    list="asset-categories"
+                  <label>Asset Category</label>
+                  <select
                     value={newAssetName}
-                    onChange={(e) => setNewAssetName(e.target.value)}
-                    placeholder="Select or type a custom name..."
-                    required
-                  />
-                  <datalist id="asset-categories">
-                    <option value="AC 1.5 Ton" />
-                    <option value="Geyser 15L" />
-                    <option value="Ceiling Fan" />
-                    <option value="Study Desk & Chair" />
-                    <option value="Single Wooden Bed" />
-                    <option value="Steel Wardrobe" />
-                  </datalist>
+                    onChange={(e) => {
+                      setNewAssetName(e.target.value);
+                      if (e.target.value !== "Custom Category") setCustomAssetName("");
+                    }}
+                  >
+                    <optgroup label="Standard Categories">
+                      {STANDARD_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </optgroup>
+                    {existingCustomCategories.length > 0 && (
+                      <optgroup label="Your Custom Categories">
+                        {existingCustomCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                      </optgroup>
+                    )}
+                    <option value="Custom Category" style={{ fontWeight: 600, color: 'var(--primary)' }}>+ Add New Custom Category</option>
+                  </select>
                 </div>
+
+                {newAssetName === "Custom Category" && (
+                  <div className={styles.formField}>
+                    <label>Specify New Category Name</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Microwave, Router"
+                      value={customAssetName}
+                      onChange={(e) => setCustomAssetName(e.target.value)}
+                      required
+                    />
+                  </div>
+                )}
 
                 <div className={styles.formField}>
                   <label>Serial Number</label>
