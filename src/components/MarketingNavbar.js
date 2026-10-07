@@ -141,7 +141,12 @@ export default function MarketingNavbar() {
       }
 
       setTimeout(() => {
-        router.push("/dashboard");
+        // Redirect to the 'app.' subdomain
+        const currentHost = window.location.host; // e.g. localhost:3000 or stayos.in
+        const proto = window.location.protocol; // http: or https:
+        // Strip any existing subdomains if they exist, to get root domain
+        const rootDomain = currentHost.replace(/^(app|owner|admin|tenant)\./, '');
+        window.location.href = `${proto}//app.${rootDomain}/`;
       }, 1000);
     } catch (err) {
       console.error(err);
