@@ -6,13 +6,10 @@ export const config = {
   ],
 };
 
-export function proxy(req) {
+export function middleware(req) {
   const url = req.nextUrl.clone();
   const hostname = req.headers.get('host') || '';
   const pathname = url.pathname;
-
-  let isSuperAdmin = false;
-  let isDashboard = false;
 
   if (hostname.startsWith('admin.')) {
     if (!pathname.startsWith('/super-admin')) {
@@ -20,8 +17,12 @@ export function proxy(req) {
     }
   } 
   else if (hostname.startsWith('owner.') || hostname.startsWith('app.')) {
+    // If they go to app.domain.com/, send them to /auth or /dashboard.
+    // Wait, the app needs an auth page. If they go to / on app.domain.com, 
+    // we should render the login page if not authenticated, or dashboard if they are.
+    // For now, rewrite to /app route so it handles its own UI.
     if (pathname === '/') {
-      url.pathname = '/dashboard';
+      url.pathname = '/app';
     }
   }
   else if (hostname.startsWith('tenant.')) {

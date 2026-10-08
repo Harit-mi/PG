@@ -15,8 +15,7 @@ export default async function DashboardLayout({ children }) {
     const headersList = await require("next/headers").headers();
     const host = headersList.get("host") || "";
     const proto = host.includes("localhost") ? "http" : "https";
-    const rootDomain = host.replace(/^(app|owner|admin|tenant)\./, "");
-    redirect(`${proto}://${rootDomain}/`);
+    redirect('/');
   }
 
   const propertyId = (await cookies()).get("activePropertyId")?.value;

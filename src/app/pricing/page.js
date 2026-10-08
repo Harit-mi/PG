@@ -122,9 +122,9 @@ export default function PricingPage() {
             )}
           </div>
           
-          <button className={styles.btnPrimary} style={{ width: '100%', marginBottom: '3rem', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px' }}>
+          <a href="http://app.localhost:3000/" className={styles.btnPrimary} style={{ width: '100%', marginBottom: '3rem', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px', display: 'inline-block', textAlign: 'center', textDecoration: 'none', fontWeight: 600 }} style={{ width: '100%', marginBottom: '3rem', padding: '1rem', fontSize: '1.1rem', borderRadius: '12px' }}>
             Start your free 14-day trial
-          </button>
+          </a>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.25rem' }}>
             {features.map((f, j) => (
