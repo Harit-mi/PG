@@ -43,6 +43,23 @@ export default function MarketingNavbar() {
     setIsAuthOpen(true);
   };
 
+  
+  const handleGoogleLogin = async () => {
+    setAuthLoading(true);
+    setAuthError("");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    });
+
+    if (error) {
+      setAuthError(error.message);
+      setAuthLoading(false);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
@@ -212,6 +229,21 @@ export default function MarketingNavbar() {
             <div className={styles.modalBody}>
               {authError && <div className={styles.errorBanner}>{authError}</div>}
               {authSuccess && <div className={styles.successBanner}>{authSuccess}</div>}
+
+              
+              <button 
+                type="button"
+                onClick={handleGoogleLogin}
+                className={styles.googleBtn}
+                disabled={authLoading}
+              >
+                <img src="https://www.google.com/favicon.ico" alt="Google" width={18} height={18} />
+                Continue with Google
+              </button>
+
+              <div className={styles.divider}>
+                <span>or</span>
+              </div>
 
               {authMode === "login" ? (
                 <form onSubmit={handleLogin}>
